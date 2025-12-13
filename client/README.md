@@ -5,6 +5,8 @@ Venuz is a venue booking web application.
 ## Tech Stack
 - React
 - Vite
+- Tailwind CSS
+
 
 ## Getting Started
 npm install
