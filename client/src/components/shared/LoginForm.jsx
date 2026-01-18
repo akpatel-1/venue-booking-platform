@@ -2,27 +2,56 @@ import { useState } from "react";
 
 export default function LoginForm({ onSubmit }) {
   const [formData, setFormData] = useState({ username: "", password: "" });
-  const [usernameError, setUsernameError] = useState("");
+  const [credentialError, setCredentialError] = useState({
+    usernameError: "",
+    passwordError: "",
+  });
 
   const handleChange = (e) => {
-    setUsernameError("");
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value.trim() }));
+    setCredentialError((prev) => ({ ...prev, [`${name}Error`]: "" }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "username" ? value.trim() : value,
+    }));
   };
 
-  const validateUsername = (e) => {
-    const { value } = e.target;
-    const regex = /^[a-zA-Z0-9._-]{8,50}$/;
-    if (value && !regex.test(value.trim())) {
-      setUsernameError("Username can contain only letters, numbers, . _ -");
-    } else {
-      setUsernameError("");
+  const validateCredentials = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "username") {
+      const regex = /^[a-zA-Z0-9._-]{8,50}$/;
+
+      setCredentialError((prev) => ({
+        ...prev,
+        usernameError:
+          value && !regex.test(value)
+            ? "Username can contain only letters, numbers, . _ -"
+            : "",
+      }));
+    }
+
+    if (name === "password") {
+      let error = "";
+
+      if (value.trim().length === 0) {
+        error = "Password cannot be empty or spaces only.";
+      } else if (value.startsWith(" ") || value.endsWith(" ")) {
+        error = "Password cannot start or end with a space.";
+      } else if (value.length < 12) {
+        error = "Password must be at least 12 characters long.";
+      }
+
+      setCredentialError((prev) => ({
+        ...prev,
+        passwordError: error,
+      }));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (usernameError) return;
+    if (credentialError.username || credentialError.password) return;
     onSubmit(formData);
   };
 
@@ -48,11 +77,13 @@ export default function LoginForm({ onSubmit }) {
               maxLength={50}
               value={formData.username}
               onChange={handleChange}
-              onBlur={validateUsername}
+              onBlur={validateCredentials}
               className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500'
             />
-            {usernameError && (
-              <p className='text-red-500 text-sm mt-1'>{usernameError}</p>
+            {credentialError.usernameError && (
+              <p className='text-red-500 text-sm mt-1'>
+                {credentialError.usernameError}
+              </p>
             )}
           </div>
 
@@ -69,9 +100,15 @@ export default function LoginForm({ onSubmit }) {
               minLength={12}
               maxLength={128}
               value={formData.password}
+              onBlur={validateCredentials}
               onChange={handleChange}
               className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400'
             />
+            {credentialError.passwordError && (
+              <p className='text-red-500 text-sm mt-1'>
+                {credentialError.passwordError}
+              </p>
+            )}
           </div>
 
           {/* Submit */}
