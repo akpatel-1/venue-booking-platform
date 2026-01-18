@@ -1,10 +1,10 @@
 import AdminDashboard from "../pages/admin/AdminDashboard";
-import LoginForm from "../components/shared/LoginForm";
+import AdminLogin from "../pages/admin/AdminLogin";
 
-const AdminRoutes = [
+const adminRoutes = [
   {
     path: "/admin/login",
-    element: <LoginForm />,
+    element: <AdminLogin />,
   },
   {
     path: "/admin/dashboard",
@@ -12,4 +12,4 @@ const AdminRoutes = [
   },
 ];
 
-export default AdminRoutes;
+export default adminRoutes;

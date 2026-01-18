@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-export default function LoginForm() {
+export default function LoginForm({ onSubmit }) {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [usernameError, setUsernameError] = useState("");
 
   const handleChange = (e) => {
-    setUsernameError(""); 
+    setUsernameError("");
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value.trim() }));
   };
@@ -23,9 +23,7 @@ export default function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (usernameError) return;
-    console.log(
-      `Username: ${formData.username}\nPassword: ${formData.password}`
-    );
+    onSubmit(formData);
   };
 
   return (
