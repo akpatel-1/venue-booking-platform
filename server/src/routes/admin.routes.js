@@ -1,8 +1,8 @@
 import express from "express";
 
-const router = express.Router();
+const adminRoutes = express.Router();
 
-router.post("/admin/login", (req, res) => {
+adminRoutes.post("/admin/login", (req, res) => {
   const { username, password } = req.body;
   console.log(`Username: ${username}`);
   console.log(`Password: ${password}`);
@@ -13,4 +13,4 @@ router.post("/admin/login", (req, res) => {
   });
 });
 
-export default router;
+export default adminRoutes;
