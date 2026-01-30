@@ -14,6 +14,6 @@ app.use(
 );
 app.use(express.json());
 
-app.use(adminRoutes);
+app.use("/admin", adminRoutes);
 
 export default app;

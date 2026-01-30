@@ -1,16 +1,8 @@
 import express from "express";
+import { authValidation } from "../middlewares/auth.validation.middleware.js";
+import { adminLogin } from "../controllers/admin.auth.controller.js";
 
-const adminRoutes = express.Router();
+export const adminRoutes = express.Router();
 
-adminRoutes.post("/admin/login", (req, res) => {
-  const { username, password } = req.body;
-  console.log(`Username: ${username}`);
-  console.log(`Password: ${password}`);
-
-  res.json({
-    success: true,
-    message: "Working perfectly",
-  });
-});
-
-export default adminRoutes;
+// Public routes
+adminRoutes.post("/login", authValidation, adminLogin);
