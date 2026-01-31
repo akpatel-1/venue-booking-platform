@@ -1,7 +1,7 @@
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminLogin from "../pages/admin/AdminLogin";
 
-const adminRoutes = [
+export const adminRoutes = [
   {
     path: "/admin/login",
     element: <AdminLogin />,
@@ -11,5 +11,3 @@ const adminRoutes = [
     element: <AdminDashboard />,
   },
 ];
-
-export default adminRoutes;
