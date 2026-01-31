@@ -1,15 +1,18 @@
 import { useState } from "react";
 
-export default function LoginForm({ onSubmit }) {
+export default function LoginForm({ onSubmit, loginUser }) {
   const [formData, setFormData] = useState({ username: "", password: "" });
+  const [isLoading, setIsLoading] = useState("Submit");
   const [credentialError, setCredentialError] = useState({
     usernameError: "",
     passwordError: "",
   });
+  const [serverError, setServerError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentialError((prev) => ({ ...prev, [`${name}Error`]: "" }));
+    setServerError("");
     setFormData((prev) => ({
       ...prev,
       [name]: name === "username" ? value.trim() : value,
@@ -49,18 +52,34 @@ export default function LoginForm({ onSubmit }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (credentialError.username || credentialError.password) return;
-    onSubmit(formData);
+    setIsLoading("Loading...");
+    if (credentialError.usernameError || credentialError.passwordError) return;
+    try {
+      await onSubmit(formData);
+    } catch (err) {
+      let errorMessage = "Something went wrong";
+      if (err.response?.data?.message) {
+        errorMessage = err.response?.data?.message;
+      } else if (err.message == "Network Error") {
+        errorMessage = "Service temporarily unavailable. Please try again.";
+      }
+      setServerError(errorMessage);
+    } finally {
+      setIsLoading("SUBMIT");
+    }
   };
 
   return (
     <div className='min-h-screen flex items-center justify-center p-4 bg-gray-100'>
       <div className='bg-white border border-gray-200 rounded-lg shadow-md p-8 w-full max-w-md'>
-        <h1 className='text-2xl font-medium mb-8 text-center pb-2 border-b-2 border-purple-500'>
-          Log in to your account
+        <h1 className='text-2xl font-medium mb-6 text-center pb-2 border-b-2 border-purple-500'>
+          {loginUser} login
         </h1>
+        {serverError && (
+          <p className='text-red-500 text-sm mt-1 mb-4'>{serverError}</p>
+        )}
 
         <form onSubmit={handleSubmit} className='space-y-6'>
           {/* Username */}
@@ -116,7 +135,7 @@ export default function LoginForm({ onSubmit }) {
             type='submit'
             className='w-full py-3 font-bold text-white bg-purple-500 rounded-md hover:bg-purple-600'
           >
-            SUBMIT
+            {isLoading}
           </button>
         </form>
       </div>
