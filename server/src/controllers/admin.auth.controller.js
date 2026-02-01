@@ -4,7 +4,6 @@ import "dotenv/config";
 export async function adminLogin(req, res) {
   try {
     const admin = await authenticateUser(req.body);
-
     const sessionId = await createRedisSession(admin.id);
 
     res.cookie("sessionId", sessionId, {
@@ -15,17 +14,24 @@ export async function adminLogin(req, res) {
     });
 
     return res.status(200).json({
+      success: true,
       message: "Login successful",
-      admin: {
+      data: {
         id: admin.id,
         username: admin.username,
       },
     });
   } catch (error) {
     if (error.message === "Invalid credentials") {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials",
+      });
     }
 
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 }
