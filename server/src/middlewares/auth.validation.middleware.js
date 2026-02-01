@@ -7,9 +7,10 @@ export function authValidation(req, res, next) {
     return res.status(400).json({ error: "Invalid credentials" });
   }
 
-  req.body.username = username.trim().toLowerCase();
+  const normalizedUsername = username.trim().toLowerCase();
+  req.body.username = normalizedUsername;
 
-  if (!usernameRegex.test(username)) {
+  if (!usernameRegex.test(normalizedUsername)) {
     return res.status(400).json({ error: "Invalid credentials" });
   }
 
