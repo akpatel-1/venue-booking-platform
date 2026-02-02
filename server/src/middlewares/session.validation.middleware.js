@@ -1,22 +1,17 @@
 import { getSessionData } from "../infra/redis.session.js";
+import { apiError } from "../utils/api.error.js";
 
 export async function sessionValidation(req, res, next) {
   const { sessionId } = req.cookies;
 
   if (!sessionId) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized request",
-    });
+    throw new apiError(401, "Unauthorized request");
   }
 
   const session = await getSessionData(sessionId);
 
   if (!session) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized request",
-    });
+    throw new apiError(401, "Unauthorized request");
   }
 
   req.admin = session;

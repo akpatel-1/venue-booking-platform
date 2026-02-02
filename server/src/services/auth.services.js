@@ -1,12 +1,13 @@
 import argon2 from "argon2";
+import { apiError } from "../utils/api.error.js";
 import { findUserByUsername, updateLastLogin } from "../models/auth.model.js";
 
 export async function authenticateUser({ username, password }) {
   const user = await findUserByUsername(username);
-  if (!user) throw new Error("Invalid credentials");
+  if (!user) throw new apiError(401, "Invalid credentials");
 
   const isMatch = await argon2.verify(user.password_hash, password);
-  if (!isMatch) throw new Error("Invalid credentials");
+  if (!isMatch) throw new apiError(401, "Invalid credentials");
 
   await updateLastLogin(user.id);
 
