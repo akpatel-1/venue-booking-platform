@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm({ onSubmit, loginUser }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState("Submit");
   const [credentialError, setCredentialError] = useState({
@@ -59,13 +61,11 @@ export default function LoginForm({ onSubmit, loginUser }) {
     try {
       await onSubmit(formData);
     } catch (err) {
-      let errorMessage = "Something went wrong";
-      if (err.response?.data?.message) {
-        errorMessage = err.response?.data?.message;
-      } else if (err.message == "Network Error") {
-        errorMessage = "Service temporarily unavailable. Please try again.";
+      if (!err.response || err.response?.status === 503) {
+        navigate("/error/503");
+        return;
       }
-      setServerError(errorMessage);
+      setServerError(err.response?.data?.message || "Something went wrong");
     } finally {
       setIsLoading("SUBMIT");
     }
