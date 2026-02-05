@@ -19,3 +19,7 @@ export async function createRedisSession(adminId, role = "admin") {
 export async function getSessionData(sessionId) {
   return redis.get(`session:${sessionId}`);
 }
+
+export async function deleteSessionData(sessionId) {
+  return redis.del(`session:${sessionId}`);
+}
