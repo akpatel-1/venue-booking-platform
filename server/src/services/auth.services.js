@@ -3,12 +3,9 @@ import { apiError } from "../utils/api.error.js";
 import { findUserByUsername, updateLastLogin } from "../models/auth.model.js";
 
 export async function authenticateUser({ username, password }) {
-  let user;
-  try {
-    user = await findUserByUsername(username);
-  } catch {
-    throw new apiError(503, "Service temporarily unavailable");
-  }
+  
+  const user = await findUserByUsername(username);
+  
   if (!user) throw new apiError(401, "Invalid credentials");
 
   let isMatch;

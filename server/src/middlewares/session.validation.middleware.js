@@ -8,12 +8,7 @@ export async function sessionValidation(req, res, next) {
     throw new apiError(401, "Unauthorized request");
   }
 
-  let session;
-  try {
-    session = await getSessionData(sessionId);
-  } catch {
-    throw new apiError(503, "Service temporarily unavailable");
-  }
+  const session = await getSessionData(sessionId);
 
   if (!session) {
     throw new apiError(401, "Unauthorized request");
