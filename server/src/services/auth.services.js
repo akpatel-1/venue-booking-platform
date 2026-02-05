@@ -12,7 +12,7 @@ export async function authenticateUser({ username, password }) {
   try {
     isMatch = await argon2.verify(user.password_hash, password);
   } catch {
-    throw new apiError(503, "Service temporarily unavailable");
+    throw new apiError(500, "Service temporarily unavailable");
   }
   if (!isMatch) throw new apiError(401, "Invalid credentials");
 

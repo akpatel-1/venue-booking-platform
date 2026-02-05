@@ -61,8 +61,8 @@ export default function LoginForm({ onSubmit, loginUser }) {
     try {
       await onSubmit(formData);
     } catch (err) {
-      if (!err.response || err.response?.status === 503) {
-        navigate("/error/503");
+      if (!err.response || err.response?.status === 500) {
+        navigate("/error/500");
         return;
       }
       setServerError(err.response?.data?.message || "Something went wrong");

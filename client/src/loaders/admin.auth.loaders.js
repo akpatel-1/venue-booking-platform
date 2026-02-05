@@ -7,14 +7,14 @@ export async function protectAdminRoute() {
     return null;
   } catch (error) {
     if (!error.response) {
-      return redirect("/error/503");
+      return redirect("/error/500");
     }
 
     const status = error.response.status;
 
     if (status === 401) return redirect("/admin/login");
     if (status === 403) return redirect("/error/403");
-    if (status === 503) return redirect("/error/503");
+    if (status === 500) return redirect("/error/500");
 
     throw error;
   }
