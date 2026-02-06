@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginForm({ onSubmit, loginUser }) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState("Submit");
   const [credentialError, setCredentialError] = useState({
-    usernameError: "",
+    emailError: "",
     passwordError: "",
   });
   const [serverError, setServerError] = useState("");
@@ -17,22 +17,19 @@ export default function LoginForm({ onSubmit, loginUser }) {
     setServerError("");
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "username" ? value.trim() : value,
+      [name]: name === "email" ? value.trim() : value,
     }));
   };
 
   const validateCredentials = (e) => {
     const { name, value } = e.target;
 
-    if (name === "username") {
-      const regex = /^[a-zA-Z0-9._-]{8,50}$/;
+    if (name === "email") {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       setCredentialError((prev) => ({
         ...prev,
-        usernameError:
-          value && !regex.test(value)
-            ? "Username can contain only letters, numbers, . _ -"
-            : "",
+        emailError: value && !regex.test(value) ? "Invalid email format" : "",
       }));
     }
 
@@ -56,8 +53,11 @@ export default function LoginForm({ onSubmit, loginUser }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (credentialError.emailError || credentialError.passwordError) return;
+
     setIsLoading("Loading...");
-    if (credentialError.usernameError || credentialError.passwordError) return;
+
     try {
       await onSubmit(formData);
     } catch (err) {
@@ -82,26 +82,26 @@ export default function LoginForm({ onSubmit, loginUser }) {
         )}
 
         <form onSubmit={handleSubmit} className='space-y-6'>
-          {/* Username */}
+          {/* Email */}
           <div>
             <label className='block text-sm font-medium mb-1 text-gray-700'>
-              Username
+              Email
             </label>
             <input
               type='text'
-              name='username'
-              placeholder='Enter your username'
+              name='email'
+              placeholder='Enter your email'
               required
               minLength={8}
               maxLength={50}
-              value={formData.username}
+              value={formData.email}
               onChange={handleChange}
               onBlur={validateCredentials}
               className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500'
             />
-            {credentialError.usernameError && (
+            {credentialError.emailError && (
               <p className='text-red-500 text-sm mt-1'>
-                {credentialError.usernameError}
+                {credentialError.emailError}
               </p>
             )}
           </div>

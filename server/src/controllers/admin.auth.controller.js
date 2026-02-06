@@ -1,11 +1,12 @@
-import { authenticateUser } from "../services/auth.services.js";
+import { authenticateAdmin } from "../services/admin.auth.services.js";
 import {
   createRedisSession,
   deleteSessionData,
 } from "../infra/redis.session.js";
 import "dotenv/config";
+
 export async function adminLogin(req, res) {
-  const admin = await authenticateUser(req.body);
+  const admin = await authenticateAdmin(req.body);
   const sessionId = await createRedisSession(admin.id);
 
   res.cookie("sessionId", sessionId, {
@@ -20,7 +21,7 @@ export async function adminLogin(req, res) {
     message: "Login successful",
     data: {
       id: admin.id,
-      username: admin.username,
+      email: admin.email,
     },
   });
 }
@@ -42,6 +43,7 @@ export async function adminLogout(req, res) {
       success: true,
       message: "Logged out successfully",
     });
+    
   } catch (err) {
     return res.status(500).json({
       success: false,

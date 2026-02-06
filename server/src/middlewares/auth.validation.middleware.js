@@ -1,26 +1,23 @@
 import { apiError } from "../utils/api.error.js";
 
 export function authValidation(req, res, next) {
-  const { username, password } = req.body || {};
+  const { email, password } = req.body || {};
 
-  if (!username || !password) {
-    throw new apiError(400, "Invalid credentials");
+  if (!email || !password) {
+    throw new apiError(401, "Invalid credentials");
   }
 
-  const normalizedUsername = username.trim().toLowerCase();
-  req.body.username = normalizedUsername;
+  const normalizedEmail = email.trim().toLowerCase();
+  req.body.email = normalizedEmail;
 
-  const usernameRegex = /^[a-z0-9._-]{8,50}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!usernameRegex.test(normalizedUsername)) {
-    throw new apiError(400, "Invalid credentials");
+  if (!emailRegex.test(normalizedEmail)) {
+    throw new apiError(401, "Invalid credentials");
   }
 
-  const isOnlySpace = /^\s+$/;
-  const hasEdgeSpaces = password.startsWith(" ") || password.endsWith(" ");
-
-  if (isOnlySpace.test(password) || hasEdgeSpaces || password.length < 12) {
-    throw new apiError(400, "Invalid credentials");
+  if (password.trim().length < 12 || password !== password.trim()) {
+    throw new apiError(401, "Invalid credentials");
   }
 
   next();
