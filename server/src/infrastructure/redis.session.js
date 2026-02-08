@@ -1,4 +1,4 @@
-import { redis } from "../config/redis.js";
+import { redis } from "./redis/redis.js";
 import crypto from "crypto";
 
 export async function createRedisSession(adminId, role = "admin") {

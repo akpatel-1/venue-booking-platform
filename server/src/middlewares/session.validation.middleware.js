@@ -1,4 +1,4 @@
-import { getSessionData } from "../infra/redis.session.js";
+import { getSessionData } from "../infrastructure/redis.session.js";
 import { apiError } from "../utils/api.error.js";
 
 export async function sessionValidation(req, res, next) {

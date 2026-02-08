@@ -2,7 +2,7 @@ import { authenticateAdmin } from "../services/admin.auth.services.js";
 import {
   createRedisSession,
   deleteSessionData,
-} from "../infra/redis.session.js";
+} from "../infrastructure/redis.session.js";
 import "dotenv/config";
 
 export async function adminLogin(req, res) {
@@ -43,7 +43,6 @@ export async function adminLogout(req, res) {
       success: true,
       message: "Logged out successfully",
     });
-    
   } catch (err) {
     return res.status(500).json({
       success: false,

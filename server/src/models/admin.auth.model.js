@@ -1,12 +1,10 @@
-import { supabase } from "../config/supabase.js";
+import { pool } from "../infrastructure/database/db.js";
 
 export async function findAdminByEmail(email) {
-  const { data, error } = await supabase
-    .from("admins")
-    .select("id, email, password_hash")
-    .eq("email", email)
-    .maybeSingle();
-  if (error) throw error;
-  return data;
+  const result = await pool.query(
+    `SELECT id, email, password_hash FROM admins WHERE email = $1 LIMIT 1`,
+    [email],
+  );
+  console.log("result", result);
+  return result.rows[0] || null;
 }
-
