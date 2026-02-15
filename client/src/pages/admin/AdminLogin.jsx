@@ -10,5 +10,5 @@ export default function AdminLogin() {
     navigate("/admin/dashboard");
   };
 
-  return <LoginForm onSubmit={handleSubmit} loginUser='Admin' />;
+  return <LoginForm onSubmit={handleSubmit} formUse='Admin login' />;
 }

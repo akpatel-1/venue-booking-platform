@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function LoginForm({ onSubmit, loginUser }) {
+export default function LoginForm({ onSubmit, formUse }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState("Submit");
@@ -25,7 +25,7 @@ export default function LoginForm({ onSubmit, loginUser }) {
     const { name, value } = e.target;
 
     if (name === "email") {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
       setCredentialError((prev) => ({
         ...prev,
@@ -75,7 +75,7 @@ export default function LoginForm({ onSubmit, loginUser }) {
     <div className='min-h-screen flex items-center justify-center p-4 bg-gray-100'>
       <div className='bg-white border border-gray-200 rounded-lg shadow-md p-8 w-full max-w-md'>
         <h1 className='text-2xl font-medium mb-6 text-center pb-2 border-b-2 border-purple-500'>
-          {loginUser} login
+          {formUse}
         </h1>
         {serverError && (
           <p className='text-red-500 text-sm mt-1 mb-4'>{serverError}</p>
