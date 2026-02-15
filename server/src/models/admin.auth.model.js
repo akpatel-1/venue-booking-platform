@@ -5,6 +5,5 @@ export async function findAdminByEmail(email) {
     `SELECT id, email, password_hash FROM admins WHERE email = $1 LIMIT 1`,
     [email],
   );
-  console.log("result", result);
   return result.rows[0] || null;
 }

@@ -2,10 +2,16 @@ import { authenticateAdmin } from "../services/admin.auth.services.js";
 import {
   createRedisSession,
   deleteSessionData,
-} from "../infrastructure/redis.session.js";
+} from "../infrastructure/admin.redis.session.js";
 import "dotenv/config";
 
 export async function adminLogin(req, res) {
+  const { sessionId: oldSession } = req.cookies;
+
+  if (oldSession) {
+    await deleteSessionData(oldSession);
+  }
+
   const admin = await authenticateAdmin(req.body);
   const sessionId = await createRedisSession(admin.id);
 
@@ -27,26 +33,19 @@ export async function adminLogin(req, res) {
 }
 
 export async function adminLogout(req, res) {
-  try {
-    const { sessionId } = req.cookies;
+  const { sessionId } = req.cookies;
 
-    if (sessionId) {
-      await deleteSessionData(sessionId);
-      res.clearCookie("sessionId", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Logged out successfully",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Logout failed",
+  if (sessionId) {
+    await deleteSessionData(sessionId);
+    res.clearCookie("sessionId", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
     });
   }
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
 }

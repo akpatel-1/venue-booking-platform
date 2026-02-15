@@ -1,4 +1,4 @@
-import { getSessionData } from "../infrastructure/redis.session.js";
+import { getSessionData } from "../infrastructure/admin.redis.session.js";
 import { apiError } from "../utils/api.error.utils.js";
 
 export async function sessionValidation(req, res, next) {
@@ -14,6 +14,10 @@ export async function sessionValidation(req, res, next) {
     throw new apiError(401, "Unauthorized request");
   }
 
-  req.admin = session;
+ req.admin = {
+   id: session.id,
+   email: session.email,
+ };
+
   next();
 }

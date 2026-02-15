@@ -1,4 +1,4 @@
-import { apiError } from "../utils/api.error.js";
+import { apiError } from "../utils/api.error.utils.js";
 
 export function authValidation(req, res, next) {
   const { email, password } = req.body || {};
@@ -10,7 +10,7 @@ export function authValidation(req, res, next) {
   const normalizedEmail = email.trim().toLowerCase();
   req.body.email = normalizedEmail;
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(normalizedEmail)) {
     throw new apiError(401, "Invalid credentials");
