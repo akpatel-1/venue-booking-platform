@@ -3,7 +3,7 @@ export async function createUser(client, email) {
     `INSERT INTO users (email)
      VALUES ($1)
      RETURNING id`,
-    [email],
+    [email]
   );
 
   return result.rows[0].id;
@@ -20,7 +20,7 @@ export async function createAuthMethod(client, data) {
       data.providerIdentifier,
       data.passwordHash,
       data.verifiedAt,
-    ],
+    ]
   );
 }
 
@@ -29,6 +29,6 @@ export async function insertEmailVerificationToken(client, data) {
     `INSERT INTO email_verification_tokens
      (user_id, token_hash, expires_at)
      VALUES ($1, $2, $3)`,
-    [data.userId, data.tokenHash, data.expiresAt],
+    [data.userId, data.tokenHash, data.expiresAt]
   );
 }

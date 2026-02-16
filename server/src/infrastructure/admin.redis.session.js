@@ -1,7 +1,8 @@
-import { redis } from "./redis/redis.js";
-import crypto from "crypto";
+import crypto from 'crypto';
 
-export async function createRedisSession(adminId, role = "admin") {
+import { redis } from './redis/redis.js';
+
+export async function createRedisSession(adminId, role = 'admin') {
   const SESSION_TTL = 60 * 60 * 24;
   const sessionId = crypto.randomUUID();
   const sessionKey = `session:${sessionId}`;

@@ -1,47 +1,47 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm({ onSubmit, formUse }) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [isLoading, setIsLoading] = useState("Submit");
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [isLoading, setIsLoading] = useState('Submit');
   const [credentialError, setCredentialError] = useState({
-    emailError: "",
-    passwordError: "",
+    emailError: '',
+    passwordError: '',
   });
-  const [serverError, setServerError] = useState("");
+  const [serverError, setServerError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCredentialError((prev) => ({ ...prev, [`${name}Error`]: "" }));
-    setServerError("");
+    setCredentialError((prev) => ({ ...prev, [`${name}Error`]: '' }));
+    setServerError('');
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "email" ? value.trim() : value,
+      [name]: name === 'email' ? value.trim() : value,
     }));
   };
 
   const validateCredentials = (e) => {
     const { name, value } = e.target;
 
-    if (name === "email") {
+    if (name === 'email') {
       const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
       setCredentialError((prev) => ({
         ...prev,
-        emailError: value && !regex.test(value) ? "Invalid email format" : "",
+        emailError: value && !regex.test(value) ? 'Invalid email format' : '',
       }));
     }
 
-    if (name === "password") {
-      let error = "";
+    if (name === 'password') {
+      let error = '';
 
       if (value.trim().length === 0) {
-        error = "Password cannot be empty or spaces only.";
-      } else if (value.startsWith(" ") || value.endsWith(" ")) {
-        error = "Password cannot start or end with a space.";
+        error = 'Password cannot be empty or spaces only.';
+      } else if (value.startsWith(' ') || value.endsWith(' ')) {
+        error = 'Password cannot start or end with a space.';
       } else if (value.length < 12) {
-        error = "Password must be at least 12 characters long.";
+        error = 'Password must be at least 12 characters long.';
       }
 
       setCredentialError((prev) => ({
@@ -56,51 +56,51 @@ export default function LoginForm({ onSubmit, formUse }) {
 
     if (credentialError.emailError || credentialError.passwordError) return;
 
-    setIsLoading("Loading...");
+    setIsLoading('Loading...');
 
     try {
       await onSubmit(formData);
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
-        navigate("/error/500");
+        navigate('/error/500');
         return;
       }
-      setServerError(err.response?.data?.message || "Something went wrong");
+      setServerError(err.response?.data?.message || 'Something went wrong');
     } finally {
-      setIsLoading("SUBMIT");
+      setIsLoading('SUBMIT');
     }
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center p-4 bg-gray-100'>
-      <div className='bg-white border border-gray-200 rounded-lg shadow-md p-8 w-full max-w-md'>
-        <h1 className='text-2xl font-medium mb-6 text-center pb-2 border-b-2 border-purple-500'>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-100">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-md p-8 w-full max-w-md">
+        <h1 className="text-2xl font-medium mb-6 text-center pb-2 border-b-2 border-purple-500">
           {formUse}
         </h1>
         {serverError && (
-          <p className='text-red-500 text-sm mt-1 mb-4'>{serverError}</p>
+          <p className="text-red-500 text-sm mt-1 mb-4">{serverError}</p>
         )}
 
-        <form onSubmit={handleSubmit} className='space-y-6'>
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email */}
           <div>
-            <label className='block text-sm font-medium mb-1 text-gray-700'>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
               Email
             </label>
             <input
-              type='text'
-              name='email'
-              placeholder='Enter your email'
+              type="text"
+              name="email"
+              placeholder="Enter your email"
               required
               minLength={8}
               maxLength={50}
               value={formData.email}
               onChange={handleChange}
               onBlur={validateCredentials}
-              className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500'
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
             {credentialError.emailError && (
-              <p className='text-red-500 text-sm mt-1'>
+              <p className="text-red-500 text-sm mt-1">
                 {credentialError.emailError}
               </p>
             )}
@@ -108,23 +108,23 @@ export default function LoginForm({ onSubmit, formUse }) {
 
           {/* Password */}
           <div>
-            <label className='block text-sm font-medium mb-1 text-gray-700'>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
               Password
             </label>
             <input
-              type='password'
-              name='password'
-              placeholder='Enter your password'
+              type="password"
+              name="password"
+              placeholder="Enter your password"
               required
               minLength={12}
               maxLength={128}
               value={formData.password}
               onBlur={validateCredentials}
               onChange={handleChange}
-              className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400'
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
             {credentialError.passwordError && (
-              <p className='text-red-500 text-sm mt-1'>
+              <p className="text-red-500 text-sm mt-1">
                 {credentialError.passwordError}
               </p>
             )}
@@ -132,8 +132,8 @@ export default function LoginForm({ onSubmit, formUse }) {
 
           {/* Submit */}
           <button
-            type='submit'
-            className='w-full py-3 font-bold text-white bg-purple-500 rounded-md hover:bg-purple-600'
+            type="submit"
+            className="w-full py-3 font-bold text-white bg-purple-500 rounded-md hover:bg-purple-600"
           >
             {isLoading}
           </button>

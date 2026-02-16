@@ -1,5 +1,5 @@
-import { axiosClient } from "../lib/axios.client";
+import { axiosClient } from '../lib/axios.client';
 
 export const userApi = {
-  signup: (data) => axiosClient.post("/auth/signup/email", data),
+  signup: (data) => axiosClient.post('/auth/signup/email', data),
 };

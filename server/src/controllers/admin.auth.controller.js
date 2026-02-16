@@ -1,9 +1,10 @@
-import { authenticateAdmin } from "../services/admin.auth.services.js";
+import 'dotenv/config';
+
 import {
   createRedisSession,
   deleteSessionData,
-} from "../infrastructure/admin.redis.session.js";
-import "dotenv/config";
+} from '../infrastructure/admin.redis.session.js';
+import { authenticateAdmin } from '../services/admin.auth.services.js';
 
 export async function adminLogin(req, res) {
   const { sessionId: oldSession } = req.cookies;
@@ -15,16 +16,16 @@ export async function adminLogin(req, res) {
   const admin = await authenticateAdmin(req.body);
   const sessionId = await createRedisSession(admin.id);
 
-  res.cookie("sessionId", sessionId, {
+  res.cookie('sessionId', sessionId, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
     maxAge: 24 * 60 * 60 * 1000,
   });
 
   return res.status(200).json({
     success: true,
-    message: "Login successful",
+    message: 'Login successful',
     data: {
       id: admin.id,
       email: admin.email,
@@ -37,15 +38,15 @@ export async function adminLogout(req, res) {
 
   if (sessionId) {
     await deleteSessionData(sessionId);
-    res.clearCookie("sessionId", {
+    res.clearCookie('sessionId', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
     });
   }
 
   return res.status(200).json({
     success: true,
-    message: "Logged out successfully",
+    message: 'Logged out successfully',
   });
 }

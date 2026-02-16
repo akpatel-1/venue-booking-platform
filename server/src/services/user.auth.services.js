@@ -1,12 +1,12 @@
-import { pool } from "../infrastructure/database/db.js";
-import { hashPassword } from "../utils/password.utils.js";
-import { generateEmailVerificationToken } from "../utils/token.utils.js";
+import { pool } from '../infrastructure/database/db.js';
 import {
-  createUser,
   createAuthMethod,
+  createUser,
   insertEmailVerificationToken,
-} from "../models/user.auth.model.js";
-import { sendVerificationEmail } from "./email.services.js";
+} from '../models/user.auth.model.js';
+import { hashPassword } from '../utils/password.utils.js';
+import { generateEmailVerificationToken } from '../utils/token.utils.js';
+import { sendVerificationEmail } from './email.services.js';
 
 export async function registerEmailUser({ email, password }) {
   const client = await pool.connect();
@@ -16,13 +16,13 @@ export async function registerEmailUser({ email, password }) {
     const passwordHash = await hashPassword(password);
     const hashedToken = generateEmailVerificationToken();
 
-    await client.query("BEGIN");
+    await client.query('BEGIN');
 
     const userId = await createUser(client, email);
 
     await createAuthMethod(client, {
       userId,
-      authProvider: "password",
+      authProvider: 'password',
       providerIdentifier: email,
       passwordHash,
       verifiedAt: null,
@@ -34,11 +34,11 @@ export async function registerEmailUser({ email, password }) {
       expiresAt,
     });
 
-    await client.query("COMMIT");
+    await client.query('COMMIT');
 
     return userId;
   } catch (err) {
-    await client.query("ROLLBACK");
+    await client.query('ROLLBACK');
     throw err;
   } finally {
     client.release();

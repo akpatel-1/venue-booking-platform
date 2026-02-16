@@ -1,23 +1,24 @@
-import AdminDashboard from "../pages/admin/AdminDashboard";
-import AdminLogin from "../pages/admin/AdminLogin";
 import {
   protectAdminRoute,
   redirectAdminLogin,
-} from "../loaders/admin.auth.loaders";
+} from '../loaders/admin.auth.loaders';
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminLogin from '../pages/admin/AdminLogin';
+
 export const adminRoutes = [
   {
-    path: "/admin",
+    path: '/admin',
     children: [
       {
         loader: redirectAdminLogin,
-        path: "login",
+        path: 'login',
         element: <AdminLogin />,
       },
       {
         loader: protectAdminRoute,
         children: [
           {
-            path: "dashboard",
+            path: 'dashboard',
             element: <AdminDashboard />,
           },
         ],
