@@ -6,7 +6,6 @@ import {
 } from '../models/user.auth.model.js';
 import { hashPassword } from '../utils/password.utils.js';
 import { generateEmailVerificationToken } from '../utils/token.utils.js';
-import { sendVerificationEmail } from './email.services.js';
 
 export async function registerEmailUser({ email, password }) {
   const client = await pool.connect();
