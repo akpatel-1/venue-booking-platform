@@ -1,13 +1,18 @@
-import VerifyEmail from '../components/shared/VerifyEmail';
-import UserSignup from '../pages/shared/UserSignup';
+import EmailVerificationPage from '../pages/shared/EmailVerificationPage';
+import EmailVerifiedPage from '../pages/shared/EmailVerifiedPage';
+import UserSignupPage from '../pages/shared/UserSignupPage';
 
 export const userRoutes = [
   {
-    path: 'auth/signup/email',
-    element: <UserSignup />,
+    path: '/signup',
+    element: <UserSignupPage />,
   },
   {
-    path: '/VerifyEmail',
-    element: <VerifyEmail />,
+    path: '/verify-email',
+    element: <EmailVerificationPage />,
+  },
+  {
+    path: '/email-verified',
+    element: <EmailVerifiedPage />,
   },
 ];
