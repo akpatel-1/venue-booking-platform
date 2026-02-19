@@ -19,7 +19,7 @@ export async function adminLogin(req, res) {
   res.cookie('sessionId', sessionId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000,
   });
 
