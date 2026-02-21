@@ -21,10 +21,10 @@ export async function protectAdminRoute() {
   }
 }
 
-export async function redirectAdminLogin() {
+export async function redirectToAdminDashboard() {
   try {
     await adminApi.checkSession();
-    throw redirect('/admin/dashboard');
+    return redirect('/admin/dashboard');
   } catch (error) {
     if (error.response?.status === 401) {
       return null;

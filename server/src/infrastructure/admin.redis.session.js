@@ -2,7 +2,7 @@ import crypto from 'crypto';
 
 import { redis } from './redis/redis.js';
 
-export async function createRedisSession(adminId, role = 'admin') {
+export async function createAdminSession(adminId, role = 'admin') {
   const SESSION_TTL = 60 * 60 * 24;
   const sessionId = crypto.randomUUID();
   const sessionKey = `session:${sessionId}`;
@@ -21,6 +21,6 @@ export async function getSessionData(sessionId) {
   return redis.get(`session:${sessionId}`);
 }
 
-export async function deleteSessionData(sessionId) {
+export async function deleteAdminSession(sessionId) {
   return redis.del(`session:${sessionId}`);
 }

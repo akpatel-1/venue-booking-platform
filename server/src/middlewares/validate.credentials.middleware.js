@@ -1,6 +1,6 @@
 import { apiError } from '../utils/api.error.utils.js';
 
-export function authValidation(req, res, next) {
+export function validateCredentials(req, res, next) {
   const { email, password } = req.body || {};
 
   if (!email || !password) {

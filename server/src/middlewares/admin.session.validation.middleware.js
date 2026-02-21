@@ -11,12 +11,21 @@ export async function sessionValidation(req, res, next) {
   const session = await getSessionData(sessionId);
 
   if (!session) {
-    throw new apiError(401, 'Unauthorized request');
+    res.clearCookie('sessionId', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    });
+    throw new apiError(401, 'Session expired. Please log in again.');
+  }
+
+  if (session.role !== 'admin') {
+    throw new apiError(403, 'Forbidden: Admin access required');
   }
 
   req.admin = {
-    id: session.id,
-    email: session.email,
+    id: session.adminId,
+    role: session.role,
   };
 
   next();

@@ -1,6 +1,6 @@
 import {
   protectAdminRoute,
-  redirectAdminLogin,
+  redirectToAdminDashboard,
 } from '../loaders/admin.auth.loaders';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminLogin from '../pages/admin/AdminLogin';
@@ -10,7 +10,7 @@ export const adminRoutes = [
     path: '/admin',
     children: [
       {
-        loader: redirectAdminLogin,
+        loader: redirectToAdminDashboard,
         path: 'login',
         element: <AdminLogin />,
       },
