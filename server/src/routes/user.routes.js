@@ -1,10 +1,10 @@
 import express from 'express';
 
 import { register, verifyEmail } from '../controllers/user.auth.controller.js';
-import { authValidation } from '../middlewares/auth.validation.middleware.js';
+import { validateCredentials } from '../middlewares/validate.credentials.middleware.js';
 
 export const userRoutes = express.Router();
 
-userRoutes.post('/auth/signup/email', authValidation, register);
+userRoutes.post('/auth/signup/email', validateCredentials, register);
 
 userRoutes.get('/auth/verify-email/:token', verifyEmail);
