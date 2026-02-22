@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import { pool } from '../infrastructure/database/db.js';
 import * as authModel from '../models/user.auth.model.js';
-import { apiError } from '../utils/api.error.utils.js';
+import { ApiError } from '../utils/api.error.utils.js';
 import { hashPassword } from '../utils/password.utils.js';
 import { convertToHash, generateAuthTokens } from '../utils/token.utils.js';
 import { withTransaction } from '../utils/transactions.utils.js';
@@ -11,7 +11,7 @@ import { sendEmailVerification } from './email.services.js';
 export async function registerUserWithEmail({ email, password }) {
   const existing = await authModel.findUserByEmail(pool, { email });
   if (existing) {
-    throw new apiError(409, 'Email already registered. Please login.');
+    throw new ApiError(409, 'Email already registered. Please login.');
   }
 
   const passwordHash = await hashPassword(password);
@@ -69,7 +69,7 @@ export async function verifyUserEmail(verificationToken) {
       tokenHash: hashedToken,
     });
     if (!userId) {
-      throw new apiError(401, 'Invalid or expired token');
+      throw new ApiError(401, 'Invalid or expired token');
     }
     await authModel.markEmailAsVerified(client, {
       userId,
@@ -82,7 +82,7 @@ export async function checkEmailVerified(userId) {
   const user = await authModel.getUserById(pool, { userId });
 
   if (!user) {
-    throw new apiError(404, 'User not found');
+    throw new ApiError(404, 'User not found');
   }
 
   return {

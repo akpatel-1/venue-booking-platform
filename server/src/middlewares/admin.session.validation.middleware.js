@@ -1,11 +1,11 @@
 import { getSessionData } from '../infrastructure/admin.redis.session.js';
-import { apiError } from '../utils/api.error.utils.js';
+import { ApiError } from '../utils/api.error.utils.js';
 
 export async function sessionValidation(req, res, next) {
   const { sessionId } = req.cookies;
 
   if (!sessionId) {
-    throw new apiError(401, 'Unauthorized request');
+    throw new ApiError(401, 'Unauthorized request');
   }
 
   const session = await getSessionData(sessionId);
@@ -16,11 +16,11 @@ export async function sessionValidation(req, res, next) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
-    throw new apiError(401, 'Session expired. Please log in again.');
+    throw new ApiError(401, 'Session expired. Please log in again.');
   }
 
   if (session.role !== 'admin') {
-    throw new apiError(403, 'Forbidden: Admin access required');
+    throw new ApiError(403, 'Forbidden: Admin access required');
   }
 
   req.admin = {

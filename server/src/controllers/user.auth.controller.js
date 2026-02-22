@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import * as authService from '../services/user.auth.services.js';
-import { apiError } from '../utils/api.error.utils.js';
+import { ApiError } from '../utils/api.error.utils.js';
 
 export async function register(req, res) {
   const { userId, email } = await authService.registerUserWithEmail(req.body);
@@ -61,7 +61,7 @@ export async function verifyUser(req, res) {
 export async function refreshToken(req, res) {
   const { refreshToken } = req.cookies;
   if (!refreshToken) {
-    throw new apiError(401, 'No active session. Please login again');
+    throw new ApiError(401, 'No active session. Please login again');
   }
   const newToken = await authService.rotateSession(refreshToken);
 

@@ -6,7 +6,7 @@ import {
 } from '../infrastructure/admin.redis.session.js';
 import { pool } from '../infrastructure/database/db.js';
 import { findAdminByEmail } from '../models/admin.auth.model.js';
-import { apiError } from '../utils/api.error.utils.js';
+import { ApiError } from '../utils/api.error.utils.js';
 
 export async function login(credentials, oldSessionId) {
   if (oldSessionId) {
@@ -23,10 +23,10 @@ export async function login(credentials, oldSessionId) {
 }
 export async function authenticateAdmin({ email, password }) {
   const admin = await findAdminByEmail(email);
-  if (!admin) throw new apiError(401, 'Invalid credentials');
+  if (!admin) throw new ApiError(401, 'Invalid credentials');
 
   const isMatch = await argon2.verify(admin.password_hash, password);
-  if (!isMatch) throw new apiError(401, 'Invalid credentials');
+  if (!isMatch) throw new ApiError(401, 'Invalid credentials');
 
   return {
     id: admin.id,
