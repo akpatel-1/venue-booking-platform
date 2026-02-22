@@ -4,7 +4,7 @@ export function validateCredentials(req, res, next) {
   const { email, password } = req.body || {};
 
   if (!email || !password) {
-    throw new apiError(401, 'Invalid credentials');
+    throw new apiError(400, 'Email and password are required');
   }
 
   const normalizedEmail = email.trim().toLowerCase();

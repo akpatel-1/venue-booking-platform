@@ -1,80 +1,120 @@
+import jwt from 'jsonwebtoken';
+
 import { pool } from '../infrastructure/database/db.js';
-import {
-  createAuthMethod,
-  createEmailVerificationToken,
-  createUser,
-  findValidVerificationTokenByHash,
-  markEmailAsVerified,
-} from '../models/user.auth.model.js';
+import * as authModel from '../models/user.auth.model.js';
 import { apiError } from '../utils/api.error.utils.js';
 import { hashPassword } from '../utils/password.utils.js';
 import { convertToHash, generateAuthTokens } from '../utils/token.utils.js';
+import { withTransaction } from '../utils/transactions.utils.js';
 import { sendEmailVerification } from './email.services.js';
 
 export async function registerUserWithEmail({ email, password }) {
-  const hashedPassword = await hashPassword(password);
-  const expireIn = new Date(Date.now() + 10 * 60 * 1000);
-  const { rawToken: rawEmailToken, hashedToken: hashedEmailToken } =
-    generateAuthTokens();
-  const client = await pool.connect();
+  const existing = await authModel.findUserByEmail(pool, { email });
+  if (existing) {
+    throw new apiError(409, 'Email already registered. Please login.');
+  }
 
-  try {
-    await client.query('BEGIN');
+  const passwordHash = await hashPassword(password);
+  const { rawToken, hashedToken } = generateAuthTokens();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    const id = await createUser(client, { email });
+  const userId = await withTransaction(pool, async (client) => {
+    const userId = await authModel.createUser(client, { email });
 
-    await createAuthMethod(client, {
-      userId: id,
+    await authModel.createAuthMethod(client, {
+      userId,
       authProvider: 'password',
       providerIdentifier: email,
-      passwordHash: hashedPassword,
+      passwordHash: passwordHash,
       verifiedAt: null,
     });
 
-    await createEmailVerificationToken(client, {
-      userId: id,
-      tokenHash: hashedEmailToken,
-      expiresAt: expireIn,
+    await authModel.createEmailVerificationToken(client, {
+      userId,
+      tokenHash: hashedToken,
+      expiresAt,
     });
 
-    await client.query('COMMIT');
+    return userId;
+  });
 
-    await sendEmailVerification(email, rawEmailToken);
+  await sendEmailVerification(email, rawToken);
 
-    return email;
-  } catch (err) {
-    await client.query('ROLLBACK');
-    throw err;
-  } finally {
-    client.release();
-  }
+  return { userId, email };
 }
 
-export async function verifyUserEmail(token) {
-  const client = await pool.connect();
+export async function createSession(userId) {
+  const { rawToken, hashedToken } = generateAuthTokens();
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-  try {
-    const hashedToken = convertToHash(token);
+  const accessToken = jwt.sign({ userId }, process.env.ACCESS_SECRET, {
+    expiresIn: '30m',
+  });
 
-    await client.query('BEGIN');
+  await authModel.createRefreshToken(pool, {
+    userId,
+    tokenHash: hashedToken,
+    expiresAt,
+    revokedAt: null,
+  });
 
-    const userId = await findValidVerificationTokenByHash(client, {
+  return { accessToken, refreshToken: rawToken };
+}
+
+export async function verifyUserEmail(verificationToken) {
+  const hashedToken = convertToHash(verificationToken);
+
+  await withTransaction(pool, async (client) => {
+    const userId = await authModel.consumeVerificationToken(client, {
       tokenHash: hashedToken,
     });
-
     if (!userId) {
       throw new apiError(401, 'Invalid or expired token');
     }
-
-    await markEmailAsVerified(client, {
+    await authModel.markEmailAsVerified(client, {
       userId,
     });
+  });
+}
 
-    await client.query('COMMIT');
-  } catch (err) {
-    await client.query('ROLLBACK');
-    throw err;
-  } finally {
-    client.release();
+export async function checkEmailVerified(userId) {
+  const verifiedAt = await authModel.getUserVerification(pool, { userId });
+  const user = await authModel.getUserById(pool, { userId });
+
+  if (!user) {
+    throw new apiError(404, 'User not found');
   }
+
+  return {
+    id: user.id,
+    email: user.email,
+    verified: !!verifiedAt,
+  };
+}
+
+export async function rotateSession(refreshToken) {
+  const hashedRefreshToken = convertToHash(refreshToken);
+
+  const { userId, rawToken } = await withTransaction(pool, async (client) => {
+    const userId = await authModel.revokeRefreshToken(client, {
+      tokenHash: hashedRefreshToken,
+    });
+    if (!userId) {
+      throw new Error('Token expired, login again');
+    }
+    const { rawToken, hashedToken } = generateAuthTokens();
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+    await authModel.createRefreshToken(client, {
+      userId,
+      tokenHash: hashedToken,
+      expiresAt,
+      revokedAt: null,
+    });
+    return { userId, rawToken };
+  });
+  const accessToken = jwt.sign({ userId }, process.env.ACCESS_SECRET, {
+    expiresIn: '30m',
+  });
+  return { accessToken, refreshToken: rawToken };
 }

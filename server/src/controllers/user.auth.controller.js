@@ -1,12 +1,26 @@
 import 'dotenv/config';
 
-import {
-  registerUserWithEmail,
-  verifyUserEmail,
-} from '../services/user.auth.services.js';
+import * as authService from '../services/user.auth.services.js';
+import { apiError } from '../utils/api.error.utils.js';
 
 export async function register(req, res) {
-  const email = await registerUserWithEmail(req.body);
+  const { userId, email } = await authService.registerUserWithEmail(req.body);
+
+  const { accessToken, refreshToken } = await authService.createSession(userId);
+
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 30 * 60 * 1000,
+  });
+
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
 
   return res.status(201).json({
     success: true,
@@ -16,9 +30,9 @@ export async function register(req, res) {
 }
 
 export async function verifyEmail(req, res) {
-  const { token } = req.params;
+  const { verificationToken } = req.params;
 
-  if (!token) {
+  if (!verificationToken) {
     return res.redirect(
       302,
       `${process.env.FRONTEND_URL}/email-verified?status=invalid`
@@ -26,7 +40,7 @@ export async function verifyEmail(req, res) {
   }
 
   try {
-    await verifyUserEmail(token);
+    await authService.verifyUserEmail(verificationToken);
     return res.redirect(
       302,
       `${process.env.FRONTEND_URL}/email-verified?status=success`
@@ -37,4 +51,35 @@ export async function verifyEmail(req, res) {
       `${process.env.FRONTEND_URL}/email-verified?status=invalid`
     );
   }
+}
+
+export async function verifyUser(req, res) {
+  const data = await authService.checkEmailVerified(req.userId);
+  return res.json(data);
+}
+
+export async function refreshToken(req, res) {
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) {
+    throw new apiError(401, 'No active session. Please login again');
+  }
+  const newToken = await authService.rotateSession(refreshToken);
+
+  res.cookie('accessToken', newToken.accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 30 * 60 * 1000,
+  });
+
+  res.cookie('refreshToken', newToken.refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(200).json({
+    success: true,
+  });
 }
