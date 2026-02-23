@@ -4,7 +4,6 @@ import {
   createAdminSession,
   deleteAdminSession,
 } from '../infrastructure/admin.redis.session.js';
-import { pool } from '../infrastructure/database/db.js';
 import { findAdminByEmail } from '../models/admin.auth.model.js';
 import { ApiError } from '../utils/api.error.utils.js';
 
