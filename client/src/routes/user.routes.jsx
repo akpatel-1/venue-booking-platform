@@ -1,20 +1,10 @@
 import Home from '../components/user/Home';
-import EmailVerificationPage from '../pages/shared/EmailVerificationPage';
-import EmailVerifiedPage from '../pages/shared/EmailVerifiedPage';
-import UserSignupPage from '../pages/shared/UserSignupPage';
+import UserAuthenticationPage from '../pages/shared/UserAuthenticationPage';
 
 export const userRoutes = [
   {
-    path: '/signup',
-    element: <UserSignupPage />,
-  },
-  {
-    path: '/verify-email',
-    element: <EmailVerificationPage />,
-  },
-  {
-    path: '/email-verified',
-    element: <EmailVerifiedPage />,
+    path: '/auth',
+    element: <UserAuthenticationPage />,
   },
   {
     path: '/home',
