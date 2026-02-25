@@ -25,7 +25,7 @@ export default function Authentication() {
     setServerError('');
     setIsLoading(true);
     try {
-      await userApi.requestOtp({ email });
+      await userApi.requestOtp({email});
       setStep('otp');
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
@@ -84,6 +84,22 @@ export default function Authentication() {
       const otpString = otp.join('');
       await userApi.verifyOtp({ email, otp: otpString });
       navigate('/home');
+    } catch (err) {
+      if (!err.response || err.response?.status === 500) {
+        navigate('/error/500');
+        return;
+      }
+      setServerError(err.response?.data?.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    resetOtpStep();
+    setIsLoading(true);
+    try {
+      await userApi.resendOtp({email});
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
         navigate('/error/500');
@@ -261,6 +277,7 @@ export default function Authentication() {
                     <button
                       type="button"
                       disabled={isLoading}
+                      onClick={handleResend}
                       className="font-semibold text-gray-900 hover:underline disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       Resend code

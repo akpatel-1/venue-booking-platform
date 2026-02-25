@@ -19,4 +19,5 @@ userRoutes.post(
   validateOtp,
   handleOtpVerification
 );
+userRoutes.post('/auth/otp/resend', handleOtpRequest);
 userRoutes.post('/auth/refresh', handleSessionRotation);
