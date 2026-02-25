@@ -12,7 +12,21 @@ export async function handleOtpRequest(req, res) {
 }
 
 export async function handleOtpVerification(req, res) {
-  await processOtpVerification(req.body);
+  const { accessToken, refreshToken } = await processOtpVerification(req.body);
+
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 30 * 60 * 1000,
+  });
+
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
 
   return res.status(200).json({ success: true, message: 'Login successful.' });
 }

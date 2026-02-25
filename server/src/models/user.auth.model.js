@@ -59,3 +59,12 @@ export async function createAuthMethods(client, data) {
     [data.userId, data.authProvider, data.providerIdentifier]
   );
 }
+
+export async function createRefreshToken(client, data) {
+  await client.query(
+    `INSERT INTO refresh_tokens 
+     (user_id, token_hash, expires_at, revoked_at) 
+     VALUES ($1, $2, $3, $4)`,
+    [data.userId, data.tokenHash, data.expiresAt, data.revokedAt]
+  );
+}

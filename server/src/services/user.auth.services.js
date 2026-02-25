@@ -1,12 +1,19 @@
 import { pool } from '../infrastructure/database/db.js';
 import {
   consumeOtpToken,
+  createAuthMethods,
   createOtpToken,
+  createRefreshToken,
   createUser,
   findUser,
   markOtpsAsUsed,
 } from '../models/user.auth.model.js';
+import { ApiError } from '../utils/api.error.utils.js';
 import { generateOtp, generateOtpHash } from '../utils/otp.utils.js';
+import {
+  generateAccessToken,
+  generateAuthTokens,
+} from '../utils/token.utils.js';
 import { withTransaction } from '../utils/transactions.utils.js';
 import { processOtpRequestEmail } from './email.services.js';
 
@@ -16,7 +23,6 @@ export async function processOtpRequest({ email }) {
 
   await withTransaction(pool, async (client) => {
     await markOtpsAsUsed(client, email);
-
     await createOtpToken(client, {
       email,
       otpHash: hashedOtp,
@@ -24,6 +30,7 @@ export async function processOtpRequest({ email }) {
       usedAt: null,
     });
   });
+
   try {
     await processOtpRequestEmail(email, otp);
   } catch (err) {
@@ -36,6 +43,9 @@ export async function processOtpVerification({ email, otp }) {
   return withTransaction(pool, async (client) => {
     await verifyOtpHash(client, email, otp);
     const userId = await findOrCreateUser(client, email);
+    const refreshToken = await createSession(client, userId);
+    const accessToken = generateAccessToken(userId);
+    return { accessToken, refreshToken };
   });
 }
 
@@ -58,4 +68,17 @@ async function findOrCreateUser(client, email) {
   });
 
   return userId;
+}
+
+export async function createSession(client, userId) {
+  const { rawToken, hashedToken } = generateAuthTokens();
+
+  await createRefreshToken(client, {
+    userId,
+    tokenHash: hashedToken,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    revokedAt: null,
+  });
+
+  return rawToken;
 }
