@@ -18,3 +18,14 @@ export function validateEmail(req, res, next) {
 
   next();
 }
+
+export function validateOtp(req, res, next) {
+  const { otp } = req.body;
+
+  const otpRegex = /^[0-9]{6}$/;
+  if (!otp || !otpRegex.test(otp)) {
+    throw new ApiError(400, 'Invalid OTP');
+  }
+
+  next();
+}

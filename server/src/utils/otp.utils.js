@@ -11,3 +11,13 @@ export function generateOtp() {
 
   return { otp, hashedOtp };
 }
+
+export function generateOtpHash(otp) {
+  const secret = process.env.OTP_SECRET;
+  const hashedOtp = crypto
+    .createHmac('sha256', secret)
+    .update(otp.toString())
+    .digest('hex');
+
+  return hashedOtp;
+}

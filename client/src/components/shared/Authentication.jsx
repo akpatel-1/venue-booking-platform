@@ -25,7 +25,7 @@ export default function Authentication() {
     setServerError('');
     setIsLoading(true);
     try {
-      await userApi.handleOtpRequest({ email });
+      await userApi.requestOtp({ email });
       setStep('otp');
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
@@ -68,6 +68,31 @@ export default function Authentication() {
     setServerError('');
     // Focus last input after paste
     inputRefs.current[5]?.focus();
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    setServerError('');
+
+    if (otp.some((d) => d === '')) {
+      setServerError('Please enter the complete 6-digit code');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const otpString = otp.join('');
+      await userApi.verifyOtp({ email, otp: otpString });
+      navigate('/home');
+    } catch (err) {
+      if (!err.response || err.response?.status === 500) {
+        navigate('/error/500');
+        return;
+      }
+      setServerError(err.response?.data?.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // TODO: Implement Google OAuth
@@ -194,7 +219,7 @@ export default function Authentication() {
                   </div>
                 )}
 
-                <form>
+                <form onSubmit={handleOtpSubmit}>
                   <div className="flex gap-2 justify-center mb-6">
                     {otp.map((data, index) => (
                       <input
