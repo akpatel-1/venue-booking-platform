@@ -7,12 +7,14 @@ import {
   createUser,
   findUser,
   markOtpsAsUsed,
+  markRefreshTokenAsRevoked,
 } from '../models/user.auth.model.js';
 import { ApiError } from '../utils/api.error.utils.js';
 import { generateOtp, generateOtpHash } from '../utils/otp.utils.js';
 import {
   generateAccessToken,
   generateAuthTokens,
+  generateTokenHash,
 } from '../utils/token.utils.js';
 import { withTransaction } from '../utils/transactions.utils.js';
 import { processOtpRequestEmail } from './email.services.js';
@@ -81,4 +83,24 @@ export async function createSession(client, userId) {
   });
 
   return rawToken;
+}
+
+export async function processSessionRotation({ refreshToken }) {
+  if (!refreshToken)
+    throw new ApiError(401, 'No active session. Please login again');
+
+  const hashedRefreshToken = generateTokenHash(refreshToken);
+
+  const { userId, rawToken } = await withTransaction(pool, async (client) => {
+    const userId = await markRefreshTokenAsRevoked(client, {
+      tokenHash: hashedRefreshToken,
+    });
+    if (!userId) throw new ApiError(401, 'Token expired, login again');
+
+    const rawToken = await createSession(client, userId);
+    return { userId, rawToken };
+  });
+
+  const accessToken = generateAccessToken(userId);
+  return { accessToken, refreshToken: rawToken };
 }

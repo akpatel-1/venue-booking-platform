@@ -68,3 +68,14 @@ export async function createRefreshToken(client, data) {
     [data.userId, data.tokenHash, data.expiresAt, data.revokedAt]
   );
 }
+
+export async function markRefreshTokenAsRevoked(client, { tokenHash }) {
+  const result = await client.query(
+    `UPDATE refresh_tokens
+    SET revoked_at = NOW()
+    WHERE token_hash = $1
+    RETURNING user_id`,
+    [tokenHash]
+  );
+  return result.rows[0]?.user_id ?? null;
+}

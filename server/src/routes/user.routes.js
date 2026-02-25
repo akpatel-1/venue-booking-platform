@@ -3,6 +3,7 @@ import express from 'express';
 import {
   handleOtpRequest,
   handleOtpVerification,
+  handleSessionRotation,
 } from '../controllers/user.auth.controller.js';
 import {
   validateEmail,
@@ -18,3 +19,4 @@ userRoutes.post(
   validateOtp,
   handleOtpVerification
 );
+userRoutes.post('/auth/refresh', handleSessionRotation);
