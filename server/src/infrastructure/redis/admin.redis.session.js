@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import { redis } from './redis/redis.js';
+import { redis } from './redis.js';
 
 export async function createAdminSession(adminId, role = 'admin') {
   const SESSION_TTL = 60 * 60 * 24;

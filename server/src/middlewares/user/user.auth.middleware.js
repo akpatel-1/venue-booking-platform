@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { ApiError } from '../utils/api.error.utils.js';
+import { ApiError } from '../../utils/api.error.utils.js';
 
 export async function requireAuth(req, res, next) {
   const { accessToken } = req.cookies;

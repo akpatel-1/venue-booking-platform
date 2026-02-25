@@ -1,4 +1,4 @@
-import { ApiError } from '../utils/api.error.utils.js';
+import { ApiError } from '../../utils/api.error.utils.js';
 
 export function validateCredentials(req, res, next) {
   const { email, password } = req.body || {};
