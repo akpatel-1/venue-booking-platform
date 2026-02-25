@@ -1,3 +1,18 @@
+import resend from '../infrastructure/email/email.js';
+import { generateOtpTemplate } from '../infrastructure/email/templates/otp.template.js';
+import { ApiError } from '../utils/api.error.utils.js';
+
 export async function processOtpRequestEmail(email, otp) {
-  console.log('OTP: ', otp);
+  try {
+    const response = await resend.emails.send({
+      from: 'Venuz <onboarding@resend.dev>',
+      to: email,
+      subject: 'Your Venuz Verification Code',
+      html: generateOtpTemplate(otp),
+    });
+
+    return response;
+  } catch (error) {
+    throw new ApiError('Failed to send OTP email');
+  }
 }
