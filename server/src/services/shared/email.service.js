@@ -1,6 +1,6 @@
-import resend from '../infrastructure/email/email.js';
-import { generateOtpTemplate } from '../infrastructure/email/templates/otp.template.js';
-import { ApiError } from '../utils/api.error.utils.js';
+import resend from '../../infrastructure/email/email.js';
+import { generateOtpTemplate } from '../../infrastructure/email/templates/otp.template.js';
+import { ApiError } from '../../utils/api.error.util.js';
 
 export async function processOtpRequestEmail(email, otp) {
   try {

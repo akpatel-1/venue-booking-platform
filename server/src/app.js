@@ -3,9 +3,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 
-import { errorHandler } from './middlewares/error.handler.js';
-import { adminRoutes } from './routes/admin.routes.js';
-import { userRoutes } from './routes/user.routes.js';
+import { sharedRoutes } from './routes/shared.routes.js';
 
 const app = express();
 
@@ -18,9 +16,6 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-
-app.use(userRoutes);
-app.use('/admin', adminRoutes);
-app.use(errorHandler);
+app.use(sharedRoutes);
 
 export default app;

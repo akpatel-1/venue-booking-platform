@@ -1,9 +1,9 @@
 import {
   protectAdminRoute,
   redirectToAdminDashboard,
-} from '../loaders/admin.auth.loaders';
-import AdminDashboard from '../pages/admin/AdminDashboard';
-import AdminLogin from '../pages/admin/AdminLogin';
+} from '../loaders/admin.auth.loader';
+import AdminDashboard from '../pages/admin/AdminDashboardPage';
+import AdminLogin from '../pages/admin/AdminLoginPage';
 
 export const adminRoutes = [
   {

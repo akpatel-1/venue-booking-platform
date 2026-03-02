@@ -1,4 +1,4 @@
-import { pool } from '../infrastructure/database/db.js';
+import { pool } from '../../infrastructure/database/db.js';
 import {
   consumeOtpToken,
   createAuthMethods,
@@ -8,16 +8,16 @@ import {
   findUser,
   markOtpsAsUsed,
   markRefreshTokenAsRevoked,
-} from '../models/user.auth.model.js';
-import { ApiError } from '../utils/api.error.utils.js';
-import { generateOtp, generateOtpHash } from '../utils/otp.utils.js';
+} from '../../models/user.auth.model.js';
+import { processOtpRequestEmail } from '../../services/shared/email.service.js';
+import { ApiError } from '../../utils/api.error.util.js';
+import { generateOtp, generateOtpHash } from '../../utils/shared/otp.util.js';
 import {
   generateAccessToken,
   generateAuthTokens,
   generateTokenHash,
-} from '../utils/token.utils.js';
-import { withTransaction } from '../utils/transactions.utils.js';
-import { processOtpRequestEmail } from './email.services.js';
+} from '../../utils/shared/token.util.js';
+import { withTransaction } from '../../utils/transaction.util.js';
 
 export async function processOtpRequest({ email }) {
   const { otp, hashedOtp } = generateOtp();

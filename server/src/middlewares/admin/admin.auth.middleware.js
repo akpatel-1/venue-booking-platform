@@ -1,5 +1,5 @@
 import { getSessionData } from '../../infrastructure/redis/admin.redis.session.js';
-import { ApiError } from '../../utils/api.error.utils.js';
+import { ApiError } from '../../utils/api.error.util.js';
 
 export async function sessionValidation(req, res, next) {
   const { sessionId } = req.cookies;

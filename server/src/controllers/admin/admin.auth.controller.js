@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { login, logout } from '../services/admin.auth.services.js';
+import { login, logout } from '../../services/admin/admin.auth.service.js';
 
 export async function adminLogin(req, res) {
   const { sessionId: oldSession } = req.cookies;

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { userApi } from '../../api/user.api';
 
-export default function Authentication() {
+export default function AuthForm() {
   const navigate = useNavigate();
   const [step, setStep] = useState('email');
   const [email, setEmail] = useState('');
@@ -25,7 +25,7 @@ export default function Authentication() {
     setServerError('');
     setIsLoading(true);
     try {
-      await userApi.requestOtp({email});
+      await userApi.requestOtp({ email });
       setStep('otp');
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
@@ -99,7 +99,7 @@ export default function Authentication() {
     resetOtpStep();
     setIsLoading(true);
     try {
-      await userApi.resendOtp({email});
+      await userApi.resendOtp({ email });
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
         navigate('/error/500');

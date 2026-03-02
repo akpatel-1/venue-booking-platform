@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 
 import { adminApi } from '../../api/admin.api.js';
-import LoginForm from '../../components/shared/LoginForm.jsx';
+import LoginForm from '../../components/admin/LoginForm.jsx';
 
-export default function AdminLogin() {
+export default function AdminLoginPage() {
   const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {

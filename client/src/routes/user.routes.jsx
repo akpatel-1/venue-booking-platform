@@ -1,13 +1,8 @@
-import Home from '../components/user/Home';
-import UserAuthenticationPage from '../pages/shared/UserAuthenticationPage';
+import AuthForm from '../features/auth/AuthForm';
 
 export const userRoutes = [
   {
     path: '/auth',
-    element: <UserAuthenticationPage />,
-  },
-  {
-    path: '/home',
-    element: <Home />,
+    element: <AuthForm />,
   },
 ];

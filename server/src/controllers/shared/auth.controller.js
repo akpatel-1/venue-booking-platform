@@ -2,7 +2,7 @@ import {
   processOtpRequest,
   processOtpVerification,
   processSessionRotation,
-} from '../services/user.auth.services.js';
+} from '../../services/shared/auth.service.js';
 
 export async function handleOtpRequest(req, res) {
   await processOtpRequest(req.body);

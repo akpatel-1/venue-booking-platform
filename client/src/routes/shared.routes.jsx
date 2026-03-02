@@ -1,6 +1,6 @@
-import Error403 from '../pages/shared/ErrorPage403';
-import Error404 from '../pages/shared/ErrorPage404';
-import Error500 from '../pages/shared/ErrorPage500';
+import Error403 from '../pages/shared/Error403Page';
+import Error404 from '../pages/shared/Error404Page';
+import Error500 from '../pages/shared/Error500Page';
 
 export const sharedRoutes = [
   { path: 'error/403', element: <Error403 /> },

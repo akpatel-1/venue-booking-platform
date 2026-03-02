@@ -3,9 +3,9 @@ import express from 'express';
 import {
   adminLogin,
   adminLogout,
-} from '../controllers/admin.auth.controller.js';
-import { adminSession } from '../controllers/admin.session.controller.js';
-import { sessionValidation } from '../middlewares/admin/admin.auth.validation.middleware.js';
+} from '../controllers/admin/admin.auth.controller.js';
+import { adminSession } from '../controllers/admin/admin.session.controller.js';
+import { sessionValidation } from '../middlewares/admin/admin.auth.middleware.js';
 import { validateCredentials } from '../middlewares/admin/admin.validation.middleware.js';
 
 export const adminRoutes = express.Router();

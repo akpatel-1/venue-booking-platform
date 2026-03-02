@@ -3,9 +3,9 @@ import argon2 from 'argon2';
 import {
   createAdminSession,
   deleteAdminSession,
-} from '../infrastructure/redis/admin.redis.session.js';
-import { findAdminByEmail } from '../models/admin.auth.model.js';
-import { ApiError } from '../utils/api.error.utils.js';
+} from '../../infrastructure/redis/admin.redis.session.js';
+import { findAdminByEmail } from '../../models/admin.model.js';
+import { ApiError } from '../../utils/api.error.util.js';
 
 export async function login(credentials, oldSessionId) {
   if (oldSessionId) {
