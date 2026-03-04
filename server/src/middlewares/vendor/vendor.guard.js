@@ -1,0 +1,21 @@
+import { pool } from '../../infrastructure/database/db.js';
+import { findVerifiedVendorProfileByUserId } from '../../models/vendor/vendor.verification.model.js';
+import { ApiError } from '../../utils/api.error.util.js';
+
+export async function requireVendorAccess(req, res, next) {
+  if (req.user.role !== 'vendor') {
+    throw new ApiError(403, 'Vendor access required');
+  }
+
+  const profile = await findVerifiedVendorProfileByUserId(pool, req.userId);
+
+  if (!profile) {
+    throw new ApiError(403, 'Vendor profile not found');
+  }
+
+  if (profile.is_suspended) {
+    throw new ApiError(403, profile.suspension_reason);
+  }
+
+  next();
+}

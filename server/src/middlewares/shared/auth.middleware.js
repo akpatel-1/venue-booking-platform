@@ -6,17 +6,16 @@ export async function requireAuth(req, res, next) {
   const { accessToken } = req.cookies;
 
   if (!accessToken) {
-    throw new ApiError(401, 'Unauthorized request');
+    throw new ApiError(401, 'Authentication required');
   }
 
-  try {
-    const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);
-    if (typeof payload === 'string') {
-      throw new ApiError(401, 'Invalid token payload');
-    }
+  const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);
+
+  if (typeof payload === 'object' && payload.userId) {
     req.userId = payload.userId;
-    next();
-  } catch {
-    throw new ApiError(401, 'Invalid or expired token');
+  } else {
+    throw new ApiError(401, 'Invalid token structure');
   }
+
+  next();
 }
