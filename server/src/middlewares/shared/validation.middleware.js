@@ -4,7 +4,7 @@ export function validateEmail(req, res, next) {
   const { email } = req.body;
 
   if (!email) {
-    throw new ApiError(400, 'Email required');
+    throw new ApiError(400, 'Email required', 'EMAIL_REQUIRED');
   }
 
   const normalizedEmail = email.trim().toLowerCase();
@@ -13,7 +13,7 @@ export function validateEmail(req, res, next) {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(normalizedEmail)) {
-    throw new ApiError(400, 'Invalid email');
+    throw new ApiError(400, 'Invalid email', 'INVALID_EMAIL');
   }
 
   next();
@@ -24,7 +24,7 @@ export function validateOtp(req, res, next) {
 
   const otpRegex = /^[0-9]{6}$/;
   if (!otp || !otpRegex.test(otp)) {
-    throw new ApiError(400, 'Invalid OTP');
+    throw new ApiError(400, 'Invalid OTP', 'INVALID_OTP');
   }
 
   next();

@@ -22,10 +22,12 @@ export async function login(credentials, oldSessionId) {
 }
 export async function authenticateAdmin({ email, password }) {
   const admin = await findAdminByEmail(email);
-  if (!admin) throw new ApiError(401, 'Invalid credentials');
+  if (!admin)
+    throw new ApiError(401, 'Invalid credentials', 'INVALID_CREDENTIALS');
 
   const isMatch = await argon2.verify(admin.password_hash, password);
-  if (!isMatch) throw new ApiError(401, 'Invalid credentials');
+  if (!isMatch)
+    throw new ApiError(401, 'Invalid credentials', 'INVALID_CREDENTIALS');
 
   return {
     id: admin.id,

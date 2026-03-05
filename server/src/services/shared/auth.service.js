@@ -54,7 +54,8 @@ export async function processOtpVerification({ email, otp }) {
 async function verifyOtpHash(client, email, otp) {
   const otpHash = generateOtpHash(otp);
   const record = await consumeOtpToken(client, { email, otpHash });
-  if (!record) throw new ApiError(400, 'Invalid or expired OTP');
+  if (!record)
+    throw new ApiError(400, 'Invalid or expired OTP', 'INVALID_OR_EXPIRED_OTP');
 }
 
 async function findOrCreateUser(client, email) {
@@ -87,7 +88,11 @@ export async function createSession(client, userId) {
 
 export async function processSessionRotation({ refreshToken }) {
   if (!refreshToken)
-    throw new ApiError(401, 'No active session. Please login again');
+    throw new ApiError(
+      401,
+      'No active session. Please login again',
+      'NO_ACTIVE_SESSION'
+    );
 
   const hashedRefreshToken = generateTokenHash(refreshToken);
 
@@ -95,7 +100,8 @@ export async function processSessionRotation({ refreshToken }) {
     const userId = await markRefreshTokenAsRevoked(client, {
       tokenHash: hashedRefreshToken,
     });
-    if (!userId) throw new ApiError(401, 'Token expired, login again');
+    if (!userId)
+      throw new ApiError(401, 'Token expired, login again', 'TOKEN_EXPIRED');
 
     const rawToken = await createSession(client, userId);
     return { userId, rawToken };

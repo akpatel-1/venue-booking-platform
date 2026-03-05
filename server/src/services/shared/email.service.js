@@ -13,6 +13,6 @@ export async function processOtpRequestEmail(email, otp) {
 
     return response;
   } catch (error) {
-    throw new ApiError('Failed to send OTP email');
+    throw new ApiError(500, 'Failed to send OTP email', 'EMAIL_SEND_FAILED');
   }
 }

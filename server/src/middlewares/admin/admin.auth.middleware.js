@@ -5,7 +5,7 @@ export async function sessionValidation(req, res, next) {
   const { sessionId } = req.cookies;
 
   if (!sessionId) {
-    throw new ApiError(401, 'Unauthorized request');
+    throw new ApiError(401, 'Unauthorized request', 'UNAUTHORIZED_REQUEST');
   }
 
   const session = await getSessionData(sessionId);
@@ -16,11 +16,19 @@ export async function sessionValidation(req, res, next) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
-    throw new ApiError(401, 'Session expired. Please log in again.');
+    throw new ApiError(
+      401,
+      'Session expired. Please log in again.',
+      'SESSION_EXPIRED'
+    );
   }
 
   if (session.role !== 'admin') {
-    throw new ApiError(403, 'Forbidden: Admin access required');
+    throw new ApiError(
+      403,
+      'Forbidden: Admin access required',
+      'ADMIN_ACCESS_REQUIRED'
+    );
   }
 
   req.admin = {

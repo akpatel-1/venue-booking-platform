@@ -6,7 +6,7 @@ export async function requireAuth(req, res, next) {
   const { accessToken } = req.cookies;
 
   if (!accessToken) {
-    throw new ApiError(401, 'Authentication required');
+    throw new ApiError(401, 'Authentication required', 'AUTH_REQUIRED');
   }
 
   const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);
@@ -14,7 +14,7 @@ export async function requireAuth(req, res, next) {
   if (typeof payload === 'object' && payload.userId) {
     req.userId = payload.userId;
   } else {
-    throw new ApiError(401, 'Invalid token structure');
+    throw new ApiError(401, 'Invalid token structure', 'INVALID_TOKEN');
   }
 
   next();
