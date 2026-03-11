@@ -6,13 +6,15 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1004.0",
     "@supabase/supabase-js": "^2.91.0",
     "@upstash/redis": "^1.36.1",
     "argon2": "^0.44.0",
@@ -21,7 +23,10 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.18.0"
+    "multer": "^2.1.1",
+    "pg": "^8.18.0",
+    "resend": "^6.9.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",

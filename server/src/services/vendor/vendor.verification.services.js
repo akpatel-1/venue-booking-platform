@@ -1,5 +1,13 @@
+import path from 'path';
+
 import { pool } from '../../infrastructure/database/db.js';
-import { findLatestVendorApplicationByUserId } from '../../models/vendor/vendor.verification.model.js';
+import {
+  findLatestVendorApplicationByUserId,
+  insertVendorApplication,
+} from '../../models/vendor/vendor.verification.model.js';
+import { withTransaction } from '../../utils/transaction.util.js';
+import { deleteFromR2 } from '../../utils/vendor/delete.from.r2.js';
+import { uploadToR2 } from '../../utils/vendor/upload.to.r2.js';
 
 export async function fetchVendorApplicationStatus(userId) {
   const application = await findLatestVendorApplicationByUserId(pool, userId);
@@ -15,4 +23,29 @@ export async function fetchVendorApplicationStatus(userId) {
   }
 
   return response;
+}
+
+export async function processApplication(userId, userData, userFile) {
+  const ext = path.extname(userFile.originalname);
+  const key = `vendor-application/${userId}/${Date.now()}-verification${ext}`;
+
+  const documentUrl = await uploadToR2(userFile.buffer, key, userFile.mimetype);
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const id = await insertVendorApplication(client, {
+      userId,
+      ...userData,
+      documentUrl,
+    });
+    await client.query('COMMIT');
+    return id;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    await deleteFromR2(key);
+    throw err;
+  } finally {
+    await client.release();
+  }
 }
