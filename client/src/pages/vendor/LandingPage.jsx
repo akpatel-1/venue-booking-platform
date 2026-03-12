@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FiArrowRight, FiMapPin, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,21 +30,27 @@ const H2 = ({ children, light }) => (
   </h2>
 );
 
-const JoinBtn = ({ label = 'Join as a Partner', onClick }) => (
+const JoinBtn = ({ label = 'Join as a Partner', onClick, loading = false }) => (
   <button
     type="button"
     onClick={onClick}
-    className="btn-pop inline-flex items-center gap-3 bg-[#ff4d1c] text-white font-display font-bold text-base px-8 py-4 rounded-lg border-2 border-[#0d0d0d]"
+    disabled={loading}
+    className="btn-pop inline-flex items-center gap-3 rounded-lg border-2 border-[#0d0d0d] bg-[#ff4d1c] px-8 py-4 font-display text-base font-bold text-white disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none"
   >
-    {label} <FiArrowRight size={18} />
+    {loading ? 'Loading...' : label}
+    <FiArrowRight size={18} />
   </button>
 );
 
 /* ── Page ── */
 export default function LandingPage() {
   const navigate = useNavigate();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const handleCheckStatus = async () => {
+    if (isNavigating) return;
+
+    setIsNavigating(true);
     navigate('/partners/application/status');
   };
 
@@ -60,9 +67,10 @@ export default function LandingPage() {
         <button
           type="button"
           onClick={handleCheckStatus}
-          className="flex items-center gap-2 text-sm font-medium px-2 py-2.5 border-2 border-[#0d0d0d] rounded-full hover:bg-[#0d0d0d] hover:text-[#f5f1eb] transition-colors"
+          disabled={isNavigating}
+          className="flex items-center gap-2 rounded-full border-2 border-[#0d0d0d] px-2 py-2.5 text-sm font-medium transition-colors hover:bg-[#0d0d0d] hover:text-[#f5f1eb] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          <FiUser size={15} /> Partner Login
+          <FiUser size={15} /> {isNavigating ? 'Loading...' : 'Partner Login'}
         </button>
       </nav>
 
@@ -107,7 +115,7 @@ export default function LandingPage() {
         </p>
 
         <div className="animate-fadeup delay-3 flex items-center gap-4 flex-wrap">
-          <JoinBtn onClick={handleCheckStatus} />
+          <JoinBtn onClick={handleCheckStatus} loading={isNavigating} />
           <p className="text-sm text-[#7a7267]">
             Free to start · No credit card
           </p>
@@ -253,6 +261,7 @@ export default function LandingPage() {
           <JoinBtn
             label="Get Started — It's Free"
             onClick={handleCheckStatus}
+            loading={isNavigating}
           />
         </FadeSection>
       </section>
