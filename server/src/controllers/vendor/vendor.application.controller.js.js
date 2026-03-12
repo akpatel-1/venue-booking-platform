@@ -1,10 +1,10 @@
 import {
-  fetchVendorApplicationStatus,
   processApplication,
+  processApplicationStatus,
 } from '../../services/vendor/vendor.verification.services.js';
 
-export async function handleGetVendorStatus(req, res) {
-  const data = await fetchVendorApplicationStatus(req.userId);
+export async function checkApplicationStatus(req, res) {
+  const data = await processApplicationStatus(req.userId);
   res.status(200).json({ success: true, ...data });
 }
 

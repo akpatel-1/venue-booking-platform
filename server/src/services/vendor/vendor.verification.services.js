@@ -5,11 +5,10 @@ import {
   findLatestVendorApplicationByUserId,
   insertVendorApplication,
 } from '../../models/vendor/vendor.verification.model.js';
-import { withTransaction } from '../../utils/transaction.util.js';
 import { deleteFromR2 } from '../../utils/vendor/delete.from.r2.js';
 import { uploadToR2 } from '../../utils/vendor/upload.to.r2.js';
 
-export async function fetchVendorApplicationStatus(userId) {
+export async function processApplicationStatus(userId) {
   const application = await findLatestVendorApplicationByUserId(pool, userId);
 
   if (!application) {

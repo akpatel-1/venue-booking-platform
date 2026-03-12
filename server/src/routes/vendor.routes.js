@@ -1,7 +1,7 @@
 import express from 'express';
 
 import {
-  handleGetVendorStatus,
+  checkApplicationStatus,
   submitApplication,
 } from '../controllers/vendor/vendor.application.controller.js.js';
 import { ensureAccountActive } from '../middlewares/shared/account.guard.js';
@@ -18,7 +18,7 @@ vendorRoutes.get(
   '/partners/application/status',
   requireAuth,
   ensureAccountActive,
-  handleGetVendorStatus
+  checkApplicationStatus
 );
 
 vendorRoutes.post(
