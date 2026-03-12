@@ -1,10 +1,16 @@
 import { FiArrowRight, FiMapPin, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
-import '../../../../index.css';
-import { BENEFITS, STATS, STEPS, TICKER, VENUES } from './Constants';
-import DashMockup from './DashMockup';
-import FadeSection from './FadeSection';
+import {
+  BENEFITS,
+  STATS,
+  STEPS,
+  TICKER,
+  VENUES,
+} from '../../components/vendor/landing/Constants';
+import DashMockup from '../../components/vendor/landing/DashMockup';
+import FadeSection from '../../components/vendor/landing/FadeSection';
+import '../../index.css';
 
 const TICKER_DOUBLED = [...TICKER, ...TICKER];
 

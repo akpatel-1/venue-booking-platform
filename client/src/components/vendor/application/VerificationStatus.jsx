@@ -29,7 +29,7 @@ export default function VerificationStatus({ state, reason }) {
   const showReason = (state === 'rejected' || state === 'suspended') && reason;
 
   const handleReapply = () => {
-    navigate('/partners/application');
+    navigate('/partners/application/apply');
   };
 
   return (

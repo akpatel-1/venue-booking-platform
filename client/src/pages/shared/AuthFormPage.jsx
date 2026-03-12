@@ -7,10 +7,18 @@ export default function AuthFormPage() {
   const navigate = useNavigate();
 
   const redirect = decodeURIComponent(params.get('redirect') || '/');
+  const handleBack = () => navigate(-1);
 
   const handleSuccess = () => {
     navigate(redirect, { replace: true });
   };
 
-  return <AuthForm onSuccess={handleSuccess} />;
+  return (
+    <AuthForm
+      onSuccess={handleSuccess}
+      onClose={handleBack}
+      showClose={true}
+      exitType="back"
+    />
+  );
 }

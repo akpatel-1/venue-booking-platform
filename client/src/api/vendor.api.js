@@ -1,5 +1,5 @@
 import { axiosClient } from '../lib/axios.instance';
 
 export const vendorApi = {
-  verifyStatus: () => axiosClient.get('/partners/application/status'),
+  getApplicationStatus: () => axiosClient.get('/partners/application/status'),
 };

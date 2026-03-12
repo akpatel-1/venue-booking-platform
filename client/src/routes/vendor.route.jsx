@@ -1,6 +1,6 @@
-import ApplicationForm from '../components/vendor/application/ApplicationForm';
-import LandingPage from '../components/vendor/application/landing/Landing';
 import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
+import ApplicationPage from '../pages/vendor/ApplicationPage';
+import LandingPage from '../pages/vendor/LandingPage';
 import VendorDashboardPage from '../pages/vendor/VendorDashboardPage';
 import VendorStatusPage from '../pages/vendor/VendorStatusPage';
 
@@ -10,20 +10,12 @@ export const vendorRoutes = [
     element: <LandingPage />,
   },
   {
-    path: '/partners/application',
-    element: <ApplicationForm />,
+    path: '/partners/application/apply',
+    element: <ApplicationPage />,
   },
   {
     loader: vendorApplicationLoader,
-    children: [
-      {
-        path: '/partners/application/status',
-        element: <VendorStatusPage />,
-      },
-      {
-        path: '/partners/dashboard',
-        element: <VendorDashboardPage />,
-      },
-    ],
+    path: '/partners/application/status',
+    element: <VendorStatusPage />,
   },
 ];

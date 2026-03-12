@@ -4,22 +4,22 @@ import { vendorApi } from '../api/vendor.api';
 
 export async function vendorApplicationLoader() {
   try {
-    const res = await vendorApi.verifyStatus();
+    const res = await vendorApi.getApplicationStatus();
 
     if (res.data.state === 'approved') {
       return redirect('/partners/dashboard');
     }
 
     if (res.data.state === 'not_applied') {
-      return redirect('/partners/application');
+      return redirect('/partners/application/apply');
     }
 
     return res.data;
   } catch (err) {
     if (err.response?.status === 401) {
-      return { unauthorized: true };
+      return redirect('/auth?redirect=/partners/application/status');
     }
 
-    return redirect('/error/500');
+    throw err;
   }
 }
