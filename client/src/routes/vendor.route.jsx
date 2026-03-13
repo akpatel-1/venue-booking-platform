@@ -1,7 +1,6 @@
 import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
 import ApplicationPage from '../pages/vendor/ApplicationPage';
 import LandingPage from '../pages/vendor/LandingPage';
-import VendorDashboardPage from '../pages/vendor/VendorDashboardPage';
 import VendorStatusPage from '../pages/vendor/VendorStatusPage';
 
 export const vendorRoutes = [
