@@ -12,6 +12,7 @@ export const sessionRepository = {
       adminId,
       role: 'admin',
       createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + ADMIN_AUTH_CONFIG.SESSION_TTL * 1000),
     };
 
     await redis.set(key, sessionData, { ex: ADMIN_AUTH_CONFIG.SESSION_TTL });

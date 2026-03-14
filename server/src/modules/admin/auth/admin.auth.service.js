@@ -5,49 +5,56 @@ import { sessionRepository } from '../session/admin.session.repository.js';
 import { ADMIN_AUTH_ERRORS } from './admin.auth.config.js';
 import { findAdminByEmail } from './admin.auth.repository.js';
 
-export async function loginAdmin({ email, password }, oldSessionId) {
-  if (oldSessionId) {
-    await sessionRepository.delete(oldSessionId);
-  }
+export const adminAuthService = {
+  async loginAdmin({ email, password }, oldSessionId) {
+    const admin = await this._authenticateAdmin(email, password);
 
-  const admin = await authenticateAdmin(email, password);
+    if (oldSessionId) {
+      const session = await sessionRepository.get(oldSessionId);
 
-  const sessionId = await sessionRepository.create(admin.id);
+      if (session && session.adminId === admin.id) {
+        await sessionRepository.delete(oldSessionId);
+      }
+    }
 
-  return {
-    sessionId,
-    admin: {
-      id: admin.id,
-      email: admin.email,
-    },
-  };
-}
+    const sessionId = await sessionRepository.create(admin.id);
 
-async function authenticateAdmin(email, password) {
-  const admin = await findAdminByEmail(email);
+    return {
+      sessionId,
+      admin: {
+        id: admin.id,
+        email: admin.email,
+      },
+    };
+  },
 
-  if (!admin) {
-    throw new ApiError(
-      401,
-      'Invalid credentials',
-      ADMIN_AUTH_ERRORS.INVALID_CREDENTIALS
-    );
-  }
+  async logoutAdmin(sessionId) {
+    if (sessionId) {
+      await sessionRepository.delete(sessionId);
+    }
+  },
 
-  const isMatch = await argon2.verify(admin.password_hash, password);
-  if (!isMatch) {
-    throw new ApiError(
-      401,
-      'Invalid credentials',
-      ADMIN_AUTH_ERRORS.INVALID_CREDENTIALS
-    );
-  }
+  async _authenticateAdmin(email, password) {
+    const admin = await findAdminByEmail(email);
 
-  return admin;
-}
+    if (!admin) {
+      throw new ApiError(
+        401,
+        'Invalid credentials',
+        ADMIN_AUTH_ERRORS.INVALID_CREDENTIALS
+      );
+    }
 
-export async function logoutAdmin(sessionId) {
-  if (sessionId) {
-    await sessionRepository.delete(sessionId);
-  }
-}
+    const isMatch = await argon2.verify(admin.password_hash, password);
+
+    if (!isMatch) {
+      throw new ApiError(
+        401,
+        'Invalid credentials',
+        ADMIN_AUTH_ERRORS.INVALID_CREDENTIALS
+      );
+    }
+
+    return admin;
+  },
+};
