@@ -4,7 +4,7 @@ import { adminAuthService } from './admin.auth.service.js';
 export const authController = {
   async handleAdminLogin(req, res) {
     const oldSessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
-    const credentials = req.data();
+    const credentials = req.data;
 
     const { sessionId, admin } = await adminAuthService.loginAdmin(
       credentials,
