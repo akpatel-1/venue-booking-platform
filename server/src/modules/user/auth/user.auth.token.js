@@ -2,8 +2,8 @@ import crypto from 'crypto';
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 
-export const authTokens = {
-  generateAuthTokens() {
+export const userAuthToken = {
+  generateAuthToken() {
     const rawToken = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto
       .createHash('sha256')

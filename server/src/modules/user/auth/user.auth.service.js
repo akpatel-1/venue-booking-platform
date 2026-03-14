@@ -4,7 +4,7 @@ import { withTransaction } from '../../../utils/transaction.util.js';
 import { processOtpRequestEmail } from './user.auth.email.service.js';
 import { userAuthOtp } from './user.auth.otp.js';
 import { userAuthRepository } from './user.auth.repository.js';
-import { authTokens } from './user.auth.token.js';
+import { userAuthToken } from './user.auth.token.js';
 
 export const userAuthService = {
   async processOtpRequest({ email }) {
@@ -34,7 +34,7 @@ export const userAuthService = {
       await this._verifyOtpHash(client, email, otp);
       const userId = await this._findOrCreateUser(client, email);
       const refreshToken = await this.createSession(client, userId);
-      const accessToken = authTokens.generateAccesToken(userId);
+      const accessToken = userAuthToken.generateAccessToken(userId);
 
       return { accessToken, refreshToken };
     });
@@ -80,8 +80,7 @@ export const userAuthService = {
       );
     }
 
-    const hashedRefreshToken =
-      authTokens.authTokens.generateTokenHash(refreshToken);
+    const hashedRefreshToken = userAuthToken.generateTokenHash(refreshToken);
 
     const { userId, rawToken } = await withTransaction(pool, async (client) => {
       const userId = await userAuthRepository.markRefreshTokenAsRevoked(
@@ -99,12 +98,12 @@ export const userAuthService = {
       return { userId, rawToken };
     });
 
-    const accessToken = authTokens.generateAccesToken(userId);
+    const accessToken = userAuthToken.generateAccessToken(userId);
     return { accessToken, refreshToken: rawToken };
   },
 
   async createSession(client, userId) {
-    const { rawToken, hashedToken } = authTokens.generateAuthToken();
+    const { rawToken, hashedToken } = userAuthToken.generateAuthToken();
 
     await userAuthRepository.createRefreshToken(client, {
       userId,
