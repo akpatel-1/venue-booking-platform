@@ -1,0 +1,22 @@
+export const USER_ERROR_CONFIG = {
+  ACCOUNT_DEACTIVATED: {
+    statusCode: 403,
+    message: 'Your account has been deactivated. Please contact support.',
+    code: 'ACCOUNT_DEACTIVATED',
+  },
+  USER_NOT_FOUND: {
+    statusCode: 401,
+    message: 'User not exists',
+    code: 'USER_NOT_FOUND',
+  },
+  INVALID_TOKEN: {
+    statusCode: 401,
+    message: 'Invalid token structure',
+    code: 'INVALID_TOKEN',
+  },
+  INVALID_OR_EXPIRED_OTP: {
+    statusCode: 400,
+    message: 'Invalid or expired OTP',
+    code: 'INVALID_OR_EXPIRED_OTP',
+  },
+};

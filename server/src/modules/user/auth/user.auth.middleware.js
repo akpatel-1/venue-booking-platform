@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 
 import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
+import { ERROR_CONFIG } from '../../error.config.js';
+import { USER_ERROR_CONFIG } from '../user.error.config.js';
 import { userAuthRepository } from './user.auth.repository.js';
 
 export const userAuthMiddleware = {
@@ -9,7 +11,7 @@ export const userAuthMiddleware = {
     const { accessToken } = req.cookies;
 
     if (!accessToken) {
-      throw new ApiError(401, 'Authentication required', 'AUTH_REQUIRED');
+      throw new ApiError(ERROR_CONFIG.UNAUTHORIZED);
     }
 
     const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);
@@ -17,7 +19,7 @@ export const userAuthMiddleware = {
     if (typeof payload === 'object' && payload.userId) {
       req.userId = payload.userId;
     } else {
-      throw new ApiError(401, 'Invalid token structure', 'INVALID_TOKEN');
+      throw new ApiError(USER_ERROR_CONFIG.INVALID_TOKEN);
     }
 
     next();
@@ -27,15 +29,11 @@ export const userAuthMiddleware = {
     const user = await userAuthRepository.findUserById(pool, req.userId);
 
     if (!user) {
-      throw new ApiError(401, 'User not exists', 'USER_NOT_FOUND');
+      throw new ApiError(USER_ERROR_CONFIG.USER_NOT_FOUND);
     }
 
     if (user.status === 'banned') {
-      throw new ApiError(
-        403,
-        'Your account has been deactivated. Please contact support.',
-        'ACCOUNT_DEACTIVATED'
-      );
+      throw new ApiError(USER_ERROR_CONFIG.ACCOUNT_DEACTIVATED);
     }
     req.user = user;
     next();

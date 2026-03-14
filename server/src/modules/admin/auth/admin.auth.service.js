@@ -1,8 +1,8 @@
 import argon2 from 'argon2';
 
 import { ApiError } from '../../../utils/api.error.util.js';
+import { ERROR_CONFIG } from '../../error.config.js';
 import { sessionRepository } from '../session/admin.session.repository.js';
-import { ADMIN_AUTH_ERRORS } from './admin.auth.config.js';
 import { findAdminByEmail } from './admin.auth.repository.js';
 
 export const adminAuthService = {
@@ -38,21 +38,13 @@ export const adminAuthService = {
     const admin = await findAdminByEmail(email);
 
     if (!admin) {
-      throw new ApiError(
-        401,
-        'Invalid credentials',
-        ADMIN_AUTH_ERRORS.INVALID_CREDENTIALS
-      );
+      throw new ApiError(ERROR_CONFIG.INVALID_CREDENTIALS);
     }
 
     const isMatch = await argon2.verify(admin.password_hash, password);
 
     if (!isMatch) {
-      throw new ApiError(
-        401,
-        'Invalid credentials',
-        ADMIN_AUTH_ERRORS.INVALID_CREDENTIALS
-      );
+      throw new ApiError(ERROR_CONFIG.INVALID_CREDENTIALS);
     }
 
     return admin;

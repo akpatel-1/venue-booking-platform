@@ -53,14 +53,6 @@ export const vendorApplicationService = {
       if (documentUrl) {
         await r2Storage.delete(key);
       }
-
-      if (!(err instanceof ApiError)) {
-        throw new ApiError(
-          500,
-          'Application processing failed',
-          'APPLICATION_ERROR'
-        );
-      }
       throw err;
     }
   },

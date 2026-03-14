@@ -1,6 +1,8 @@
 import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
+import { ERROR_CONFIG } from '../../error.config.js';
+import { USER_ERROR_CONFIG } from '../user.error.config.js';
 import { processOtpRequestEmail } from './user.auth.email.service.js';
 import { userAuthOtp } from './user.auth.otp.js';
 import { userAuthRepository } from './user.auth.repository.js';
@@ -48,11 +50,7 @@ export const userAuthService = {
     });
 
     if (!record) {
-      throw new ApiError(
-        400,
-        'Invalid or expired OTP',
-        'INVALID_OR_EXPIRED_OTP'
-      );
+      throw new ApiError(USER_ERROR_CONFIG.INVALID_OR_EXPIRED_OTP);
     }
   },
 
@@ -73,11 +71,7 @@ export const userAuthService = {
 
   async processSessionRotation({ refreshToken }) {
     if (!refreshToken) {
-      throw new ApiError(
-        401,
-        'No active session. Please login again',
-        'NO_ACTIVE_SESSION'
-      );
+      throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
     }
 
     const hashedRefreshToken = userAuthToken.generateTokenHash(refreshToken);
@@ -91,7 +85,7 @@ export const userAuthService = {
       );
 
       if (!userId) {
-        throw new ApiError(401, 'Token expired, login again', 'TOKEN_EXPIRED');
+        throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
       }
 
       const rawToken = await this.createSession(client, userId);

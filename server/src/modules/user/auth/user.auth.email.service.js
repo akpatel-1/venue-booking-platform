@@ -1,6 +1,7 @@
 import resend from '../../../infrastructure/email/email.js';
 import { generateOtpTemplate } from '../../../infrastructure/email/templates/otp.template.js';
 import { ApiError } from '../../../utils/api.error.util.js';
+import { ERROR_CONFIG } from '../../error.config.js';
 
 export async function processOtpRequestEmail(email, otp) {
   try {
@@ -13,6 +14,6 @@ export async function processOtpRequestEmail(email, otp) {
 
     return response;
   } catch (error) {
-    throw new ApiError(500, 'Failed to send OTP email', 'EMAIL_SEND_FAILED');
+    throw new ApiError(ERROR_CONFIG.EMAIL_SEND_FAILED);
   }
 }
