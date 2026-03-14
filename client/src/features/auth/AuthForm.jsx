@@ -3,7 +3,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { HiArrowLeft, HiArrowRight, HiXMark } from 'react-icons/hi2';
 // Added HiXMark
 import { IoWarningOutline } from 'react-icons/io5';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { userApi } from '../../api/user.api';
 
@@ -51,6 +51,7 @@ export default function AuthForm({
   const [otp, setOtp] = useState(Array(6).fill(''));
   const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const inputRefs = useRef([]);
   const modalRef = useRef(null);
@@ -96,6 +97,10 @@ export default function AuthForm({
 
       if (onSuccess) {
         onSuccess();
+      } else {
+        const redirectTo =
+          searchParams.get('redirect') || '/partners/application/status';
+        navigate(redirectTo);
       }
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
