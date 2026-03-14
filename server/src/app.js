@@ -3,8 +3,8 @@ import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 
-import { errorHandler } from './middlewares/error.handler.js';
-import router from './routes/index.js';
+import { router } from './index.js';
+import { errorHandler } from './modules/error.handler.js';
 
 const app = express();
 

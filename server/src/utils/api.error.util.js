@@ -4,6 +4,5 @@ export class ApiError extends Error {
     this.statusCode = statusCode;
     this.code = code;
     this.success = false;
-    Error.captureStackTrace(this, this.constructor);
   }
 }
