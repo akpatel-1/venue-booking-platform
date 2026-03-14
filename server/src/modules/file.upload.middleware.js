@@ -1,6 +1,6 @@
 import multer from 'multer';
 
-import { ApiError } from '../../utils/api.error.util.js';
+import { ApiError } from '../utils/api.error.util.js';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 

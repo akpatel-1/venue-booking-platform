@@ -1,4 +1,4 @@
-import { ApiError } from '../../utils/api.error.util.js';
+import { ApiError } from '../../../utils/api.error.util.js';
 
 export async function requireDocument(req, res, next) {
   if (!req.file) {
