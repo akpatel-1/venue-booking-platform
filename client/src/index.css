@@ -16,7 +16,6 @@
   width: max-content; 
 }
 
-/* Optional: Pause on hover for better UX */
 .animate-ticker:hover {
   animation-play-state: paused;
 }

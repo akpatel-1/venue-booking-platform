@@ -1,7 +1,7 @@
-import { axiosClient } from '../lib/axios.instance';
+import { userClient } from '../lib/axios.instance';
 
 export const vendorApi = {
-  getApplicationStatus: () => axiosClient.get('/partners/application/status'),
+  getApplicationStatus: () => userClient.get('/partners/application/status'),
   postApplication: (data) =>
-    axiosClient.post('/partners/application/apply', data),
+    userClient.post('/partners/application/apply', data),
 };

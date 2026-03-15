@@ -8,9 +8,9 @@ import {
   STEPS,
   TICKER,
   VENUES,
-} from '../../components/vendor/landing/Constants';
-import DashMockup from '../../components/vendor/landing/DashMockup';
-import FadeSection from '../../components/vendor/landing/FadeSection';
+} from '../../components/landing/Constants';
+import DashMockup from '../../components/landing/DashMockup';
+import FadeSection from '../../components/landing/FadeSection';
 import '../../index.css';
 
 const TICKER_DOUBLED = [...TICKER, ...TICKER];

@@ -1,6 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 
-import VerificationStatus from '../../components/vendor/application/VerificationStatus';
+import VerificationStatus from '../../components/application/VerificationStatus';
 
 export default function VendorStatusPage() {
   const data = useLoaderData();
