@@ -159,7 +159,7 @@ export default function AuthForm({
   const AuthContent = (
     <div
       ref={isModal ? modalRef : null}
-      className="w-full max-w-sm bg-white border-2 border-[#0d0d0d] rounded-xl overflow-hidden relative"
+      className={`w-full max-w-sm bg-white border-2 border-[#0d0d0d] rounded-xl overflow-hidden relative ${isModal ? 'animate-modal-card' : ''}`}
       style={{ boxShadow: '6px 6px 0 #0d0d0d' }}
       onClick={isModal ? (e) => e.stopPropagation() : undefined}
     >
@@ -320,7 +320,7 @@ export default function AuthForm({
   if (isModal) {
     return (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 animate-modal-overlay"
         onClick={onClose ? onClose : undefined}
       >
         {AuthContent}

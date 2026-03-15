@@ -1,16 +1,16 @@
 import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
-import ApplicationPage from '../pages/vendor/ApplicationPage';
-import LandingPage from '../pages/vendor/LandingPage';
+import VendorApplicationPage from '../pages/vendor/VendorApplicationPage';
+import VendorLandingPage from '../pages/vendor/VendorLandingPage';
 import VendorStatusPage from '../pages/vendor/VendorStatusPage';
 
 export const vendorRoutes = [
   {
     path: '/partners',
-    element: <LandingPage />,
+    element: <VendorLandingPage />,
   },
   {
     path: '/partners/application/apply',
-    element: <ApplicationPage />,
+    element: <VendorApplicationPage />,
   },
   {
     loader: vendorApplicationLoader,

@@ -9,6 +9,7 @@ import * as z from 'zod';
 
 import { vendorApi } from '../../api/vendor.api';
 import logo from '../../assets/logo.svg';
+import AuthForm from '../../components/auth/AuthForm';
 
 const registrationSchema = z.object({
   business_name: z.string().min(2, 'Business name is required'),
@@ -59,12 +60,14 @@ function Field({ label, error, children, className = '' }) {
   );
 }
 
-export default function ApplicationFromPage() {
+export default function VendorApplicationPage() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [fileError, setFileError] = useState('');
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingSubmissionData, setPendingSubmissionData] = useState(null);
 
   const {
     register,
@@ -91,10 +94,17 @@ export default function ApplicationFromPage() {
     setFile(f);
   };
 
-  const onSubmit = async (data) => {
-    if (!file) return setFileError('Document is required');
+  const submitApplication = async (data) => {
+    if (!data) return;
+
+    if (!file) {
+      setFileError('Document is required');
+      return;
+    }
+
     setSubmitError('');
     setLoading(true);
+
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
       formData.append(
@@ -103,16 +113,29 @@ export default function ApplicationFromPage() {
       );
     });
     formData.append('document', file);
+
     try {
-      await vendorApi.postApplication(formData);
+      await vendorApi.postApplication(formData, { skipAuthRedirect: true });
+      setPendingSubmissionData(null);
       navigate('/partners/application/status');
     } catch (err) {
+      if (err.response?.status === 401) {
+        setPendingSubmissionData(data);
+        setShowAuthModal(true);
+        return;
+      }
+
       setSubmitError(
         err?.response?.data?.message || 'Something went wrong during submission'
       );
     } finally {
       setLoading(false);
     }
+  };
+
+  const onSubmit = async (data) => {
+    setPendingSubmissionData(data);
+    await submitApplication(data);
   };
 
   const inp = (err) =>
@@ -378,6 +401,18 @@ export default function ApplicationFromPage() {
           </form>
         </div>
       </div>
+      {showAuthModal && (
+        <AuthForm
+          isModal
+          showClose
+          exitType="close"
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={async () => {
+            setShowAuthModal(false);
+            await submitApplication(pendingSubmissionData);
+          }}
+        />
+      )}
     </div>
   );
 }

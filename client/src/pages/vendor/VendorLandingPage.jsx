@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FiArrowRight, FiMapPin, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+import { vendorApi } from '../../api/vendor.api';
+import AuthForm from '../../components/auth/AuthForm';
 import {
   BENEFITS,
   STATS,
@@ -43,15 +45,32 @@ const JoinBtn = ({ label = 'Join as a Partner', onClick, loading = false }) => (
 );
 
 /* ── Page ── */
-export default function LandingPage() {
+export default function VendorLandingPage() {
   const navigate = useNavigate();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleCheckStatus = async () => {
     if (isNavigating) return;
 
     setIsNavigating(true);
-    navigate('/partners/application/status');
+    try {
+      await vendorApi.getApplicationStatus({ skipAuthRedirect: true });
+      navigate('/partners/application/status');
+    } catch (err) {
+      const status = err.response?.status;
+
+      if (status === 401) {
+        setShowAuthModal(true);
+        return;
+      }
+
+      if (!err.response || status >= 500) {
+        navigate('/error/500');
+      }
+    } finally {
+      setIsNavigating(false);
+    }
   };
 
   return (
@@ -289,6 +308,19 @@ export default function LandingPage() {
           ))}
         </div>
       </footer>
+
+      {showAuthModal && (
+        <AuthForm
+          isModal
+          showClose
+          exitType="close"
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={() => {
+            setShowAuthModal(false);
+            navigate('/partners/application/status');
+          }}
+        />
+      )}
     </div>
   );
 }

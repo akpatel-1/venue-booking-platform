@@ -38,7 +38,9 @@ userClient.interceptors.response.use(
 
         return userClient(original);
       } catch {
-        redirectToLogin(original.redirectPath);
+        if (!original.skipAuthRedirect) {
+          redirectToLogin(original.redirectPath);
+        }
         return Promise.reject(error);
       }
     }
