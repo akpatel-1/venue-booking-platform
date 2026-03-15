@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import { adminApi } from '../../api/admin.api';
-import DashboardLayout from '../../features/dashboard/DashboardLayout';
+import DashboardLayout from '../../components/dashboard/DashboardLayout';
 
 const adminNavigationLinks = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: IoHomeOutline },
