@@ -7,7 +7,7 @@ export async function sessionValidation(req, res, next) {
   const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
 
   if (!sessionId) {
-    throw new ApiError(ERROR_CONFIG.UNAUTHORIZED);
+    throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
   }
 
   const session = await sessionRepository.get(sessionId);
