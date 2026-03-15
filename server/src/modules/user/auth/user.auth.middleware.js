@@ -11,7 +11,7 @@ export const userAuthMiddleware = {
     const { accessToken } = req.cookies;
 
     if (!accessToken) {
-      throw new ApiError(ERROR_CONFIG.UNAUTHORIZED);
+      throw new ApiError(ERROR_CONFIG.UNAUTHORIZED_REQUEST);
     }
 
     const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);

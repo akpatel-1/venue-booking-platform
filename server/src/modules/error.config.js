@@ -9,12 +9,12 @@ export const ERROR_CONFIG = {
     message: 'Your session has expired, please login again',
     code: 'SESSION_EXPIRED',
   },
-  UNAUTHORIZED: {
-    statusCode: 403,
+  UNAUTHORIZED_REQUEST: {
+    statusCode: 401,
     message: 'You are not authorized to perform this action',
     code: 'UNAUTHORIZED_REQUEST',
   },
-  REQUIRED: {
+  CREDENTIALS_REQUIRED: {
     statusCode: 401,
     message: 'Credentials are required',
     code: 'CREDENTIALS_REQUIRED',
@@ -35,5 +35,9 @@ export const ERROR_CONFIG = {
     message: 'Failed to send OTP email',
     code: 'EMAIL_SEND_FAILED',
   },
-  
+  FORBIDDEN_ACCESS: {
+    statusCode: 403,
+    message: 'You do not have permission to access this resource',
+    code: 'FORBIDDEN_ACCESS',
+  },
 };

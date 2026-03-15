@@ -21,7 +21,7 @@ export async function sessionValidation(req, res, next) {
   }
 
   if (session.role !== 'admin') {
-    throw new ApiError(ERROR_CONFIG.UNAUTHORIZED);
+    throw new ApiError(ERROR_CONFIG.UNAUTHORIZED_REQUEST);
   }
 
   req.admin = {
