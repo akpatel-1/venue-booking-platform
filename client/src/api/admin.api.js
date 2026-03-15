@@ -1,7 +1,7 @@
-import { axiosClient } from '../lib/axios.instance';
+import { adminClient } from '../lib/axios.instance';
 
 export const adminApi = {
-  login: (data) => axiosClient.post('/admin/login', data),
-  checkSession: () => axiosClient.get('/admin/auth/session'),
-  logout: () => axiosClient.post('/admin/logout'),
+  login: (data) => adminClient.post('/admin/login', data),
+  checkSession: () => adminClient.get('/admin/auth/session'),
+  logout: () => adminClient.post('/admin/logout'),
 };

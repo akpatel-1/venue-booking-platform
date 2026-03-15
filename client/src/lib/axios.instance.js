@@ -1,12 +1,18 @@
 import axios from 'axios';
 
-export const axiosClient = axios.create({
+export const userClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   timeout: 10000,
 });
 
-axiosClient.interceptors.response.use(
+export const adminClient = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  withCredentials: true,
+  timeout: 10000,
+});
+
+userClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const original = error.config;
@@ -30,7 +36,7 @@ axiosClient.interceptors.response.use(
           { withCredentials: true }
         );
 
-        return axiosClient(original);
+        return userClient(original);
       } catch {
         redirectToLogin(original.redirectPath);
         return Promise.reject(error);
