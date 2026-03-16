@@ -11,7 +11,7 @@ export async function checkExistingApplication(req, res, next) {
     );
 
   if (status && status !== 'rejected') {
-    res.status(200).json({ state: status });
+    return res.status(200).json({ state: status });
   }
   next();
 }
