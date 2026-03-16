@@ -23,6 +23,13 @@ export function errorHandler(err, req, res, next) {
     });
   }
 
+  console.error(' Error Details:', {
+    url: req.url,
+    error: err.message,
+    code: err.code,
+    type: err.constructor.name,
+  });
+
   return res.status(500).json({
     message: 'Internal server error. Please try again after a while.',
     code: 'INTERNAL_ERROR',
