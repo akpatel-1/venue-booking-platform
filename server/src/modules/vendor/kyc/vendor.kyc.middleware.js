@@ -1,7 +1,7 @@
 import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { VENDOR_ERROR_CONFIG } from '../vendor.error.config.js';
-import { vendorApplicationRepository } from './vendor.application.repository.js';
+import { vendorApplicationRepository } from './vendor.kyc.repository.js';
 
 export async function checkExistingApplication(req, res, next) {
   const status =
@@ -10,13 +10,8 @@ export async function checkExistingApplication(req, res, next) {
       req.userId
     );
 
-  if (status === 'approved') {
-    throw new ApiError(VENDOR_ERROR_CONFIG.ALREADY_VERIFIED);
+  if (status && status !== 'rejected') {
+    res.status(200).json({ state: status });
   }
-
-  if (status === 'pending') {
-    throw new ApiError(VENDOR_ERROR_CONFIG.APPLICATION_PENDING);
-  }
-
   next();
 }

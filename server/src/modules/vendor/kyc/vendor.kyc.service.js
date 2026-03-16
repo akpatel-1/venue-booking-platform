@@ -4,7 +4,7 @@ import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { r2Storage } from '../../../utils/r2.storage.utils.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
-import { vendorApplicationRepository } from './vendor.application.repository.js';
+import { vendorApplicationRepository } from './vendor.kyc.repository.js';
 
 export const vendorApplicationService = {
   async processApplicationStatus(userId) {

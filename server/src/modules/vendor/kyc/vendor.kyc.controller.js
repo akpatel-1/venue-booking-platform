@@ -1,4 +1,4 @@
-import { vendorApplicationService } from './vendor.application.service.js';
+import { vendorApplicationService } from './vendor.kyc.service.js';
 
 export const vendorApplicationController = {
   async checkApplicationStatus(req, res) {
