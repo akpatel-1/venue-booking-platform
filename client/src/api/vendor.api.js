@@ -1,8 +1,8 @@
 import { userClient } from '../lib/axios.instance';
 
 export const vendorApi = {
-  getApplicationStatus: (config = {}) =>
+  getKycStatus: (config = {}) =>
     userClient.get('/partners/application/status', config),
-  postApplication: (data, config = {}) =>
-    userClient.post('/partners/application/apply', data, config),
+  postKycApplication: (data, config = {}) =>
+    userClient.post('/partners/application', data, config),
 };
