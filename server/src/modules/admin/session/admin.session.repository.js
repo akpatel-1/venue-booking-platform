@@ -21,7 +21,6 @@ export const sessionRepository = {
   },
 
   async get(sessionId) {
-    if (!sessionId) return null;
     const key = `${ADMIN_AUTH_CONFIG.SESSION_PREFIX}${sessionId}`;
     return await redis.get(key);
   },

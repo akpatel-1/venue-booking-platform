@@ -12,7 +12,7 @@ export const userAuthToken = {
     return { rawToken, hashedToken };
   },
 
-  generateTokenHash(token) {
+  generateHash(token) {
     return crypto.createHash('sha256').update(token).digest('hex');
   },
 
