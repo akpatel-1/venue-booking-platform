@@ -62,13 +62,30 @@ export default function AuthForm({
     clearError();
   };
 
+  const getNormalizedEmail = () => email.trim();
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
   /* ── API handlers ── */
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     clearError();
+
+    const normalizedEmail = getNormalizedEmail();
+
+    if (!normalizedEmail) {
+      setServerError('Please enter your email address');
+      return;
+    }
+
+    if (!isValidEmail(normalizedEmail)) {
+      setServerError('Please enter a valid email address');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await userApi.requestOtp({ email });
+      await userApi.requestOtp({ email: normalizedEmail });
+      setEmail(normalizedEmail);
       setStep('otp');
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
@@ -93,7 +110,7 @@ export default function AuthForm({
     setIsLoading(true);
     try {
       const otpString = otp.join('');
-      await userApi.verifyOtp({ email, otp: otpString });
+      await userApi.verifyOtp({ email: getNormalizedEmail(), otp: otpString });
 
       if (onSuccess) {
         onSuccess();
@@ -114,10 +131,26 @@ export default function AuthForm({
   };
 
   const handleResend = async () => {
+    clearError();
     resetOtp();
+
+    const normalizedEmail = getNormalizedEmail();
+
+    if (!normalizedEmail) {
+      setServerError('Email is required before requesting a new OTP');
+      setStep('email');
+      return;
+    }
+
+    if (!isValidEmail(normalizedEmail)) {
+      setServerError('Please enter a valid email address');
+      setStep('email');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await userApi.resendOtp({ email });
+      await userApi.resendOtp({ email: normalizedEmail });
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
         navigate('/error/500');
@@ -228,6 +261,7 @@ export default function AuthForm({
                     setEmail(e.target.value);
                     clearError();
                   }}
+                  onBlur={() => setEmail((prev) => prev.trim())}
                   placeholder="you@example.com"
                   className="w-full px-4 py-2.5 rounded-lg border-2 border-[#0d0d0d]/20 bg-white text-[#0d0d0d] placeholder-[#7a7267] text-sm focus:outline-none focus:border-[#0d0d0d] transition-colors"
                 />
