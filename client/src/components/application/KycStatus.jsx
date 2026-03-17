@@ -32,7 +32,7 @@ export default function KycStatus({ state, reason }) {
   const showReason = (state === 'rejected' || state === 'suspended') && reason;
 
   const handleReapply = () => {
-    navigate('/partners/application/apply');
+    navigate('/partners/application');
   };
 
   return (

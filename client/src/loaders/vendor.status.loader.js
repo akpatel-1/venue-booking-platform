@@ -11,7 +11,7 @@ export async function vendorApplicationLoader() {
     }
 
     if (res.data.state === 'not_applied') {
-      return redirect('/partners/application/apply');
+      return redirect('/partners/application');
     }
 
     return res.data;

@@ -56,7 +56,7 @@ export default function VendorLandingPage() {
     setIsNavigating(true);
     try {
       await vendorApi.getKycStatus({ skipAuthRedirect: true });
-      navigate('/partners/application');
+      navigate('/partners/application/status');
     } catch (err) {
       const status = err.response?.status;
 
