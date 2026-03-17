@@ -11,6 +11,7 @@ userAuthRoutes.post(
   validateSchema(userEmail),
   userAuthController.handleOtpRequest
 );
+
 userAuthRoutes.post(
   '/auth/otp/verify',
   validateSchema(userEmail),
@@ -18,7 +19,10 @@ userAuthRoutes.post(
   userAuthController.handleOtpVerification
 );
 
-userAuthRoutes.post('/auth/otp/resend',validateSchema(userEmail),
-  validateSchema(userOtp), userAuthController.handleOtpRequest);
+userAuthRoutes.post(
+  '/auth/otp/resend',
+  validateSchema(userEmail),
+  userAuthController.handleOtpRequest
+);
 
 userAuthRoutes.post('/auth/refresh', userAuthController.handleSessionRotation);
