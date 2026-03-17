@@ -24,7 +24,7 @@ const STATES = {
   },
 };
 
-export default function VerificationStatus({ state, reason }) {
+export default function KycStatus({ state, reason }) {
   const navigate = useNavigate();
   const s = STATES[state];
   if (!s) return null;

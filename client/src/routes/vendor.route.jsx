@@ -1,7 +1,7 @@
 import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
-import VendorApplicationPage from '../pages/vendor/VendorApplicationPage';
+import VendorKycPage from '../pages/vendor/VendorKycPage';
+import VendorKycStatusPage from '../pages/vendor/VendorKycStatusPage';
 import VendorLandingPage from '../pages/vendor/VendorLandingPage';
-import VendorStatusPage from '../pages/vendor/VendorStatusPage';
 
 export const vendorRoutes = [
   {
@@ -9,12 +9,12 @@ export const vendorRoutes = [
     element: <VendorLandingPage />,
   },
   {
-    path: '/partners/application/apply',
-    element: <VendorApplicationPage />,
+    path: '/partners/application',
+    element: <VendorKycPage />,
   },
   {
     loader: vendorApplicationLoader,
     path: '/partners/application/status',
-    element: <VendorStatusPage />,
+    element: <VendorKycStatusPage />,
   },
 ];
