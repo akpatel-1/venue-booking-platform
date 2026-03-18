@@ -14,7 +14,9 @@ export const r2Storage = {
     });
 
     await r2.send(command);
-    return key;
+
+    const documentUrl = `${process.env.R2_PUBLIC_URL}/${key}`;
+    return documentUrl;
   },
 
   async delete(key) {
