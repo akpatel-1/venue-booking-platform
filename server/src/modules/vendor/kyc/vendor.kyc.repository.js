@@ -2,7 +2,7 @@ export const vendorApplicationRepository = {
   async findLatestVendorApplicationByUserId(client, userId) {
     const result = await client.query(
       `SELECT status, rejection_reason
-      FROM vendor_kyc_applications
+      FROM vendor_applications
       WHERE user_id = $1
       ORDER BY submitted_at 
       DESC LIMIT 1`,
@@ -14,7 +14,7 @@ export const vendorApplicationRepository = {
   async findLatestVendorApplicationStatusByUserId(client, userId) {
     const result = await client.query(
       `SELECT status
-    FROM vendor_kyc_applications
+    FROM vendor_applications
     WHERE user_id = $1
     ORDER BY submitted_at 
     DESC LIMIT 1`,
@@ -25,7 +25,7 @@ export const vendorApplicationRepository = {
 
   async insertVendorApplication(client, data) {
     const result = await client.query({
-      text: `INSERT INTO vendor_kyc_applications
+      text: `INSERT INTO vendor_applications
            (user_id, pan_name, phone, address, pincode, city, state, pan_number, pan_document_url)
            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
            RETURNING id`,
