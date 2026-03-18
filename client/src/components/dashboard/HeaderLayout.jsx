@@ -4,14 +4,16 @@ import { HiOutlineChevronDown } from 'react-icons/hi';
 import { IoIosSearch } from 'react-icons/io';
 import { LuBell } from 'react-icons/lu';
 
+import Logo from '../../assets/logo.svg';
+
 export default function HeaderLayout({ sidebarOpen, setSidebarOpen }) {
   return (
-    <header className="w-full h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sticky top-0 z-20">
+    <header className="sticky top-0 z-20 flex h-14 w-full items-center justify-between border-b border-slate-200 bg-white px-4">
       {/* Left Section */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setSidebarOpen((prev) => !prev)}
-          className="p-2 hover:bg-gray-100 rounded-md transition-colors text-gray-500 hover:text-gray-700"
+          className="rounded-md p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
           aria-label="Toggle Sidebar"
         >
           {sidebarOpen ? (
@@ -23,15 +25,15 @@ export default function HeaderLayout({ sidebarOpen, setSidebarOpen }) {
       </div>
 
       {/* Center - Search */}
-      <div className="hidden md:flex flex-1 max-w-md mx-8">
+      <div className="mx-8 hidden max-w-md flex-1 md:flex">
         <div className="relative w-full">
-          <IoIosSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <IoIosSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all"
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-4 text-sm text-slate-700 transition-all focus:border-indigo-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/10"
           />
-          <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium text-gray-400 bg-gray-100 rounded border border-gray-200">
+          <kbd className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 lg:inline-flex">
             ctrl + K
           </kbd>
         </div>
@@ -44,32 +46,32 @@ export default function HeaderLayout({ sidebarOpen, setSidebarOpen }) {
           // href='https://github.com/akpatel-1/venue-booking-platform'
           target="_blank"
           rel="noopener noreferrer"
-          className="p-2 hover:bg-gray-100 rounded-md text-gray-500 hover:text-gray-700 transition-colors mr-5"
+          className="mr-5 rounded-md p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
           title="View on GitHub"
         >
           <FaGithub className="w-5 h-5" />
         </a>
 
         {/* Notifications */}
-        <button className="p-2 hover:bg-gray-100 rounded-md text-gray-500 hover:text-gray-700 transition-colors relative">
+        <button className="relative rounded-md p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700">
           <LuBell className="w-5 h-5" />
         </button>
 
         {/* Divider */}
-        <div className="h-6 w-px bg-gray-200 mx-2"></div>
+        <div className="mx-2 h-6 w-px bg-slate-200" />
 
         {/* User Profile */}
-        <button className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-          <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-medium">
-            SA
+        <button className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-100">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg  ">
+            <img src={Logo} alt="Venuz" className="h-6 w-6" />
           </div>
           <div className="hidden lg:block text-left">
-            <p className="text-sm font-medium text-gray-900 leading-none">
+            <p className="text-sm font-semibold leading-none text-slate-900">
               Akash patel
             </p>
-            <p className="text-xs text-gray-500 mt-0.5">super_admin</p>
+            <p className="mt-0.5 text-xs text-slate-500">super_admin</p>
           </div>
-          <HiOutlineChevronDown className="hidden lg:block w-4 h-4 text-gray-400" />
+          <HiOutlineChevronDown className="hidden h-4 w-4 text-slate-400 lg:block" />
         </button>
       </div>
     </header>
