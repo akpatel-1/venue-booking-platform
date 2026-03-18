@@ -12,6 +12,7 @@ import { userAuthToken } from './user.auth.token.js';
 export const userAuthService = {
   async processOtpRequest({ email }) {
     const hashedEmail = userAuthToken.generateHash(email);
+    await userAuthOtpRepository.checkCoolDown(hashedEmail);
     await userAuthOtpRepository.checkRateLimit(hashedEmail);
     const { otp, hashedOtp } = userAuthOtp.generateOtp();
     await userAuthOtpRepository.create(hashedEmail, hashedOtp);
