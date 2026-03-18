@@ -12,8 +12,14 @@ import KycLeftBg from '../../components/application/KycLeftBg';
 import AuthForm from '../../components/auth/AuthForm';
 
 const kycSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  surname: z.string().min(2, 'Surname is required'),
+  name: z
+    .string()
+    .min(2, 'Name is required')
+    .transform((val) => val.toUpperCase()),
+  surname: z
+    .string()
+    .min(2, 'Surname is required')
+    .transform((val) => val.toUpperCase()),
   phone: z.string().regex(/^[6-9]\d{9}$/, 'Invalid 10-digit phone number'),
   pan_number: z
     .string()
@@ -99,7 +105,7 @@ export default function VendorKycPage() {
 
     const formData = new FormData();
 
-    formData.append('pan_name', `${data.name} ${data.surname}`);
+    formData.append('pan_name', `${data.name} ${data.surname}`.toUpperCase());
 
     const fieldsToAppend = [
       'phone',
@@ -184,9 +190,13 @@ export default function VendorKycPage() {
                     className="col-span-2 sm:col-span-1"
                   >
                     <input
-                      {...register('name')}
-                      placeholder="Enter first name on PAN"
-                      className={inp(errors.name)}
+                      {...register('name', {
+                        onChange: (e) => {
+                          e.target.value = e.target.value.toUpperCase();
+                        },
+                      })}
+                      placeholder="Enter first name "
+                      className={`${inp(errors.name)} uppercase`}
                     />
                   </Field>
                   <Field
@@ -195,9 +205,13 @@ export default function VendorKycPage() {
                     className="col-span-2 sm:col-span-1"
                   >
                     <input
-                      {...register('surname')}
-                      placeholder="Enter last name on PAN"
-                      className={inp(errors.surname)}
+                      {...register('surname', {
+                        onChange: (e) => {
+                          e.target.value = e.target.value.toUpperCase();
+                        },
+                      })}
+                      placeholder="Enter last name"
+                      className={`${inp(errors.surname)} uppercase`}
                     />
                   </Field>
                 </div>
