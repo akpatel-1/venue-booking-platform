@@ -1,19 +1,24 @@
 import { ApiError } from '../utils/api.error.util.js';
-import { ERROR_CONFIG } from './error.config.js';
 
-export function validateSchema(schema) {
+export function validateSchema(schema, source = 'body') {
   return (req, res, next) => {
-    if (!req.body) {
-      throw new ApiError(ERROR_CONFIG.BODY_REQUIRED);
-    }
+    const data = req[source] || {};
 
-    const result = schema.safeParse(req.body);
+    const result = schema.safeParse(data);
 
     if (!result.success) {
-      throw new ApiError(ERROR_CONFIG.VALIDATION_ERROR);
+      const fieldErrors = result.error.flatten().fieldErrors;
+      const firstError = Object.values(fieldErrors)[0]?.[0];
+
+      throw new ApiError({
+        statusCode: 400,
+        message: firstError || 'Validation Error',
+        code: 'VALIDATION_ERROR',
+      });
     }
 
-    req.data = result.data;
+    req.data = req.data || {};
+    req.data[source] = result.data;
 
     next();
   };
