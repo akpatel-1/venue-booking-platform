@@ -10,9 +10,9 @@ export async function sessionValidation(req, res, next) {
     throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
   }
 
-  const session = await sessionRepository.get(sessionId);
+  const data = await sessionRepository.get(sessionId);
 
-  if (!session) {
+  if (!data) {
     res.clearCookie(
       ADMIN_AUTH_CONFIG.COOKIE_NAME,
       ADMIN_AUTH_CONFIG.CLEAR_COOKIE_OPTIONS
@@ -20,13 +20,13 @@ export async function sessionValidation(req, res, next) {
     throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
   }
 
-  if (session.role !== 'admin') {
+  if (data.role !== 'admin') {
     throw new ApiError(ERROR_CONFIG.UNAUTHORIZED_REQUEST);
   }
 
   req.admin = {
-    id: session.adminId,
-    role: session.role,
+    id: data.adminId,
+    role: data.role,
   };
 
   next();
