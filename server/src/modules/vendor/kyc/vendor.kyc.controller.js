@@ -11,7 +11,7 @@ export const vendorApplicationController = {
   async submitApplication(req, res) {
     const id = await vendorApplicationService.processApplication(
       req.userId,
-      req.data.body,
+      req.data,
       req.file
     );
     res.status(201).json({
