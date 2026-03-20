@@ -5,15 +5,7 @@ import { sessionValidation } from '../session/session.middleware.js';
 import { controller } from './auth.controller.js';
 import { schema } from './auth.schema.js';
 
-export const adminAuthRoutes = express.Router();
+export const adminAuth = express.Router();
 
-adminAuthRoutes.post(
-  '/login',
-  validateSchema(schema),
-  controller.handleAdminLogin
-);
-adminAuthRoutes.post(
-  '/logout',
-  sessionValidation,
-  controller.handleAdminLogout
-);
+adminAuth.post('/login', validateSchema(schema), controller.handleAdminLogin);
+adminAuth.post('/logout', sessionValidation, controller.handleAdminLogout);
