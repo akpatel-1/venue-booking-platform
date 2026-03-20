@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom';
 
 import { adminAuthLoader } from '../loaders/admin.auth.loder';
 import AdminApplicationPage from '../pages/admin/AdminApplicationPage';
+import AdminDashboardOverviewPage from '../pages/admin/AdminDashboardOverviewPage';
 import AdminDashboard from '../pages/admin/AdminDashboardPage';
 import AdminLogin from '../pages/admin/AdminLoginPage';
 
@@ -26,7 +27,7 @@ export const adminRoutes = [
 
           {
             path: 'dashboard',
-            element: <h1>Dashboard Page</h1>,
+            element: <AdminDashboardOverviewPage />,
           },
 
           {

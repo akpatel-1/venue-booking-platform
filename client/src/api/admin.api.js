@@ -10,4 +10,6 @@ export const adminApi = {
 
   updateStatus: (id, data) =>
     adminClient.patch(`/admin/application/${id}`, data),
+
+  getStatusCount: (status) => adminClient.get(`/admin/application/${status}`),
 };
