@@ -4,15 +4,14 @@ import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { r2Storage } from '../../../utils/r2.storage.utils.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
-import { vendorApplicationRepository } from './vendor.kyc.repository.js';
+import { repository } from './application.repository.js';
 
-export const vendorApplicationService = {
+export const service = {
   async processApplicationStatus(userId) {
-    const application =
-      await vendorApplicationRepository.findLatestVendorApplicationByUserId(
-        pool,
-        userId
-      );
+    const application = await repository.findLatestVendorApplicationByUserId(
+      pool,
+      userId
+    );
 
     if (!application) {
       return { state: 'not_applied' };
@@ -40,14 +39,11 @@ export const vendorApplicationService = {
       );
 
       return await withTransaction(pool, async (client) => {
-        return await vendorApplicationRepository.insertVendorApplication(
-          client,
-          {
-            userId,
-            ...userData,
-            documentUrl,
-          }
-        );
+        return await repository.insertVendorApplication(client, {
+          userId,
+          ...userData,
+          documentUrl,
+        });
       });
     } catch (err) {
       if (documentUrl) {

@@ -6,7 +6,7 @@ import { ERROR_CONFIG } from '../../error.config.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
 import { userAuthRepository } from './user.auth.repository.js';
 
-export const userAuthMiddleware = {
+export const middleware = {
   async authenticateToken(req, res, next) {
     const { accessToken } = req.cookies;
 

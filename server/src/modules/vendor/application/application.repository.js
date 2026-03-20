@@ -1,4 +1,4 @@
-export const vendorApplicationRepository = {
+export const repository = {
   async findLatestVendorApplicationByUserId(client, userId) {
     const result = await client.query(
       `SELECT status, rejection_reason

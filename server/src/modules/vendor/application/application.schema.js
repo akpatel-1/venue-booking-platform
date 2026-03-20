@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const vendorKycSchema = z.object({
+export const schema = z.object({
   pan_name: z
     .string()
     .min(2, 'Full name is required')
