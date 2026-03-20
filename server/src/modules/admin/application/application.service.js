@@ -43,4 +43,8 @@ export const service = {
       reviewedBy: reviewer_Id,
     });
   },
+
+  async processStatusCount(status) {
+    return await repository.getStatusCount(pool, status);
+  },
 };

@@ -21,3 +21,10 @@ adminApplication.patch(
   validateSchema(schema.review, 'body'),
   controller.handleUpdateRequest
 );
+
+adminApplication.get(
+  '/application/:status',
+  sessionValidation,
+  validateSchema(schema.status, 'params'),
+  controller.handleApplicationCount
+);

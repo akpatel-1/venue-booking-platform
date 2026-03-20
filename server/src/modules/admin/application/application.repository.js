@@ -56,4 +56,15 @@ export const repository = {
       [data.status, data.rejectionReason, data.reviewedBy, data.id]
     );
   },
+
+  async getStatusCount(client, status) {
+    const result = await client.query(
+      `SELECT COUNT(*) AS count
+     FROM vendor_applications
+     WHERE status = $1`,
+      [status]
+    );
+
+    return Number(result.rows[0].count);
+  },
 };
