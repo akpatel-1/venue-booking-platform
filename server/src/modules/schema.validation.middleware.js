@@ -17,9 +17,7 @@ export function validateSchema(schema, source = 'body') {
       });
     }
 
-    req.data = req.data || {};
-    req.data[source] = result.data;
-
+    req.data = Object.assign(req.data || {}, result.data);
     next();
   };
 }
