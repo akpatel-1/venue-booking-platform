@@ -2,6 +2,7 @@ import express from 'express';
 
 import { validateSchema } from '../../schema.validation.middleware.js';
 import { controller } from './auth.controller.js';
+import { middleware } from './auth.middleware.js';
 import { schema } from './auth.schema.js';
 
 export const userAuth = express.Router();
@@ -26,3 +27,10 @@ userAuth.post(
 );
 
 userAuth.post('/auth/refresh', controller.handleSessionRotation);
+
+userAuth.post(
+  '/auth/logout',
+  middleware.authenticateToken,
+  middleware.ensureAccountActive,
+  controller.handleLogout
+);

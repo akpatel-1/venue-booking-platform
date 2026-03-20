@@ -101,4 +101,8 @@ export const service = {
 
     return rawToken;
   },
+
+  async processLogout() {
+    return await repository.revokeRefreshToken;
+  },
 };

@@ -47,4 +47,9 @@ export const controller = {
 
     return res.status(200).json({ message: 'Login successful' });
   },
+
+  async handleLogout(req, res) {
+    await service.processLogout(req.userId);
+    res.status(200).json({ message: 'success' });
+  },
 };

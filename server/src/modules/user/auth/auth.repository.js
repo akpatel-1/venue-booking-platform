@@ -57,4 +57,13 @@ export const repository = {
     );
     return result.rows[0]?.user_id ?? null;
   },
+
+  async revokeRefreshToken(client, userId) {
+    const result = await client.query(
+      `UPDATE refresh_tokens
+      SET revoked_at = NOW()
+      WHERE user_id = $1`,
+      [userId]
+    );
+  },
 };
