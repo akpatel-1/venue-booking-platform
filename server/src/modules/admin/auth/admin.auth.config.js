@@ -23,4 +23,3 @@ export const ADMIN_AUTH_CONFIG = {
     };
   },
 };
-

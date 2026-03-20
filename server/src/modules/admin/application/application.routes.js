@@ -2,14 +2,22 @@ import express from 'express';
 
 import { validateSchema } from '../../schema.validation.middleware.js';
 import { sessionValidation } from '../session/admin.session.middleware.js';
-import { handleApplicationRequest } from './application.controller.js';
-import { applicationSchema } from './application.schema.js';
+import { controller } from './application.controller.js';
+import { schema } from './application.schema.js';
 
-export const adminApplicationRoutes = express.Router();
+export const adminApplication = express.Router();
 
-adminApplicationRoutes.get(
+adminApplication.get(
   '/application',
   sessionValidation,
-  validateSchema(applicationSchema.status),
-  handleApplicationRequest
+  validateSchema(schema.status, 'query'),
+  controller.handleApplicationRequest
+);
+
+adminApplication.patch(
+  '/application/:id',
+  sessionValidation,
+  validateSchema(schema.id, 'params'),
+  validateSchema(schema.review, 'body'),
+  controller.handleUpdateRequest
 );

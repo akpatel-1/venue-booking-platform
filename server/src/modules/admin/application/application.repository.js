@@ -1,4 +1,4 @@
-export const applicationRepository = {
+export const repository = {
   async getVendorApplication(client, status) {
     const result = await client.query(
       `SELECT 
@@ -21,5 +21,39 @@ export const applicationRepository = {
       [status]
     );
     return result.rows;
+  },
+
+  async markVendorAsApproved(client, data) {
+    const result = await client.query(
+      `UPDATE vendor_applications
+      SET status = $1,
+      reviewed_at = NOW(),
+      reviewed_by = $2 
+      WHERE id = $3
+      RETURNING user_id, pan_name`,
+      [data.status, data.reviewedBy, data.id]
+    );
+    return result.rows[0] ?? null;
+  },
+
+  async createVendorProfile(client, data) {
+    const result = await client.query(
+      `INSERT INTO vendor_profiles(user_id, vendor_name)
+      VALUES ($1, $2)`,
+      [data.user_id, data.pan_name]
+    );
+  },
+
+  async markVendorAsRejected(client, data) {
+    await client.query(
+      `
+    UPDATE vendor_applications
+    SET status = $1,
+    rejection_reason = $2,
+    reviewed_at NOW(),
+    reviewed_by = $3
+    WHERE id = $4`,
+      [data.status, data.rejectionReason, data.reviewedBy, data.id]
+    );
   },
 };

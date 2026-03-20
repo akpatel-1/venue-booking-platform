@@ -1,6 +1,46 @@
 import { pool } from '../../../infrastructure/database/db.js';
-import { applicationRepository } from './application.repository.js';
+import { ApiError } from '../../../utils/api.error.util.js';
+import { withTransaction } from '../../../utils/transaction.util.js';
+import { APPLICATION_ERROR_CONFIG } from './application.error.config.js';
+import { repository } from './application.repository.js';
 
-export async function processApplicationRequest(status) {
-  return await applicationRepository.getVendorApplication(pool, status);
-}
+export const service = {
+  async processApplicationRequest(status) {
+    return await repository.getVendorApplication(pool, status);
+  },
+
+  async processStatusUpdate(reviewer_Id, data) {
+    const { status } = data;
+
+    if (status === 'approved') {
+      return this._handleApproved(reviewer_Id, data.id);
+    }
+
+    return this._handleRejected(reviewer_Id, data);
+  },
+
+  async _handleApproved(reviewer_Id, id) {
+    await withTransaction(pool, async (client) => {
+      const result = await repository.markVendorAsApproved(client, {
+        id,
+        status: 'approved',
+        reviewedBy: reviewer_Id,
+      });
+
+      if (!result) {
+        throw new ApiError(APPLICATION_ERROR_CONFIG.USER_NOT_FOUND);
+      }
+
+      await repository.createVendorProfile(client, result);
+    });
+  },
+
+  async _handleRejected(reviewer_Id, data) {
+    await repository.markVendorAsRejected(pool, {
+      id: data.id,
+      status: 'rejected',
+      rejectionReason: data.rejection_reason,
+      reviewedBy: reviewer_Id,
+    });
+  },
+};
