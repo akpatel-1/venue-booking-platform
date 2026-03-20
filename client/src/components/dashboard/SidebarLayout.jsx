@@ -40,6 +40,7 @@ export default function SidebarLayout({ isOpen, links, onLogout }) {
               link={link}
               isOpen={isOpen}
               currentPath={location.pathname}
+              currentSearch={location.search}
             />
           ))}
         </ul>
@@ -61,11 +62,38 @@ export default function SidebarLayout({ isOpen, links, onLogout }) {
   );
 }
 
-function NavItem({ link, isOpen, currentPath }) {
-  const [isExpanded, setIsExpanded] = useState(currentPath.startsWith(link.to));
+function NavItem({ link, isOpen, currentPath, currentSearch }) {
   const hasChildren = link.children && link.children.length > 0;
+  const [isExpanded, setIsExpanded] = useState(false);
   const MainIcon = link.icon;
   const mainIconColor = link.color || '#64748b';
+
+  const isRouteMatch = (to) => {
+    const url = new URL(to, 'http://localhost');
+    const currentParams = new URLSearchParams(currentSearch);
+
+    if (currentPath !== url.pathname) {
+      return false;
+    }
+
+    if (!url.search) {
+      return true;
+    }
+
+    for (const [key, value] of url.searchParams.entries()) {
+      if (currentParams.get(key) !== value) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const hasActiveChild = hasChildren
+    ? link.children.some((child) => isRouteMatch(child.to))
+    : false;
+
+  const shouldShowChildren = hasActiveChild || isExpanded;
 
   const activeClass = isOpen
     ? 'bg-slate-200 text-slate-900 shadow-sm'
@@ -79,7 +107,7 @@ function NavItem({ link, isOpen, currentPath }) {
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className={`w-full group flex items-center justify-between rounded-xl px-4 py-3 transition-all duration-200 ${
-            isExpanded
+            shouldShowChildren
               ? 'bg-slate-200/70 text-slate-900'
               : 'text-slate-600 hover:bg-slate-200/70 hover:text-slate-900'
           }`}
@@ -89,26 +117,26 @@ function NavItem({ link, isOpen, currentPath }) {
             <span className="ml-3 text-sm font-medium">{link.label}</span>
           </div>
           <IoChevronDownOutline
-            className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 transition-transform duration-300 ${shouldShowChildren ? 'rotate-180' : ''}`}
           />
         </button>
 
-        {isExpanded && (
+        {shouldShowChildren && (
           <ul className="ml-6 space-y-1 border-l border-slate-200">
             {link.children.map((child) => {
               const ChildIcon = child.icon;
               const childIconColor = child.color || mainIconColor;
+              const isChildActive = isRouteMatch(child.to);
+
               return (
                 <li key={child.to}>
                   <NavLink
                     to={child.to}
-                    className={({ isActive }) =>
-                      `flex items-center py-2.5 px-4 text-sm transition-all rounded-r-lg group/sub ${
-                        isActive
-                          ? 'text-slate-900 font-semibold border-l-2 border-slate-400 -ml-[1.5px] bg-slate-200/70'
-                          : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
-                      }`
-                    }
+                    className={`flex items-center py-2.5 px-4 text-sm transition-all rounded-r-lg group/sub ${
+                      isChildActive
+                        ? 'text-slate-900 font-semibold border-l-2 border-slate-400 -ml-[1.5px] bg-slate-200/70'
+                        : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
+                    }`}
                   >
                     {ChildIcon && (
                       <ChildIcon
@@ -131,10 +159,10 @@ function NavItem({ link, isOpen, currentPath }) {
     <li>
       <NavLink
         to={link.to}
-        className={({ isActive }) =>
+        className={() =>
           `group flex items-center rounded-xl transition-all duration-200 ${
             isOpen ? 'px-4 py-3' : 'p-3  justify-center'
-          } ${isActive ? activeClass : inactiveClass}`
+          } ${isRouteMatch(link.to) ? activeClass : inactiveClass}`
         }
       >
         <MainIcon

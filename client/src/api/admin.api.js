@@ -7,4 +7,7 @@ export const adminApi = {
 
   getApplication: (status = 'pending') =>
     adminClient.get(`/admin/application?status=${status}`),
+
+  updateStatus: (id, data) =>
+    adminClient.patch(`/admin/application/${id}`, data),
 };

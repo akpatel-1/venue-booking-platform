@@ -23,25 +23,25 @@ const adminNavigationLinks = [
     color: '#6777F1',
   },
   {
-    to: '/admin/application/pending',
+    to: '/admin/application?status=pending',
     label: 'Vendor KYC',
     icon: RiUserAddLine,
     color: '#b55104',
     children: [
       {
-        to: '/admin/application/pending',
+        to: '/admin/application?status=pending',
         label: 'Pending',
         icon: IoTimeOutline,
         color: '#F59E0B',
       },
       {
-        to: '/admin/application/approved',
+        to: '/admin/application?status=approved',
         label: 'Approved',
         icon: IoCheckmarkCircleOutline,
         color: '#10B981',
       },
       {
-        to: '/admin/application/rejected',
+        to: '/admin/application?status=rejected',
         label: 'Rejected',
         icon: IoCloseCircleOutline,
         color: '#EF4444',
@@ -49,7 +49,7 @@ const adminNavigationLinks = [
     ],
   },
   {
-    to: '/admin/venues/status/pendig',
+    to: '/admin/venues?status=pendig',
     label: 'Venues',
     icon: MdOutlineStorefront,
     color: '#8B5CF6',

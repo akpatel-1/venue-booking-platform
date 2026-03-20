@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom';
 
 import { adminAuthLoader } from '../loaders/admin.auth.loder';
+import AdminApplicationPage from '../pages/admin/AdminApplicationPage';
 import AdminDashboard from '../pages/admin/AdminDashboardPage';
-import AdminKycPage from '../pages/admin/AdminApplicationPage';
 import AdminLogin from '../pages/admin/AdminLoginPage';
 
 export const adminRoutes = [
@@ -26,17 +26,12 @@ export const adminRoutes = [
 
           {
             path: 'dashboard',
-            element: <h1>Dashboard Page</h1>, 
+            element: <h1>Dashboard Page</h1>,
           },
 
           {
             path: 'application',
-            element: <Navigate to="pending" replace />,
-          },
-
-          {
-            path: 'application/:status',
-            element: <AdminKycPage />,
+            element: <AdminApplicationPage />,
           },
         ],
       },
