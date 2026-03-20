@@ -24,4 +24,9 @@ export const USER_ERROR_CONFIG = {
     message: 'Too many OTP requests. Please try again after 10 minutes.',
     code: 'OTP_RATE_LIMIT_EXCEEDED',
   },
+  ACCESS_TOKEN_MISSING: {
+    statusCode: 401,
+    message: 'Authentication required.',
+    code: 'ACCESS_TOKEN_MISSING',
+  },
 };

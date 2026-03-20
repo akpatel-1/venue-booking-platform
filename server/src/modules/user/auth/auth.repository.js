@@ -1,4 +1,4 @@
-export const userAuthRepository = {
+export const repository = {
   async findUserById(client, userId) {
     const result = await client.query(
       `SELECT role, status
@@ -8,7 +8,6 @@ export const userAuthRepository = {
     );
     return result.rows[0] ?? null;
   },
-
 
   async findUser(client, email) {
     const result = await client.query(

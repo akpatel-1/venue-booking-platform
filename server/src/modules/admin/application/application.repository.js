@@ -50,7 +50,7 @@ export const repository = {
     UPDATE vendor_applications
     SET status = $1,
     rejection_reason = $2,
-    reviewed_at NOW(),
+    reviewed_at = NOW(),
     reviewed_by = $3
     WHERE id = $4`,
       [data.status, data.rejectionReason, data.reviewedBy, data.id]

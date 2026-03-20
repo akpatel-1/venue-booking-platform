@@ -1,16 +1,17 @@
-import { USER_AUTH_CONFIG } from './user.auth.config.js';
-import { userAuthService } from './user.auth.service.js';
+import { USER_AUTH_CONFIG } from './auth.config.js';
+import { service } from './auth.service.js';
 
-export const userAuthController = {
+export const controller = {
   async handleOtpRequest(req, res) {
-    await userAuthService.processOtpRequest(req.body);
+    await service.processOtpRequest(req.body);
     return res.status(201).json({
       message: 'Please verify your email to continue',
     });
   },
   async handleOtpVerification(req, res) {
-    const { accessToken, refreshToken } =
-      await userAuthService.processOtpVerification(req.body);
+    const { accessToken, refreshToken } = await service.processOtpVerification(
+      req.body
+    );
 
     res.cookie(
       USER_AUTH_CONFIG.ACCESS_COOKIE,
@@ -30,7 +31,7 @@ export const userAuthController = {
   async handleSessionRotation(req, res) {
     const refreshToken = req.cookies[USER_AUTH_CONFIG.REFRESH_COOKIE];
 
-    const newToken = await userAuthService.processSessionRotation(refreshToken);
+    const newToken = await service.processSessionRotation(refreshToken);
 
     res.cookie(
       USER_AUTH_CONFIG.ACCESS_COOKIE,

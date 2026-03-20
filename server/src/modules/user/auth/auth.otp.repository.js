@@ -1,9 +1,9 @@
 import { redis } from '../../../infrastructure/redis/redis.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import { USER_AUTH_CONFIG } from './user.auth.config.js';
+import { USER_AUTH_CONFIG } from './auth.config.js';
 
-export const userAuthOtpRepository = {
+export const otpRepository = {
   async checkRateLimit(hashedEmail) {
     const key = `${USER_AUTH_CONFIG.OTP_RATE_LIMIT_PREFIX}${hashedEmail}`;
     const count = await redis.incr(key);

@@ -2,7 +2,7 @@ import crypto, { verify } from 'crypto';
 import 'dotenv/config';
 
 const secret = process.env.OTP_SECRET;
-export const userAuthOtp = {
+export const OTP = {
   generateOtp() {
     const otp = crypto.randomInt(100000, 1000000);
     const hashedOtp = crypto

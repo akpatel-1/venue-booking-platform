@@ -1,7 +1,7 @@
 import express from 'express';
 
-import { adminSession } from './admin.session.controller.js';
-import { sessionValidation } from './admin.session.middleware.js';
+import { adminSession } from './session.controller.js';
+import { sessionValidation } from './session.middleware.js';
 
 export const adminSessionRoutes = express.Router();
 

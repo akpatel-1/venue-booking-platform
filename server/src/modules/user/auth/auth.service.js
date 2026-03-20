@@ -3,24 +3,24 @@ import { ApiError } from '../../../utils/api.error.util.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
 import { ERROR_CONFIG } from '../../error.config.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import { processOtpRequestEmail } from './user.auth.email.service.js';
-import { userAuthOtp } from './user.auth.otp.js';
-import { userAuthOtpRepository } from './user.auth.otp.repository.js';
-import { userAuthRepository } from './user.auth.repository.js';
-import { userAuthToken } from './user.auth.token.js';
+import { sendOtpEmail } from './auth.email.service.js';
+import { OTP } from './auth.otp.js';
+import { otpRepository } from './auth.otp.repository.js';
+import { repository } from './auth.repository.js';
+import { token } from './auth.token.js';
 
-export const userAuthService = {
+export const service = {
   async processOtpRequest({ email }) {
-    const hashedEmail = userAuthToken.generateHash(email);
-    await userAuthOtpRepository.checkCoolDown(hashedEmail);
-    await userAuthOtpRepository.checkRateLimit(hashedEmail);
-    const { otp, hashedOtp } = userAuthOtp.generateOtp();
-    await userAuthOtpRepository.create(hashedEmail, hashedOtp);
+    const hashedEmail = token.generateHash(email);
+    await otpRepository.checkCoolDown(hashedEmail);
+    await otpRepository.checkRateLimit(hashedEmail);
+    const { otp, hashedOtp } = OTP.generateOtp();
+    await otpRepository.create(hashedEmail, hashedOtp);
 
     try {
-      await processOtpRequestEmail(email, otp);
+      await sendOtpEmail(email, otp);
     } catch (err) {
-      await userAuthOtpRepository.delete(hashedEmail);
+      await otpRepository.delete(hashedEmail);
       throw err;
     }
   },
@@ -31,32 +31,32 @@ export const userAuthService = {
 
       const userId = await this._findOrCreateUser(client, email);
       const refreshToken = await this.createSession(client, userId);
-      const accessToken = userAuthToken.generateAccessToken(userId);
+      const accessToken = token.generateAccessToken(userId);
 
       return { accessToken, refreshToken };
     });
   },
 
   async _verifyOtpHash(email, otp) {
-    const hashedEmail = userAuthToken.generateHash(email);
-    const otpRecord = await userAuthOtpRepository.get(hashedEmail);
+    const hashedEmail = token.generateHash(email);
+    const otpRecord = await otpRepository.get(hashedEmail);
 
     if (!otpRecord || !otpRecord.hashedOtp) {
       throw new ApiError(USER_ERROR_CONFIG.INVALID_OR_EXPIRED_OTP);
     }
-    if (!userAuthOtp.verifyOtp(otp, otpRecord.hashedOtp)) {
+    if (!OTP.verifyOtp(otp, otpRecord.hashedOtp)) {
       throw new ApiError(USER_ERROR_CONFIG.INVALID_OR_EXPIRED_OTP);
     }
-    await userAuthOtpRepository.delete(hashedEmail);
+    await otpRepository.delete(hashedEmail);
   },
 
   async _findOrCreateUser(client, email) {
-    const existingId = await userAuthRepository.findUser(client, email);
+    const existingId = await repository.findUser(client, email);
     if (existingId) return existingId;
 
-    const userId = await userAuthRepository.createUser(client, email);
+    const userId = await repository.createUser(client, email);
 
-    await userAuthRepository.createAuthMethods(client, {
+    await repository.createAuthMethods(client, {
       userId,
       authProvider: 'otp',
       providerIdentifier: email,
@@ -70,15 +70,12 @@ export const userAuthService = {
       throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
     }
 
-    const hashedRefreshToken = userAuthToken.generateHash(refreshToken);
+    const hashedRefreshToken = token.generateHash(refreshToken);
 
     const { userId, rawToken } = await withTransaction(pool, async (client) => {
-      const userId = await userAuthRepository.markRefreshTokenAsRevoked(
-        client,
-        {
-          tokenHash: hashedRefreshToken,
-        }
-      );
+      const userId = await repository.markRefreshTokenAsRevoked(client, {
+        tokenHash: hashedRefreshToken,
+      });
 
       if (!userId) {
         throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
@@ -88,14 +85,14 @@ export const userAuthService = {
       return { userId, rawToken };
     });
 
-    const accessToken = userAuthToken.generateAccessToken(userId);
+    const accessToken = token.generateAccessToken(userId);
     return { accessToken, refreshToken: rawToken };
   },
 
   async createSession(client, userId) {
-    const { rawToken, hashedToken } = userAuthToken.generateAuthToken();
+    const { rawToken, hashedToken } = token.generateAuthToken();
 
-    await userAuthRepository.createRefreshToken(client, {
+    await repository.createRefreshToken(client, {
       userId,
       tokenHash: hashedToken,
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),

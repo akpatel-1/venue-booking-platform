@@ -2,35 +2,35 @@ import argon2 from 'argon2';
 
 import { ApiError } from '../../../utils/api.error.util.js';
 import { ERROR_CONFIG } from '../../error.config.js';
-import { sessionRepository } from '../session/admin.session.repository.js';
-import { findAdminByEmail } from './admin.auth.repository.js';
+import { repository } from '../session/session.repository.js';
+import { findAdminByEmail } from './auth.repository.js';
 
-export const adminAuthService = {
+export const service = {
   async loginAdmin({ email, password }, oldSessionId) {
     const admin = await this._authenticateAdmin(email, password);
 
     if (oldSessionId) {
-      const session = await sessionRepository.get(oldSessionId);
+      const session = await repository.get(oldSessionId);
 
-      if (session && session.adminId === admin.id) {
-        await sessionRepository.delete(oldSessionId);
+      if (session && session.adminId === id) {
+        await repository.delete(oldSessionId);
       }
     }
 
-    const sessionId = await sessionRepository.create(admin.id);
+    const sessionId = await repository.create(id);
 
     return {
       sessionId,
       admin: {
-        id: admin.id,
-        email: admin.email,
+        id: id,
+        email: email,
       },
     };
   },
 
   async logoutAdmin(sessionId) {
     if (sessionId) {
-      await sessionRepository.delete(sessionId);
+      await repository.delete(sessionId);
     }
   },
 
@@ -41,7 +41,7 @@ export const adminAuthService = {
       throw new ApiError(ERROR_CONFIG.INVALID_CREDENTIALS);
     }
 
-    const isMatch = await argon2.verify(admin.password_hash, password);
+    const isMatch = await argon2.verify(password_hash, password);
 
     if (!isMatch) {
       throw new ApiError(ERROR_CONFIG.INVALID_CREDENTIALS);

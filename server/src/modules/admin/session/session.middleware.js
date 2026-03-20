@@ -1,7 +1,7 @@
 import { ApiError } from '../../../utils/api.error.util.js';
 import { ERROR_CONFIG } from '../../error.config.js';
-import { ADMIN_AUTH_CONFIG } from '../auth/admin.auth.config.js';
-import { sessionRepository } from './admin.session.repository.js';
+import { ADMIN_AUTH_CONFIG } from '../auth/auth.config.js';
+import { repository } from './session.repository.js';
 
 export async function sessionValidation(req, res, next) {
   const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
@@ -10,7 +10,7 @@ export async function sessionValidation(req, res, next) {
     throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
   }
 
-  const data = await sessionRepository.get(sessionId);
+  const data = await repository.get(sessionId);
 
   if (!data) {
     res.clearCookie(

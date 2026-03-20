@@ -1,9 +1,9 @@
 import crypto from 'crypto';
 
 import { redis } from '../../../infrastructure/redis/redis.js';
-import { ADMIN_AUTH_CONFIG } from '../auth/admin.auth.config.js';
+import { ADMIN_AUTH_CONFIG } from '../auth/auth.config.js';
 
-export const sessionRepository = {
+export const repository = {
   async create(adminId) {
     const sessionId = crypto.randomUUID();
     const key = `${ADMIN_AUTH_CONFIG.SESSION_PREFIX}${sessionId}`;

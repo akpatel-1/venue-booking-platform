@@ -7,7 +7,7 @@ export const controller = {
   },
 
   async handleUpdateRequest(req, res) {
-    await service.processStatusUpdate(req.admin.id, req.data);
+    await service.processStatusUpdate(req.id, req.data);
     res.status(201).json({ message: 'Status updated' });
   },
 };

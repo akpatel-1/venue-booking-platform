@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const adminLoginSchema = z.object({
+export const schema = z.object({
   email: z
     .string()
     .trim()
