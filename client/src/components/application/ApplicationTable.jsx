@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { LuFileText } from 'react-icons/lu';
 
 import { APPLICATION_COLUMN_CONFIG } from '../../config/application.column';
 import TableSection from './TableSection';
 
 export default function ApplicationTable({
   applications = [],
+  status = 'pending',
   onApprove,
   onReject,
   onApproveVendor,
@@ -34,72 +34,52 @@ export default function ApplicationTable({
     }
   };
 
-  const pendingRows = rows.filter((r) => r.status === 'pending');
-  const approvedRows = rows.filter((r) => r.status === 'approved');
-  const rejectedRows = rows.filter((r) => r.status === 'rejected');
-  const visibleSectionCount = [pendingRows, approvedRows, rejectedRows].filter(
-    (sectionRows) => sectionRows.length > 0
-  ).length;
-  const shouldStretchSection = visibleSectionCount === 1;
+  const statusConfig = {
+    pending: {
+      title: 'Pending Review',
+      status: 'pending',
+      variant: 'pending',
+      columns: columnConfig.pending,
+      emptyMessage: 'No pending requests',
+      onApprove: handleApproveClick,
+      onRejectClick: handleRejectSubmit,
+      approvingId,
+    },
+    approved: {
+      title: 'Approved Vendors',
+      status: 'approved',
+      variant: 'approved',
+      columns: columnConfig.approved,
+      emptyMessage: 'No approved vendors',
+    },
+    rejected: {
+      title: 'Rejected Requests',
+      status: 'rejected',
+      variant: 'rejected',
+      columns: columnConfig.rejected,
+      emptyMessage: 'No rejected requests',
+    },
+  };
+
+  const currentSection = statusConfig[status] ?? statusConfig.pending;
 
   return (
-    <div className="h-full min-h-0 flex flex-col space-y-8">
-      {pendingRows.length > 0 && (
-        <TableSection
-          title="Pending Review"
-          count={pendingRows.length}
-          status="pending"
-          variant="pending"
-          stretch={shouldStretchSection}
-          rows={pendingRows}
-          expandedId={expandedId}
-          setExpandedId={setExpandedId}
-          onApprove={handleApproveClick}
-          onRejectClick={handleRejectSubmit}
-          approvingId={approvingId}
-          columns={columnConfig.pending}
-        />
-      )}
-
-      {approvedRows.length > 0 && (
-        <TableSection
-          title="Approved Vendors"
-          count={approvedRows.length}
-          status="approved"
-          variant="approved"
-          stretch={shouldStretchSection}
-          rows={approvedRows}
-          expandedId={expandedId}
-          setExpandedId={setExpandedId}
-          columns={columnConfig.approved}
-        />
-      )}
-
-      {rejectedRows.length > 0 && (
-        <TableSection
-          title="Rejected Requests"
-          count={rejectedRows.length}
-          status="rejected"
-          variant="rejected"
-          stretch={shouldStretchSection}
-          rows={rejectedRows}
-          expandedId={expandedId}
-          setExpandedId={setExpandedId}
-          columns={columnConfig.rejected}
-        />
-      )}
-
-      {rows.length === 0 && (
-        <div className="flex items-center justify-center h-96">
-          <div className="flex flex-col items-center justify-center text-gray-400">
-            <LuFileText className="w-12 h-12 mb-4 opacity-50" />
-            <p className="text-lg font-medium">No application yet</p>
-            <p className="text-sm mt-1">
-              Submitted application requests will appear here
-            </p>
-          </div>
-        </div>
-      )}
+    <div className="h-full min-h-0 flex flex-col">
+      <TableSection
+        title={currentSection.title}
+        count={rows.length}
+        status={currentSection.status}
+        variant={currentSection.variant}
+        rows={rows}
+        expandedId={expandedId}
+        setExpandedId={setExpandedId}
+        onApprove={currentSection.onApprove}
+        onRejectClick={currentSection.onRejectClick}
+        approvingId={currentSection.approvingId}
+        columns={currentSection.columns}
+        emptyMessage={currentSection.emptyMessage}
+        stretch
+      />
     </div>
   );
 }

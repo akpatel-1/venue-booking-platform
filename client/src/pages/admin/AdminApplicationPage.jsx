@@ -31,6 +31,7 @@ export default function AdminApplicationPage() {
     <div className="h-full">
       <ApplicationTable
         applications={applications}
+        status={status}
         onApprove={approveApplication}
         onReject={rejectApplication}
         loading={loading}

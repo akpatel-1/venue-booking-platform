@@ -14,6 +14,7 @@ export default function TableSection({
   onRejectClick,
   approvingId,
   columns,
+  emptyMessage = 'No data available',
 }) {
   const config = TABLE_VARIANT_CONFIG[variant];
   const Icon = config.icon;
@@ -59,25 +60,36 @@ export default function TableSection({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {rows.map((application) => (
-              <ApplicationRow
-                key={application.id}
-                application={application}
-                status={status}
-                isExpanded={expandedId === application.id}
-                onToggle={() =>
-                  setExpandedId(
-                    expandedId === application.id ? null : application.id
-                  )
-                }
-                onApprove={() => onApprove && onApprove(application.id)}
-                onRejectClick={(reason) =>
-                  onRejectClick && onRejectClick(application.id, reason)
-                }
-                isApproving={approvingId === application.id}
-                columns={columns}
-              />
-            ))}
+            {rows.length > 0 ? (
+              rows.map((application) => (
+                <ApplicationRow
+                  key={application.id}
+                  application={application}
+                  status={status}
+                  isExpanded={expandedId === application.id}
+                  onToggle={() =>
+                    setExpandedId(
+                      expandedId === application.id ? null : application.id
+                    )
+                  }
+                  onApprove={() => onApprove && onApprove(application.id)}
+                  onRejectClick={(reason) =>
+                    onRejectClick && onRejectClick(application.id, reason)
+                  }
+                  isApproving={approvingId === application.id}
+                  columns={columns}
+                />
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={columns.length + 2}
+                  className="px-6 py-10 text-center text-sm text-gray-500"
+                >
+                  {emptyMessage}
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
