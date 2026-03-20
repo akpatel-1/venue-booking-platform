@@ -12,18 +12,18 @@ export const service = {
     if (oldSessionId) {
       const session = await repository.get(oldSessionId);
 
-      if (session && session.adminId === id) {
+      if (session && session.adminId === admin.id) {
         await repository.delete(oldSessionId);
       }
     }
 
-    const sessionId = await repository.create(id);
+    const sessionId = await repository.create(admin.id);
 
     return {
       sessionId,
       admin: {
-        id: id,
-        email: email,
+        id: admin.id,
+        email: admin.email,
       },
     };
   },
@@ -41,7 +41,7 @@ export const service = {
       throw new ApiError(ERROR_CONFIG.INVALID_CREDENTIALS);
     }
 
-    const isMatch = await argon2.verify(password_hash, password);
+    const isMatch = await argon2.verify(admin.password_hash, password);
 
     if (!isMatch) {
       throw new ApiError(ERROR_CONFIG.INVALID_CREDENTIALS);
