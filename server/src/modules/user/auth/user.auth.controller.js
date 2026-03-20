@@ -1,3 +1,4 @@
+import { USER_AUTH_CONFIG } from './user.auth.config.js';
 import { userAuthService } from './user.auth.service.js';
 
 export const userAuthController = {
@@ -11,40 +12,38 @@ export const userAuthController = {
     const { accessToken, refreshToken } =
       await userAuthService.processOtpVerification(req.body);
 
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 60 * 1000,
-    });
+    res.cookie(
+      USER_AUTH_CONFIG.ACCESS_COOKIE,
+      accessToken,
+      USER_AUTH_CONFIG.REFRESH_COOKIE_OPTIONS
+    );
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie(
+      USER_AUTH_CONFIG.REFRESH_COOKIE,
+      refreshToken,
+      USER_AUTH_CONFIG.REFRESH_COOKIE_OPTIONS
+    );
 
     return res.status(200).json({ message: 'Login successful.' });
   },
 
   async handleSessionRotation(req, res) {
-    const newToken = await userAuthService.processSessionRotation(req.cookies);
+    const refreshToken = req.cookies[USER_AUTH_CONFIG.REFRESH_COOKIE];
 
-    res.cookie('accessToken', newToken.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 60 * 1000,
-    });
+    const newToken = await userAuthService.processSessionRotation(refreshToken);
 
-    res.cookie('refreshToken', newToken.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie(
+      USER_AUTH_CONFIG.ACCESS_COOKIE,
+      newToken.accessToken,
+      USER_AUTH_CONFIG.REFRESH_COOKIE_OPTIONS
+    );
 
-    res.status(200).json({});
+    res.cookie(
+      USER_AUTH_CONFIG.ACCESS_COOKIE,
+      newToken.refreshToken,
+      USER_AUTH_CONFIG.REFRESH_COOKIE_OPTIONS
+    );
+
+    return res.status(200).json({ message: 'Login successful' });
   },
 };

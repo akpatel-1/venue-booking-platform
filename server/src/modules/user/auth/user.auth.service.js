@@ -65,7 +65,7 @@ export const userAuthService = {
     return userId;
   },
 
-  async processSessionRotation({ refreshToken }) {
+  async processSessionRotation(refreshToken) {
     if (!refreshToken) {
       throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
     }

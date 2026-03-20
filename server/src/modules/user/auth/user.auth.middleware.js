@@ -4,11 +4,12 @@ import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { ERROR_CONFIG } from '../../error.config.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
+import { USER_AUTH_CONFIG } from './user.auth.config.js';
 import { userAuthRepository } from './user.auth.repository.js';
 
 export const middleware = {
   async authenticateToken(req, res, next) {
-    const { accessToken } = req.cookies;
+    const { accessToken } = req.cookies[USER_AUTH_CONFIG.ACCESS_COOKIE];
 
     if (!accessToken) {
       throw new ApiError(ERROR_CONFIG.UNAUTHORIZED_REQUEST);
