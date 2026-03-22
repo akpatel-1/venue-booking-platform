@@ -8,16 +8,16 @@ import { checkExistingApplication } from './application.middleware.js';
 import { schema } from './application.schema.js';
 import { requireDocument } from './application.validator.js';
 
-export const vendorApplication = express.Router();
+export const vendorApplicationRoutes = express.Router();
 
-vendorApplication.get(
+vendorApplicationRoutes.get(
   '/application/status',
   middleware.authenticateToken,
   middleware.ensureAccountActive,
   controller.handleStatusRequest
 );
 
-vendorApplication.post(
+vendorApplicationRoutes.post(
   '/application',
   middleware.authenticateToken,
   middleware.ensureAccountActive,

@@ -1,4 +1,4 @@
-import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
+import { vendorApplicationRoutesLoader } from '../loaders/vendor.status.loader';
 import VendorDashboard from '../pages/vendor/VendorDashboardPage';
 import VendorKycPage from '../pages/vendor/VendorKycPage';
 import VendorKycStatusPage from '../pages/vendor/VendorKycStatusPage';
@@ -14,7 +14,7 @@ export const vendorRoutes = [
     element: <VendorKycPage />,
   },
   {
-    loader: vendorApplicationLoader,
+    loader: vendorApplicationRoutesLoader,
     path: '/partners/application/status',
     element: <VendorKycStatusPage />,
   },

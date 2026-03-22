@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
 
-import { adminAuthLoader } from '../loaders/admin.auth.loder';
-import AdminApplicationPage from '../pages/admin/AdminApplicationPage';
+import { adminAuthRoutesLoader } from '../loaders/admin.auth.loder';
 import AdminDashboardOverviewPage from '../pages/admin/AdminDashboardOverviewPage';
 import AdminDashboard from '../pages/admin/AdminDashboardPage';
 import AdminLogin from '../pages/admin/AdminLoginPage';
+import adminApplicationRoutesPage from '../pages/admin/adminApplicationRoutesPage';
 
 export const adminRoutes = [
   {
@@ -12,12 +12,12 @@ export const adminRoutes = [
     children: [
       {
         path: 'login',
-        loader: adminAuthLoader.publicRoute,
+        loader: adminAuthRoutesLoader.publicRoute,
         element: <AdminLogin />,
       },
 
       {
-        loader: adminAuthLoader.protectedRoute,
+        loader: adminAuthRoutesLoader.protectedRoute,
         element: <AdminDashboard />,
         children: [
           {
@@ -32,7 +32,7 @@ export const adminRoutes = [
 
           {
             path: 'application',
-            element: <AdminApplicationPage />,
+            element: <adminApplicationRoutesPage />,
           },
         ],
       },

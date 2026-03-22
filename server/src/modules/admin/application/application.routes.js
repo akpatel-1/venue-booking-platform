@@ -5,16 +5,16 @@ import { sessionValidation } from '../session/session.middleware.js';
 import { controller } from './application.controller.js';
 import { schema } from './application.schema.js';
 
-export const adminApplication = express.Router();
+export const adminApplicationRoutes = express.Router();
 
-adminApplication.get(
+adminApplicationRoutes.get(
   '/application',
   sessionValidation,
   validateSchema(schema.status, 'query'),
   controller.handleApplicationRequest
 );
 
-adminApplication.patch(
+adminApplicationRoutes.patch(
   '/application/:id',
   sessionValidation,
   validateSchema(schema.id, 'params'),
@@ -22,7 +22,7 @@ adminApplication.patch(
   controller.handleUpdateRequest
 );
 
-adminApplication.get(
+adminApplicationRoutes.get(
   '/application/:status',
   sessionValidation,
   validateSchema(schema.status, 'params'),
