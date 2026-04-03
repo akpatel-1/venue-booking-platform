@@ -2,31 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AlertCircle, AlertTriangle, Eye, EyeOff, Loader2 } from 'lucide-react';
-import * as z from 'zod';
 
 import { adminApi } from '../../api/admin.api';
+import { adminAuthStore } from '../../store/admin.auth.store';
+import { loginSchema } from '../../utils/login.schema';
 
-const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, 'Email is required')
-    .max(50, 'Email cannot exceed 50 characters')
-    .email('Invalid email format'),
-  password: z
-    .string()
-    .refine((value) => value.trim().length > 0, {
-      message: 'Password cannot be empty or spaces only.',
-    })
-    .refine((value) => !value.startsWith(' ') && !value.endsWith(' '), {
-      message: 'Password cannot start or end with a space.',
-    })
-    .min(12, 'Password must be at least 12 characters long.')
-    .max(128, 'Password cannot exceed 128 characters.'),
-});
-
-export default function LoginForm() {
+export default function AdminLoginPage() {
   const navigate = useNavigate();
+  const setUser = adminAuthStore((state) => state.setUser);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -86,7 +69,8 @@ export default function LoginForm() {
       const response = await adminApi.login(formData);
 
       if (response.status === 200) {
-        navigate('/admin/dashboard');
+        setUser(response.data?.data || null);
+        navigate('/admin/overview');
       }
     } catch (err) {
       const status = err.response?.status;
@@ -115,31 +99,6 @@ export default function LoginForm() {
               'repeating-linear-gradient(0deg,transparent,transparent 39px,#000 39px,#000 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,#000 39px,#000 40px)',
           }}
         />
-
-        <div className="lg:hidden flex items-center gap-2 mb-10">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 38 38" fill="none">
-              <path
-                d="M10 12 L19 26 L28 12"
-                stroke="white"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-              <circle cx="19" cy="26" r="2.5" fill="#f59e0b" />
-            </svg>
-          </div>
-          <span
-            className="text-slate-900 text-lg font-bold"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
-            Vyra
-          </span>
-          <span className="text-[0.6rem] font-bold tracking-widest uppercase text-amber-600 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-full">
-            Admin
-          </span>
-        </div>
 
         <div
           className="relative z-10 w-full max-w-100"
@@ -262,7 +221,11 @@ export default function LoginForm() {
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[1.1rem] hover:text-violet-500 transition-colors duration-200"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               {credentialError.passwordError && (

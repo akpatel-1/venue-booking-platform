@@ -1,10 +1,9 @@
 import { Navigate } from 'react-router-dom';
 
-import { adminAuthRoutesLoader } from '../loaders/admin.auth.loder';
-import AdminDashboardOverviewPage from '../pages/admin/AdminDashboardOverviewPage';
+import { adminAuthLoader } from '../loaders/admin.auth.loder';
 import AdminDashboard from '../pages/admin/AdminDashboardPage';
-import AdminLogin from '../pages/admin/AdminLoginPage';
-import adminApplicationRoutesPage from '../pages/admin/adminApplicationRoutesPage';
+import AdminLoginPage from '../pages/admin/AdminLoginPage';
+import AdminOverviewPage from '../pages/admin/AdminOverviewPage';
 
 export const adminRoutes = [
   {
@@ -12,27 +11,22 @@ export const adminRoutes = [
     children: [
       {
         path: 'login',
-        loader: adminAuthRoutesLoader.publicRoute,
-        element: <AdminLogin />,
+        loader: adminAuthLoader.publicRoute,
+        element: <AdminLoginPage />,
       },
 
       {
-        loader: adminAuthRoutesLoader.protectedRoute,
+        loader: adminAuthLoader.protectedRoute,
         element: <AdminDashboard />,
         children: [
           {
             index: true,
-            element: <Navigate to="dashboard" replace />,
+            element: <Navigate to="overview" replace />,
           },
 
           {
-            path: 'dashboard',
-            element: <AdminDashboardOverviewPage />,
-          },
-
-          {
-            path: 'application',
-            element: <adminApplicationRoutesPage />,
+            path: 'overview',
+            element: <AdminOverviewPage />,
           },
         ],
       },

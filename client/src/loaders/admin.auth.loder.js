@@ -1,23 +1,35 @@
 import { redirect } from 'react-router-dom';
 
-import { adminApi } from '../api/admin.api';
+import { adminAuthStore } from '../store/admin.auth.store';
 
+const { hasCheckedSession, isAuthenticated, initializeSession } =
+  adminAuthStore.getState();
 export const adminAuthLoader = {
   protectedRoute: async () => {
-    try {
-      await adminApi.checkSession();
-      return null;
-    } catch {
+    if (hasCheckedSession) {
+      return isAuthenticated ? null : redirect('/admin/login');
+    }
+
+    const authenticated = await initializeSession();
+
+    if (!authenticated) {
       return redirect('/admin/login');
     }
+
+    return null;
   },
 
   publicRoute: async () => {
-    try {
-      await adminApi.checkSession();
-      return redirect('/admin/dashboard');
-    } catch {
-      return null;
+    if (hasCheckedSession) {
+      return isAuthenticated ? redirect('/admin/overview') : null;
     }
+
+    const authenticated = await initializeSession();
+
+    if (authenticated) {
+      return redirect('/admin/overview');
+    }
+
+    return null;
   },
 };
