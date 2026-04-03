@@ -76,11 +76,6 @@ export default function RequestApplications() {
 
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Request Overview</h2>
-        <p className="text-sm text-gray-500">Click a card to open the subtab</p>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {CARD_CONFIG.map((card) => {
           const Icon = card.icon;

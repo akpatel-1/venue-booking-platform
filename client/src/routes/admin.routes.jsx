@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 
 import { adminAuthLoader } from '../loaders/admin.auth.loder';
+import AdminApplicationPage from '../pages/admin/AdminApplicationPage';
 import AdminDashboard from '../pages/admin/AdminDashboardPage';
 import AdminLoginPage from '../pages/admin/AdminLoginPage';
 import AdminOverviewPage from '../pages/admin/AdminOverviewPage';
@@ -27,6 +28,11 @@ export const adminRoutes = [
           {
             path: 'overview',
             element: <AdminOverviewPage />,
+          },
+
+          {
+            path: 'application',
+            element: <AdminApplicationPage />,
           },
         ],
       },

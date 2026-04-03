@@ -1,81 +1,76 @@
-import { HiOutlineCash } from 'react-icons/hi';
-import {
-  IoCheckmarkCircleOutline,
-  IoCloseCircleOutline,
-  IoHomeOutline,
-  IoSettingsOutline,
-  IoTimeOutline,
-} from 'react-icons/io5';
-import { MdOutlineStorefront } from 'react-icons/md';
-import { RiUserAddLine } from 'react-icons/ri';
-import { TbReportAnalytics } from 'react-icons/tb';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
+import {
+  BarChart3,
+  CircleCheck,
+  CircleX,
+  Clock3,
+  Home,
+  Settings,
+  Store,
+  UserPlus,
+  Wallet,
+} from 'lucide-react';
+
 import { adminApi } from '../../api/admin.api';
-import DashboardLayout from '../../components/dashboard/DashboardLayout';
+import Layout from '../../components/dashboard/Layout';
+import { adminAuthStore } from '../../store/admin.auth.store';
 
 const adminNavigationLinks = [
   {
-    to: '/admin/dashboard',
-    label: 'Dashboard',
-    icon: IoHomeOutline,
-    color: '#6777F1',
+    to: '/admin/overview',
+    label: 'Overview',
+    icon: Home,
   },
   {
     to: '/admin/application?status=pending',
     label: 'Vendor KYC',
-    icon: RiUserAddLine,
-    color: '#b55104',
+    icon: UserPlus,
     children: [
       {
         to: '/admin/application?status=pending',
         label: 'Pending',
-        icon: IoTimeOutline,
-        color: '#F59E0B',
+        icon: Clock3,
       },
       {
         to: '/admin/application?status=approved',
         label: 'Approved',
-        icon: IoCheckmarkCircleOutline,
-        color: '#10B981',
+        icon: CircleCheck,
       },
       {
         to: '/admin/application?status=rejected',
         label: 'Rejected',
-        icon: IoCloseCircleOutline,
-        color: '#EF4444',
+        icon: CircleX,
       },
     ],
   },
   {
     to: '/admin/venues?status=pendig',
     label: 'Venues',
-    icon: MdOutlineStorefront,
-    color: '#8B5CF6',
+    icon: Store,
   },
   {
     to: '/admin/transactions',
     label: 'Transactions',
-    icon: HiOutlineCash,
-    color: '#22C55E',
+    icon: Wallet,
   },
   {
     to: '/admin/reports',
     label: 'Reports',
-    icon: TbReportAnalytics,
-    color: '#0EA5E9',
+    icon: BarChart3,
   },
   {
     to: '/admin/settings',
     label: 'Settings',
-    icon: IoSettingsOutline,
-    color: '#fcba03',
+    icon: Settings,
   },
 ];
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
+  const clearSession = adminAuthStore((state) => state.clearSession);
+
   const handleLogout = async () => {
     try {
       await adminApi.logout();
@@ -85,16 +80,14 @@ export default function AdminDashboardPage() {
         return;
       }
     } finally {
+      clearSession();
       navigate('/admin/login');
     }
   };
 
   return (
-    <DashboardLayout
-      sidebarLinks={adminNavigationLinks}
-      onLogout={handleLogout}
-    >
+    <Layout sidebarLinks={adminNavigationLinks} onLogout={handleLogout}>
       <Outlet />
-    </DashboardLayout>
+    </Layout>
   );
 }

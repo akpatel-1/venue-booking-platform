@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import HeaderLayout from './HeaderLayout';
-import SidebarLayout from './SidebarLayout';
+import Header from './Header';
+import Sidebar from './Sidebar';
 
 const getInitialSidebarState = () => {
   if (typeof window === 'undefined') return false;
@@ -12,7 +12,7 @@ const getInitialSidebarState = () => {
   return window.innerWidth >= 768;
 };
 
-export default function DashboardLayout({ sidebarLinks, onLogout, children }) {
+export default function Layout({ sidebarLinks, onLogout, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(getInitialSidebarState);
 
   useEffect(() => {
@@ -20,13 +20,9 @@ export default function DashboardLayout({ sidebarLinks, onLogout, children }) {
   }, [sidebarOpen]);
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden relative">
+    <div className="flex h-screen bg-white overflow-hidden relative">
       {/* 1. Sidebar Component */}
-      <SidebarLayout
-        isOpen={sidebarOpen}
-        links={sidebarLinks}
-        onLogout={onLogout}
-      />
+      <Sidebar isOpen={sidebarOpen} links={sidebarLinks} onLogout={onLogout} />
 
       {/* 2. Mobile Backdrop Overlay */}
       {sidebarOpen && (
@@ -38,10 +34,7 @@ export default function DashboardLayout({ sidebarLinks, onLogout, children }) {
 
       {/* 3. Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <HeaderLayout
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
     </div>
