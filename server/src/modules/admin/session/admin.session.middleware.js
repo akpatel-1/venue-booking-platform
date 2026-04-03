@@ -20,13 +20,8 @@ export async function sessionValidation(req, res, next) {
     throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
   }
 
-  if (data.role !== 'admin') {
-    throw new ApiError(ERROR_CONFIG.UNAUTHORIZED_REQUEST);
-  }
-
   req.admin = {
     id: data.adminId,
-    role: data.role,
   };
 
   next();

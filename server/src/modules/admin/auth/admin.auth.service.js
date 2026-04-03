@@ -13,14 +13,13 @@ export const service = {
 
     const admin = await this._verifyAdminCredentials(email, password);
 
-    const sessionId = await repository.create(admin.id, admin.role);
+    const sessionId = await repository.create(admin.id);
 
     return {
       sessionId,
       admin: {
         id: admin.id,
         email: admin.email,
-        role: admin.role,
       },
     };
   },
