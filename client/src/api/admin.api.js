@@ -1,9 +1,9 @@
 import { adminClient } from '../lib/axios.instance';
 
 export const adminApi = {
-  login: (data) => adminClient.post('/admin/login', data),
-  checkSession: () => adminClient.get('/admin/session'),
-  logout: () => adminClient.post('/admin/logout'),
+  login: (data) => adminClient.post('/admin/auth/login', data),
+  checkSession: () => adminClient.get('/admin/auth/me'),
+  logout: () => adminClient.post('/admin/auth/logout'),
 
   getApplication: (status = 'pending') =>
     adminClient.get(`/admin/application?status=${status}`),

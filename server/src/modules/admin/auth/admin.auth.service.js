@@ -2,39 +2,36 @@ import argon2 from 'argon2';
 
 import { ApiError } from '../../../utils/api.error.util.js';
 import { ERROR_CONFIG } from '../../error.config.js';
-import { repository } from '../session/session.repository.js';
-import { findAdminByEmail } from './auth.repository.js';
+import { repository } from '../session/admin.session.repository.js';
+import { findAdminByEmail } from './admin.auth.repository.js';
 
 export const service = {
-  async loginAdmin({ email, password }, oldSessionId) {
-    const admin = await this._authenticateAdmin(email, password);
-
+  async authenticateAdmin({ email, password }, oldSessionId) {
     if (oldSessionId) {
-      const session = await repository.get(oldSessionId);
-
-      if (session && session.adminId === admin.id) {
-        await repository.delete(oldSessionId);
-      }
+      await repository.delete(oldSessionId);
     }
 
-    const sessionId = await repository.create(admin.id);
+    const admin = await this._verifyAdminCredentials(email, password);
+
+    const sessionId = await repository.create(admin.id, admin.role);
 
     return {
       sessionId,
       admin: {
         id: admin.id,
         email: admin.email,
+        role: admin.role,
       },
     };
   },
 
-  async logoutAdmin(sessionId) {
+  async terminateAdminSession(sessionId) {
     if (sessionId) {
       await repository.delete(sessionId);
     }
   },
 
-  async _authenticateAdmin(email, password) {
+  async _verifyAdminCredentials(email, password) {
     const admin = await findAdminByEmail(email);
 
     if (!admin) {

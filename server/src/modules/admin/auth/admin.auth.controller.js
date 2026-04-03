@@ -1,12 +1,12 @@
-import { ADMIN_AUTH_CONFIG } from './auth.config.js';
-import { service } from './auth.service.js';
+import { ADMIN_AUTH_CONFIG } from './admin.auth.config.js';
+import { service } from './admin.auth.service.js';
 
 export const controller = {
   async handleAdminLogin(req, res) {
     const oldSessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
     const credentials = req.data;
 
-    const { sessionId, admin } = await service.loginAdmin(
+    const { sessionId, admin } = await service.authenticateAdmin(
       credentials,
       oldSessionId
     );
@@ -26,7 +26,7 @@ export const controller = {
   async handleAdminLogout(req, res) {
     const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
 
-    await service.logoutAdmin(sessionId);
+    await service.terminateAdminSession(sessionId);
 
     res.clearCookie(
       ADMIN_AUTH_CONFIG.COOKIE_NAME,

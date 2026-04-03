@@ -1,16 +1,16 @@
 import crypto from 'crypto';
 
 import { redis } from '../../../infrastructure/redis/redis.js';
-import { ADMIN_AUTH_CONFIG } from '../auth/auth.config.js';
+import { ADMIN_AUTH_CONFIG } from '../auth/admin.auth.config.js';
 
 export const repository = {
-  async create(adminId) {
+  async create(adminId, adminRole) {
     const sessionId = crypto.randomUUID();
     const key = `${ADMIN_AUTH_CONFIG.SESSION_PREFIX}${sessionId}`;
 
     const sessionData = {
       adminId,
-      role: 'admin',
+      role: adminRole,
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + ADMIN_AUTH_CONFIG.SESSION_TTL * 1000),
     };
