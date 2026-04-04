@@ -8,7 +8,7 @@ import Logo from '../../assets/logo.svg';
 
 export default function Header({ sidebarOpen, setSidebarOpen }) {
   return (
-    <header className="sticky top-0 z-20 flex h-14 w-full items-center border-b border-slate-200 bg-white px-4">
+    <header className="sticky top-0 z-20 flex h-14 w-full items-center gap-2 border-b border-slate-200 bg-white px-4">
       {/* Left Section */}
       <div className="z-10 flex items-center gap-2">
         <button
@@ -25,8 +25,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
       </div>
 
       {/* Center - Search */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 hidden w-full max-w-xl -translate-x-1/2 -translate-y-1/2 px-4 md:block">
-        <div className="pointer-events-auto relative w-full">
+      <div className="hidden min-w-0 flex-1 justify-center px-2 md:flex">
+        <div className="relative w-full max-w-xl">
           <IoIosSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
@@ -40,7 +40,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
       </div>
 
       {/* Right Section */}
-      <div className="ml-auto flex items-center gap-1 z-10">
+      <div className="ml-auto flex items-center gap-1">
         {/* GitHub */}
         <a
           href="https://github.com/akpatel-1/venue-booking-platform"
