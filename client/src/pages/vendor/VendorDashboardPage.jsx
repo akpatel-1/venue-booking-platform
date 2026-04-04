@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Calendar, House, Settings, Store, User, Wallet } from 'lucide-react';
 
 import { userApi } from '../../api/user.api';
-import DashboardLayout from '../../components/dashboard/DashboardLayout';
+import Layout from '../../components/dashboard/Layout';
 
 const vendorNavigationLinks = [
   {
@@ -57,11 +57,11 @@ async function handleLogout() {
 
 export default function VendorDashboard() {
   return (
-    <DashboardLayout
+    <Layout
       sidebarLinks={vendorNavigationLinks}
       onLogout={handleLogout}
     >
       <Outlet />
-    </DashboardLayout>
+    </Layout>
   );
 }
