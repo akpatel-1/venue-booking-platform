@@ -1,9 +1,7 @@
 import { useRef, useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
-import { HiArrowLeft, HiArrowRight, HiXMark } from 'react-icons/hi2';
-// Added HiXMark
-import { IoWarningOutline } from 'react-icons/io5';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { AlertTriangle, ArrowLeft, ArrowRight, Globe, X } from 'lucide-react';
 
 import { userApi } from '../../api/user.api';
 
@@ -17,7 +15,7 @@ const Label = ({ children }) => (
 const ErrorBox = ({ msg }) =>
   msg ? (
     <div className="flex items-center gap-2 p-3 mb-4 bg-red-50 border-2 border-red-200 rounded-lg text-red-600 text-sm">
-      <IoWarningOutline className="w-4 h-4 shrink-0" /> {msg}
+      <AlertTriangle className="w-4 h-4 shrink-0" /> {msg}
     </div>
   ) : null;
 
@@ -31,7 +29,7 @@ const SubmitBtn = ({ loading, label, loadingLabel }) => (
       loadingLabel
     ) : (
       <>
-        {label} <HiArrowRight className="w-4 h-4" />
+        {label} <ArrowRight className="w-4 h-4" />
       </>
     )}
   </button>
@@ -205,7 +203,7 @@ export default function AuthForm({
             onClick={onClose}
             className="absolute top-5 left-5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#7a7267] hover:text-[#ff4d1c] transition-colors z-20"
           >
-            <HiArrowLeft size={14} /> Back
+            <ArrowLeft size={14} /> Back
           </button>
         ) : (
           <button
@@ -213,7 +211,7 @@ export default function AuthForm({
             onClick={onClose}
             className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-gray-100 text-[#7a7267] hover:text-[#0d0d0d] transition-colors z-20"
           >
-            <HiXMark size={20} />
+            <X size={20} />
           </button>
         ))}
 
@@ -237,7 +235,7 @@ export default function AuthForm({
               disabled
               className="w-full flex items-center justify-center gap-3 py-2.5 rounded-lg border-2 border-[#0d0d0d]/20 text-[#0d0d0d]/40 text-sm font-medium mb-4 cursor-not-allowed opacity-60"
             >
-              <FcGoogle className="w-5 h-5" /> Continue with Google
+              <Globe className="w-5 h-5" /> Continue with Google
             </button>
 
             <div className="flex items-center gap-3 mb-4">
@@ -286,7 +284,7 @@ export default function AuthForm({
               }}
               className="flex items-center gap-1.5 text-sm text-[#7a7267] hover:text-[#0d0d0d] mb-6 transition-colors"
             >
-              <HiArrowLeft className="w-4 h-4" /> Back
+              <ArrowLeft className="w-4 h-4" /> Back
             </button>
 
             <h1 className="font-display font-extrabold text-2xl tracking-tight text-[#0d0d0d] mb-1">

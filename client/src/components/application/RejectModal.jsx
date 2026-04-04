@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { FaChevronDown } from 'react-icons/fa';
+
+import { ChevronDown } from 'lucide-react';
 
 const REJECTION_REASONS = [
   'Invalid business information',
@@ -121,7 +122,7 @@ export default function RejectModal({
         className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500 hover:bg-red-600 text-white transition-colors flex items-center gap-2 disabled:opacity-50"
       >
         Reject
-        <FaChevronDown
+        <ChevronDown
           className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>

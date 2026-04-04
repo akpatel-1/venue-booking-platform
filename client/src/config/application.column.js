@@ -1,4 +1,4 @@
-import { LuCircleCheck, LuCircleX, LuClock } from 'react-icons/lu';
+import { CircleCheck, CircleX, Clock3 } from 'lucide-react';
 
 function formatDate(value) {
   if (!value) return '-';
@@ -49,7 +49,7 @@ export const APPLICATION_COLUMN_CONFIG = {
 
 export const TABLE_VARIANT_CONFIG = {
   pending: {
-    icon: LuClock,
+    icon: Clock3,
     iconColor: 'text-amber-500',
     headerBg: 'bg-amber-50',
     borderColor: 'border-amber-200',
@@ -57,7 +57,7 @@ export const TABLE_VARIANT_CONFIG = {
     badgeText: 'text-amber-700',
   },
   approved: {
-    icon: LuCircleCheck,
+    icon: CircleCheck,
     iconColor: 'text-emerald-500',
     headerBg: 'bg-emerald-50',
     borderColor: 'border-emerald-200',
@@ -65,7 +65,7 @@ export const TABLE_VARIANT_CONFIG = {
     badgeText: 'text-emerald-700',
   },
   rejected: {
-    icon: LuCircleX,
+    icon: CircleX,
     iconColor: 'text-red-500',
     headerBg: 'bg-red-50',
     borderColor: 'border-red-200',

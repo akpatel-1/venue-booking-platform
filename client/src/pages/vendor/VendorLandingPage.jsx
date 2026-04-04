@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { FiArrowRight, FiMapPin, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+
+import { ArrowRight, MapPin, User } from 'lucide-react';
 
 import { vendorApi } from '../../api/vendor.api';
 import AuthForm from '../../components/auth/AuthForm';
@@ -40,7 +41,7 @@ const JoinBtn = ({ label = 'Join as a Partner', onClick, loading = false }) => (
     className="btn-pop inline-flex items-center gap-3 rounded-lg border-2 border-[#0d0d0d] bg-[#ff4d1c] px-8 py-4 font-display text-base font-bold text-white disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none"
   >
     {loading ? 'Loading...' : label}
-    <FiArrowRight size={18} />
+    <ArrowRight size={18} />
   </button>
 );
 
@@ -89,7 +90,7 @@ export default function VendorLandingPage() {
           disabled={isNavigating}
           className="flex items-center gap-2 rounded-full border-2 border-[#0d0d0d] px-2 py-2.5 text-sm font-medium transition-colors hover:bg-[#0d0d0d] hover:text-[#f5f1eb] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          <FiUser size={15} /> {isNavigating ? 'Loading...' : 'Partner Login'}
+          <User size={15} /> {isNavigating ? 'Loading...' : 'Partner Login'}
         </button>
       </nav>
 
@@ -268,7 +269,7 @@ export default function VendorLandingPage() {
         />
         <FadeSection>
           <div className="flex items-center justify-center gap-2 mb-6 text-sm text-[#7a7267]">
-            <FiMapPin className="text-[#ff4d1c]" /> Already live in 50+ cities
+            <MapPin className="text-[#ff4d1c]" /> Already live in 50+ cities
             across India
           </div>
           <h2 className="font-display font-extrabold text-4xl md:text-6xl tracking-tight leading-tight max-w-2xl mx-auto mb-5">

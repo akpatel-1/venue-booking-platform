@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FiUpload, FiX } from 'react-icons/fi';
-import { IoWarningOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { TriangleAlert, Upload, X } from 'lucide-react';
 import * as z from 'zod';
 
 import { vendorApi } from '../../api/vendor.api';
@@ -177,8 +176,7 @@ export default function VendorKycPage() {
               <fieldset disabled={loading} className="flex flex-col gap-3">
                 {submitError && (
                   <div className="shrink-0 p-2.5 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg flex gap-2 items-center">
-                    <IoWarningOutline className="shrink-0 text-lg" />{' '}
-                    {submitError}
+                    <TriangleAlert className="shrink-0 text-lg" /> {submitError}
                   </div>
                 )}
 
@@ -300,7 +298,7 @@ export default function VendorKycPage() {
                     }`}
                   >
                     <span className="grid h-7 w-7 place-items-center rounded-full bg-[#f6efe4] text-[#7a7267] transition-colors duration-150 group-hover:bg-[#ffe6dc] group-hover:text-[#ff4d1c]">
-                      <FiUpload size={14} />
+                      <Upload size={14} />
                     </span>
                     <span className="text-xs text-[#7a7267] truncate flex-1">
                       {file ? file.name : 'Upload JPG or PNG (max 5MB)'}
@@ -315,7 +313,7 @@ export default function VendorKycPage() {
                         }}
                         aria-label="Remove uploaded file"
                       >
-                        <FiX size={14} />
+                        <X size={14} />
                       </button>
                     )}
                     <input

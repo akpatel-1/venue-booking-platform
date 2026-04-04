@@ -1,4 +1,4 @@
-import { FiChevronDown, FiFileText } from 'react-icons/fi';
+import { ChevronDown, FileText } from 'lucide-react';
 
 import ActionButtons from './ActionButtons';
 import ExpandedDetails from './ExpandedDetails';
@@ -28,7 +28,7 @@ export default function ApplicationRow({
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <FiFileText className="w-4 h-4" /> View
+          <FileText className="w-4 h-4" /> View
         </a>
       ) : (
         '-'
@@ -47,7 +47,7 @@ export default function ApplicationRow({
         onClick={onToggle}
       >
         <td className="px-4 py-4">
-          <FiChevronDown
+          <ChevronDown
             className={`w-5 h-5 transition-transform ${
               isDarkMode ? 'text-slate-500' : 'text-gray-400'
             } ${isExpanded ? 'rotate-180' : ''}`}

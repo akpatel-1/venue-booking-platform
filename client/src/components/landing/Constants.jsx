@@ -1,45 +1,44 @@
 import {
-  FiBarChart2,
-  FiCheckCircle,
-  FiDollarSign,
-  FiSmartphone,
-} from 'react-icons/fi';
-import { GiJumpingRope, GiPartyFlags } from 'react-icons/gi';
-import {
-  MdPool,
-  MdSportsBasketball,
-  MdSportsFootball,
-  MdVideogameAsset,
-} from 'react-icons/md';
+  BarChart2,
+  CircleCheck,
+  DollarSign,
+  Dumbbell,
+  Flag,
+  Gamepad2,
+  Goal,
+  Smartphone,
+  Volleyball,
+  Waves,
+} from 'lucide-react';
 
 export const VENUES = [
   {
-    icon: <MdPool size={24} />,
+    icon: <Waves size={24} />,
     name: 'Water Parks',
     desc: 'Slot-based entry & seasonal pricing',
   },
   {
-    icon: <MdSportsFootball size={24} />,
+    icon: <Goal size={24} />,
     name: 'Turf Grounds',
     desc: 'Hourly slots & advance reservations',
   },
   {
-    icon: <GiJumpingRope size={24} />,
+    icon: <Dumbbell size={24} />,
     name: 'Trampoline Parks',
     desc: 'Age-based tickets & capacity limits',
   },
   {
-    icon: <MdSportsBasketball size={24} />,
+    icon: <Volleyball size={24} />,
     name: 'Rebound Arenas',
     desc: 'Multi-court & tournament scheduling',
   },
   {
-    icon: <MdVideogameAsset size={24} />,
+    icon: <Gamepad2 size={24} />,
     name: 'Gaming Zones',
     desc: 'Session passes & combo packages',
   },
   {
-    icon: <GiPartyFlags size={24} />,
+    icon: <Flag size={24} />,
     name: 'Play Zones',
     desc: 'Kids tickets & parent bundles',
   },
@@ -70,22 +69,22 @@ export const STEPS = [
 
 export const BENEFITS = [
   {
-    icon: <FiBarChart2 />,
+    icon: <BarChart2 />,
     title: 'Live dashboard',
     desc: 'Track bookings, revenue and slot fill-rate in real time.',
   },
   {
-    icon: <FiDollarSign />,
+    icon: <DollarSign />,
     title: 'Instant digital payments',
     desc: 'UPI, cards, wallets — customers pay online, you settle fast.',
   },
   {
-    icon: <FiSmartphone />,
+    icon: <Smartphone />,
     title: 'Zero tech skills needed',
     desc: 'If you can use WhatsApp, you can run your VenueOS account.',
   },
   {
-    icon: <FiCheckCircle />,
+    icon: <CircleCheck />,
     title: 'Auto confirmations',
     desc: 'Customers get digital tickets. No more counter queues.',
   },

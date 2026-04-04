@@ -1,4 +1,4 @@
-import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { CircleCheck, CircleX } from 'lucide-react';
 
 import RejectModal from './RejectModal';
 
@@ -12,7 +12,7 @@ export default function ActionButtons({
   if (status === 'approved') {
     return (
       <span className="inline-flex items-center gap-2 text-emerald-700 font-semibold">
-        <FaCheckCircle className="w-4 h-4" />
+        <CircleCheck className="w-4 h-4" />
         Approved
       </span>
     );
@@ -21,7 +21,7 @@ export default function ActionButtons({
   if (status === 'rejected') {
     return (
       <span className="inline-flex items-center gap-2 text-red-700 font-semibold">
-        <FaTimesCircle className="w-4 h-4" />
+        <CircleX className="w-4 h-4" />
         Rejected
       </span>
     );

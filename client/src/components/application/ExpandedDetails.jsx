@@ -1,4 +1,4 @@
-import { FiFileText } from 'react-icons/fi';
+import { FileText } from 'lucide-react';
 
 export default function ExpandedDetails({
   application,
@@ -57,7 +57,7 @@ export default function ExpandedDetails({
                             : 'text-blue-600 hover:text-blue-700'
                         }`}
                       >
-                        <FiFileText className="w-4 h-4" /> Open Full Image
+                        <FileText className="w-4 h-4" /> Open Full Image
                       </a>
                     </div>
                   ) : (
@@ -71,7 +71,7 @@ export default function ExpandedDetails({
                           : 'text-blue-600 hover:text-blue-700'
                       }`}
                     >
-                      <FiFileText className="w-4 h-4" /> Open Document
+                      <FileText className="w-4 h-4" /> Open Document
                     </a>
                   )
                 ) : (
