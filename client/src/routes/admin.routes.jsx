@@ -12,7 +12,6 @@ export const adminRoutes = [
     children: [
       {
         path: 'login',
-        loader: adminAuthLoader.publicRoute,
         element: <AdminLoginPage />,
       },
 

@@ -13,9 +13,8 @@ import {
   Wallet,
 } from 'lucide-react';
 
-import { adminApi } from '../../api/admin.api';
 import Layout from '../../components/dashboard/Layout';
-import { adminAuthStore } from '../../store/admin.auth.store';
+import { adminAuthStore } from '../../store/admin/admin.auth.store';
 
 const adminNavigationLinks = [
   {
@@ -69,18 +68,17 @@ const adminNavigationLinks = [
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
-  const clearSession = adminAuthStore((state) => state.clearSession);
+  const logout = adminAuthStore((state) => state.logout);
 
   const handleLogout = async () => {
     try {
-      await adminApi.logout();
+      await logout();
     } catch (err) {
       if (!err.response || err.response.status >= 500) {
         navigate('/error/500');
         return;
       }
     } finally {
-      clearSession();
       navigate('/admin/login');
     }
   };

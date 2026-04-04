@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AlertCircle, AlertTriangle, Eye, EyeOff, Loader2 } from 'lucide-react';
 
-import { adminApi } from '../../api/admin.api';
-import { adminAuthStore } from '../../store/admin.auth.store';
+import { adminAuthStore } from '../../store/admin/admin.auth.store';
 import { loginSchema } from '../../utils/login.schema';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
-  const setUser = adminAuthStore((state) => state.setUser);
+  const login = adminAuthStore((state) => state.login);
+  const initializeSession = adminAuthStore((state) => state.initializeSession);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +18,17 @@ export default function AdminLoginPage() {
     passwordError: '',
   });
   const [serverError, setServerError] = useState('');
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const isAuthenticated = await initializeSession();
+      if (isAuthenticated) {
+        navigate('/admin/overview');
+      }
+    };
+
+    checkAuth();
+  }, [initializeSession, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,6 +64,7 @@ export default function AdminLoginPage() {
     setCredentialError({ emailError: '', passwordError: '' });
     setServerError('');
 
+    // Validate form data before API call
     const result = loginSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors;
@@ -66,24 +78,17 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await adminApi.login(formData);
+      const loginResult = await login(formData);
 
-      if (response.status === 200) {
-        setUser(response.data?.data || null);
+      if (loginResult.success) {
         navigate('/admin/overview');
-      }
-    } catch (err) {
-      const status = err.response?.status;
-      const errorMessage = err.response?.data?.message;
-
-      if (!err.response || status >= 500) {
+      } else if (loginResult.statusCode >= 500) {
         navigate('/error/500');
-        return;
+      } else {
+        setServerError(loginResult.serverError);
       }
-
-      setServerError(
-        errorMessage || 'Invalid credentials or connection issue.'
-      );
+    } catch {
+      navigate('/error/500');
     } finally {
       setIsLoading(false);
     }
