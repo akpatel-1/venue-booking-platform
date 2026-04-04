@@ -1,6 +1,11 @@
 import { FiFileText } from 'react-icons/fi';
 
-export default function ExpandedDetails({ application, status, columns }) {
+export default function ExpandedDetails({
+  application,
+  status,
+  columns,
+  isDarkMode = false,
+}) {
   const isImageDocument = (url) => {
     if (!url || typeof url !== 'string') return false;
     return /\.(png|jpe?g|webp|gif|bmp|svg)(\?.*)?$/i.test(url);
@@ -12,12 +17,24 @@ export default function ExpandedDetails({ application, status, columns }) {
         {columns.map((column) => (
           <div
             key={column.key}
-            className="bg-white p-3 rounded border border-gray-200 shadow-sm"
+            className={`rounded border p-3 shadow-sm ${
+              isDarkMode
+                ? 'border-slate-700 bg-slate-900'
+                : 'border-gray-200 bg-white'
+            }`}
           >
-            <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-1">
+            <p
+              className={`mb-1 text-xs font-semibold uppercase tracking-wide ${
+                isDarkMode ? 'text-slate-400' : 'text-gray-500'
+              }`}
+            >
               {column.label}
             </p>
-            <div className="text-sm text-gray-900 font-medium break-all">
+            <div
+              className={`text-sm font-medium break-all ${
+                isDarkMode ? 'text-slate-100' : 'text-gray-900'
+              }`}
+            >
               {column.type === 'document' ? (
                 application[column.key] ? (
                   isImageDocument(application[column.key]) ? (
@@ -25,14 +42,20 @@ export default function ExpandedDetails({ application, status, columns }) {
                       <img
                         src={application[column.key]}
                         alt="Document preview"
-                        className="w-full max-h-56 object-contain rounded border border-gray-200"
+                        className={`max-h-56 w-full rounded border object-contain ${
+                          isDarkMode ? 'border-slate-700' : 'border-gray-200'
+                        }`}
                         loading="lazy"
                       />
                       <a
                         href={application[column.key]}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-blue-600 hover:underline inline-flex items-center gap-1"
+                        className={`inline-flex items-center gap-1 hover:underline ${
+                          isDarkMode
+                            ? 'text-sky-400 hover:text-sky-300'
+                            : 'text-blue-600 hover:text-blue-700'
+                        }`}
                       >
                         <FiFileText className="w-4 h-4" /> Open Full Image
                       </a>
@@ -42,7 +65,11 @@ export default function ExpandedDetails({ application, status, columns }) {
                       href={application[column.key]}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-blue-600 hover:underline inline-flex items-center gap-1"
+                      className={`inline-flex items-center gap-1 hover:underline ${
+                        isDarkMode
+                          ? 'text-sky-400 hover:text-sky-300'
+                          : 'text-blue-600 hover:text-blue-700'
+                      }`}
                     >
                       <FiFileText className="w-4 h-4" /> Open Document
                     </a>
@@ -61,11 +88,27 @@ export default function ExpandedDetails({ application, status, columns }) {
       </div>
 
       {status === 'rejected' && application.rejection_reason && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm font-semibold text-red-900 mb-2">
+        <div
+          className={`rounded-lg border p-4 ${
+            isDarkMode
+              ? 'border-rose-500/30 bg-rose-500/10'
+              : 'border-red-200 bg-red-50'
+          }`}
+        >
+          <p
+            className={`mb-2 text-sm font-semibold ${
+              isDarkMode ? 'text-rose-200' : 'text-red-900'
+            }`}
+          >
             Rejection Reason
           </p>
-          <p className="text-sm text-red-700">{application.rejection_reason}</p>
+          <p
+            className={`text-sm ${
+              isDarkMode ? 'text-rose-300' : 'text-red-700'
+            }`}
+          >
+            {application.rejection_reason}
+          </p>
         </div>
       )}
     </div>

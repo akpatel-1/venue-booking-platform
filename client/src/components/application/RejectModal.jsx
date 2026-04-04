@@ -16,7 +16,12 @@ const VIEWPORT_GUTTER = 12;
 const DROPDOWN_OFFSET = 8;
 const DROPDOWN_ESTIMATED_HEIGHT = 360;
 
-export default function RejectModal({ onConfirm, onCancel, disabled = false }) {
+export default function RejectModal({
+  onConfirm,
+  onCancel,
+  disabled = false,
+  isDarkMode = false,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState('');
   const [customReason, setCustomReason] = useState('');
@@ -125,7 +130,11 @@ export default function RejectModal({ onConfirm, onCancel, disabled = false }) {
         createPortal(
           <div
             ref={menuRef}
-            className="bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+            className={`z-50 rounded-lg border shadow-lg ${
+              isDarkMode
+                ? 'border-slate-700 bg-slate-900'
+                : 'border-gray-200 bg-white'
+            }`}
             style={{
               position: 'fixed',
               top: `${menuPosition.top}px`,
@@ -134,8 +143,16 @@ export default function RejectModal({ onConfirm, onCancel, disabled = false }) {
             }}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="px-4 py-3 border-b border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-900">
+            <div
+              className={`border-b px-4 py-3 ${
+                isDarkMode ? 'border-slate-700' : 'border-gray-200'
+              }`}
+            >
+              <h3
+                className={`text-sm font-semibold ${
+                  isDarkMode ? 'text-slate-100' : 'text-gray-900'
+                }`}
+              >
                 Select rejection reason
               </h3>
             </div>
@@ -145,7 +162,9 @@ export default function RejectModal({ onConfirm, onCancel, disabled = false }) {
                 {REJECTION_REASONS.map((reason) => (
                   <label
                     key={reason}
-                    className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer"
+                    className={`flex cursor-pointer items-center gap-2 text-sm ${
+                      isDarkMode ? 'text-slate-300' : 'text-gray-700'
+                    }`}
                   >
                     <input
                       type="radio"
@@ -168,17 +187,29 @@ export default function RejectModal({ onConfirm, onCancel, disabled = false }) {
                   onChange={(e) => setCustomReason(e.target.value)}
                   placeholder="Please specify the reason for rejection..."
                   autoFocus
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm resize-none"
+                  className={`w-full resize-none rounded-lg border px-3 py-2 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    isDarkMode
+                      ? 'border-slate-700 bg-slate-800 text-slate-100 placeholder:text-slate-500'
+                      : 'border-gray-300 bg-white text-gray-900'
+                  }`}
                   rows="3"
                 />
               )}
             </div>
 
-            <div className="px-4 py-3 border-t border-gray-200 flex gap-2 justify-end">
+            <div
+              className={`flex justify-end gap-2 border-t px-4 py-3 ${
+                isDarkMode ? 'border-slate-700' : 'border-gray-200'
+              }`}
+            >
               <button
                 type="button"
                 onClick={handleCancel}
-                className="px-3 py-1.5 text-gray-700 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                  isDarkMode
+                    ? 'border-slate-600 text-slate-300 hover:bg-slate-800'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
               >
                 Cancel
               </button>
@@ -186,7 +217,13 @@ export default function RejectModal({ onConfirm, onCancel, disabled = false }) {
                 type="button"
                 onClick={handleSubmit}
                 disabled={!submitReason}
-                className="px-3 py-1.5 bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white text-sm font-medium rounded-lg transition-colors"
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium text-white transition-colors ${
+                  submitReason
+                    ? 'bg-red-500 hover:bg-red-600'
+                    : isDarkMode
+                      ? 'bg-slate-700'
+                      : 'bg-gray-300'
+                }`}
               >
                 Submit
               </button>

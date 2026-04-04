@@ -11,6 +11,7 @@ export default function ApplicationRow({
   onApprove,
   onRejectClick,
   isApproving,
+  isDarkMode = false,
   columns,
 }) {
   const renderCellValue = (column, value) => {
@@ -20,7 +21,11 @@ export default function ApplicationRow({
           href={value}
           target="_blank"
           rel="noreferrer"
-          className="text-blue-600 hover:text-blue-700 hover:underline font-medium inline-flex items-center gap-1"
+          className={`inline-flex items-center gap-1 font-medium hover:underline ${
+            isDarkMode
+              ? 'text-sky-400 hover:text-sky-300'
+              : 'text-blue-600 hover:text-blue-700'
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
           <FiFileText className="w-4 h-4" /> View
@@ -36,17 +41,26 @@ export default function ApplicationRow({
   return (
     <>
       <tr
-        className="cursor-pointer transition-colors hover:bg-gray-50"
+        className={`cursor-pointer transition-colors ${
+          isDarkMode ? 'hover:bg-slate-800/60' : 'hover:bg-gray-50'
+        }`}
         onClick={onToggle}
       >
         <td className="px-6 py-4">
           <FiChevronDown
-            className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+            className={`w-5 h-5 transition-transform ${
+              isDarkMode ? 'text-slate-500' : 'text-gray-400'
+            } ${isExpanded ? 'rotate-180' : ''}`}
           />
         </td>
 
         {columns.map((column) => (
-          <td key={column.key} className="px-6 py-4 text-gray-900">
+          <td
+            key={column.key}
+            className={`px-6 py-4 ${
+              isDarkMode ? 'text-slate-100' : 'text-gray-900'
+            }`}
+          >
             {renderCellValue(column, application[column.key])}
           </td>
         ))}
@@ -57,6 +71,7 @@ export default function ApplicationRow({
             onApprove={onApprove}
             onRejectClick={onRejectClick}
             isApproving={isApproving}
+            isDarkMode={isDarkMode}
           />
         </td>
       </tr>
@@ -64,11 +79,16 @@ export default function ApplicationRow({
       {isExpanded && (
         <tr>
           <td colSpan="100%">
-            <div className="px-6 py-6 bg-gray-50/50">
+            <div
+              className={`px-6 py-6 ${
+                isDarkMode ? 'bg-slate-950/70' : 'bg-gray-50/50'
+              }`}
+            >
               <ExpandedDetails
                 application={application}
                 status={status}
                 columns={columns}
+                isDarkMode={isDarkMode}
               />
             </div>
           </td>

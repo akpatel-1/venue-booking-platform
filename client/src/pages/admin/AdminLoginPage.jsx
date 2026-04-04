@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { AlertCircle, AlertTriangle, Eye, EyeOff, Loader2 } from 'lucide-react';
 
+import useDashboardDarkModePreference from '../../hooks/useDashboardDarkModePreference';
 import { adminAuthStore } from '../../store/admin/admin.auth.store';
 import { loginSchema } from '../../utils/login.schema';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
+  const isDarkMode = useDashboardDarkModePreference();
   const login = adminAuthStore((state) => state.login);
   const initializeSession = adminAuthStore((state) => state.initializeSession);
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -96,12 +98,19 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex font-sans">
-      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-[#f8f7f4] relative overflow-hidden">
+      <div
+        className={`relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-12 ${
+          isDarkMode ? 'bg-slate-950' : 'bg-[#f8f7f4]'
+        }`}
+      >
         <div
-          className="absolute inset-0 opacity-[0.025] pointer-events-none"
+          className={`pointer-events-none absolute inset-0 ${
+            isDarkMode ? 'opacity-[0.045]' : 'opacity-[0.025]'
+          }`}
           style={{
-            backgroundImage:
-              'repeating-linear-gradient(0deg,transparent,transparent 39px,#000 39px,#000 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,#000 39px,#000 40px)',
+            backgroundImage: isDarkMode
+              ? 'repeating-linear-gradient(0deg,transparent,transparent 39px,#fff 39px,#fff 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,#fff 39px,#fff 40px)'
+              : 'repeating-linear-gradient(0deg,transparent,transparent 39px,#000 39px,#000 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,#000 39px,#000 40px)',
           }}
         />
 
@@ -111,12 +120,16 @@ export default function AdminLoginPage() {
         >
           <div className="mb-8">
             <h1
-              className="text-[2rem] font-bold text-slate-900 leading-tight mb-1.5"
+              className={`mb-1.5 text-[2rem] font-bold leading-tight ${
+                isDarkMode ? 'text-slate-100' : 'text-slate-900'
+              }`}
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               Admin Sign In
             </h1>
-            <p className="text-slate-500 text-sm">
+            <p
+              className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}
+            >
               Restricted access — authorised personnel only.
             </p>
           </div>
@@ -136,7 +149,9 @@ export default function AdminLoginPage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
-                className="text-[0.78rem] font-semibold text-slate-700 tracking-tight"
+                className={`text-[0.78rem] font-semibold tracking-tight ${
+                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                }`}
               >
                 Admin email
               </label>
@@ -162,8 +177,12 @@ export default function AdminLoginPage() {
                   value={formData.email}
                   onChange={handleChange}
                   onBlur={validateCredentials}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-sm text-slate-800 bg-white outline-none transition-all duration-200
-                    placeholder:text-slate-300
+                  className={`w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm outline-none transition-all duration-200
+                    ${
+                      isDarkMode
+                        ? 'bg-slate-900 text-slate-100 placeholder:text-slate-500'
+                        : 'bg-white text-slate-800 placeholder:text-slate-300'
+                    }
                     focus:ring-2 focus:ring-violet-500/20
                     ${
                       credentialError.emailError
@@ -185,7 +204,9 @@ export default function AdminLoginPage() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="password"
-                className="text-[0.78rem] font-semibold text-slate-700 tracking-tight"
+                className={`text-[0.78rem] font-semibold tracking-tight ${
+                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                }`}
               >
                 Password
               </label>
@@ -211,8 +232,12 @@ export default function AdminLoginPage() {
                   value={formData.password}
                   onBlur={validateCredentials}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-10 py-2.5 rounded-xl border text-sm text-slate-800 bg-white outline-none transition-all duration-200
-                    placeholder:text-slate-300
+                  className={`w-full rounded-xl border py-2.5 pl-10 pr-10 text-sm outline-none transition-all duration-200
+                    ${
+                      isDarkMode
+                        ? 'bg-slate-900 text-slate-100 placeholder:text-slate-500'
+                        : 'bg-white text-slate-800 placeholder:text-slate-300'
+                    }
                     focus:ring-2 focus:ring-violet-500/20
                     ${
                       credentialError.passwordError
@@ -279,7 +304,13 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <div className="mt-7 flex items-start gap-2.5 bg-amber-50 border border-amber-200/70 rounded-xl px-3.5 py-3">
+          <div
+            className={`mt-7 flex items-start gap-2.5 rounded-xl border px-3.5 py-3 ${
+              isDarkMode
+                ? 'border-amber-400/20 bg-amber-500/10'
+                : 'border-amber-200/70 bg-amber-50'
+            }`}
+          >
             <svg
               className="w-4 h-4 text-amber-500 mt-0.5 shrink-0"
               fill="none"
@@ -293,13 +324,21 @@ export default function AdminLoginPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <p className="text-[0.72rem] text-amber-700 leading-relaxed">
+            <p
+              className={`text-[0.72rem] leading-relaxed ${
+                isDarkMode ? 'text-amber-200' : 'text-amber-700'
+              }`}
+            >
               This portal is for <strong>authorised admins only</strong>.
               Unauthorised access attempts are logged and may be reported.
             </p>
           </div>
 
-          <p className="text-center text-[0.72rem] text-slate-400 mt-6">
+          <p
+            className={`mt-6 text-center text-[0.72rem] ${
+              isDarkMode ? 'text-slate-500' : 'text-slate-400'
+            }`}
+          >
             © {new Date().getFullYear()} Vyra Technologies. All rights reserved.
           </p>
         </div>

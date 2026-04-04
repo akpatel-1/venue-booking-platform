@@ -7,6 +7,7 @@ export default function ActionButtons({
   onApprove,
   onRejectClick,
   isApproving,
+  isDarkMode = false,
 }) {
   if (status === 'approved') {
     return (
@@ -38,7 +39,11 @@ export default function ActionButtons({
       >
         {isApproving ? 'Approving...' : 'Approve'}
       </button>
-      <RejectModal onConfirm={onRejectClick} disabled={isApproving} />
+      <RejectModal
+        onConfirm={onRejectClick}
+        disabled={isApproving}
+        isDarkMode={isDarkMode}
+      />
     </div>
   );
 }

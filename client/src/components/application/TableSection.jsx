@@ -6,6 +6,7 @@ export default function TableSection({
   count,
   status,
   variant,
+  isDarkMode = false,
   stretch = false,
   rows,
   expandedId,
@@ -21,18 +22,36 @@ export default function TableSection({
 
   return (
     <div
-      className={`rounded-lg border ${config.borderColor} bg-white shadow-sm overflow-hidden ${stretch ? 'flex flex-col h-full min-h-0' : ''}`}
+      className={`overflow-hidden rounded-lg border shadow-sm ${
+        isDarkMode
+          ? 'border-slate-800 bg-slate-900'
+          : `${config.borderColor} bg-white`
+      } ${stretch ? 'flex h-full min-h-0 flex-col' : ''}`}
     >
       <div
-        className={`${config.headerBg} px-6 py-4 border-b ${config.borderColor}`}
+        className={`border-b px-6 py-4 ${
+          isDarkMode
+            ? 'border-slate-800 bg-slate-900'
+            : `${config.headerBg} ${config.borderColor}`
+        }`}
       >
         <div className="flex items-center gap-3">
           <Icon className={`w-5 h-5 ${config.iconColor}`} />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <h3
+              className={`text-lg font-semibold ${
+                isDarkMode ? 'text-slate-100' : 'text-gray-900'
+              }`}
+            >
+              {title}
+            </h3>
           </div>
           <span
-            className={`${config.badgeBg} ${config.badgeText} text-sm font-semibold px-3 py-1 rounded-full`}
+            className={`rounded-full px-3 py-1 text-sm font-semibold ${
+              isDarkMode
+                ? 'bg-slate-800 text-slate-200'
+                : `${config.badgeBg} ${config.badgeText}`
+            }`}
           >
             {count} {count === 1 ? 'request' : 'requests'}
           </span>
@@ -43,23 +62,43 @@ export default function TableSection({
         className={`overflow-y-auto overflow-x-auto ${stretch ? 'flex-1 min-h-0' : 'max-h-[calc(100vh-14rem)]'}`}
       >
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
+          <thead
+            className={`sticky top-0 z-10 border-b ${
+              isDarkMode
+                ? 'border-slate-800 bg-slate-950/80 backdrop-blur'
+                : 'border-gray-200 bg-gray-50'
+            }`}
+          >
             <tr>
-              <th className="px-6 py-3 text-left font-semibold text-gray-700 w-8"></th>
+              <th
+                className={`w-8 px-6 py-3 text-left font-semibold ${
+                  isDarkMode ? 'text-slate-300' : 'text-gray-700'
+                }`}
+              ></th>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="px-6 py-3 text-left font-semibold text-gray-700"
+                  className={`px-6 py-3 text-left font-semibold ${
+                    isDarkMode ? 'text-slate-300' : 'text-gray-700'
+                  }`}
                 >
                   {col.label}
                 </th>
               ))}
-              <th className="px-6 py-3 text-center font-semibold text-gray-700">
+              <th
+                className={`px-6 py-3 text-center font-semibold ${
+                  isDarkMode ? 'text-slate-300' : 'text-gray-700'
+                }`}
+              >
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody
+            className={`divide-y ${
+              isDarkMode ? 'divide-slate-800' : 'divide-gray-200'
+            }`}
+          >
             {rows.length > 0 ? (
               rows.map((application) => (
                 <ApplicationRow
@@ -77,6 +116,7 @@ export default function TableSection({
                     onRejectClick && onRejectClick(application.id, reason)
                   }
                   isApproving={approvingId === application.id}
+                  isDarkMode={isDarkMode}
                   columns={columns}
                 />
               ))
@@ -84,7 +124,9 @@ export default function TableSection({
               <tr>
                 <td
                   colSpan={columns.length + 2}
-                  className="px-6 py-10 text-center text-sm text-gray-500"
+                  className={`px-6 py-10 text-center text-sm ${
+                    isDarkMode ? 'text-slate-400' : 'text-gray-500'
+                  }`}
                 >
                   {emptyMessage}
                 </td>

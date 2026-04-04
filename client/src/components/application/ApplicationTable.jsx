@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { APPLICATION_COLUMN_CONFIG } from '../../config/application.column';
+import { useDashboardTheme } from '../dashboard/dashboard.theme.context';
 import TableSection from './TableSection';
 
 export default function ApplicationTable({
@@ -13,6 +14,7 @@ export default function ApplicationTable({
 }) {
   const [expandedId, setExpandedId] = useState(null);
   const [approvingId, setApprovingId] = useState(null);
+  const { isDarkMode } = useDashboardTheme();
 
   const rows = Array.isArray(applications) ? applications : [];
 
@@ -78,6 +80,7 @@ export default function ApplicationTable({
         approvingId={currentSection.approvingId}
         columns={currentSection.columns}
         emptyMessage={currentSection.emptyMessage}
+        isDarkMode={isDarkMode}
         stretch
       />
     </div>
