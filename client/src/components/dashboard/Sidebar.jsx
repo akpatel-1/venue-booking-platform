@@ -14,7 +14,7 @@ export default function Sidebar({ isOpen, links, onLogout }) {
     >
       {/* Brand Logo */}
       <div
-        className={`flex items-center h-16 border-b border-slate-200/80 ${isOpen ? 'px-6' : 'justify-center'}`}
+        className={`flex items-center h-14 border-b border-slate-200/80 ${isOpen ? 'px-6' : 'justify-center'}`}
       >
         <img src={Logo} alt="Vyra" className="h-7 w-7" />
         {isOpen && (

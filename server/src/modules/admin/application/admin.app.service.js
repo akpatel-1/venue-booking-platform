@@ -1,8 +1,8 @@
 import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
-import { APPLICATION_ERROR_CONFIG } from './application.error.config.js';
-import { repository } from './application.repository.js';
+import { APPLICATION_ERROR_CONFIG } from './admin.app.error.config.js';
+import { repository } from './admin.app.repository.js';
 
 export const service = {
   async processApplicationRequest(status) {

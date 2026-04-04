@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-import { APPLICATION_STATUS } from './application.config.js';
-
-const ALLOWED_STATUS = new Set(Object.values(APPLICATION_STATUS));
+const ALLOWED_STATUS = new Set(['pending', 'approved', 'rejected']);
 
 export const schema = {
   status: z.object({

@@ -1,20 +1,20 @@
 import express from 'express';
 
 import { validateSchema } from '../../schema.validation.middleware.js';
-import { sessionValidation } from '../session/session.middleware.js';
-import { controller } from './application.controller.js';
-import { schema } from './application.schema.js';
+import { sessionValidation } from '../session/admin.session.middleware.js';
+import { controller } from './admin.app.controller.js';
+import { schema } from './admin.app.schema.js';
 
-export const adminApplicationRoutes = express.Router();
+export const adminAppRoutes = express.Router();
 
-adminApplicationRoutes.get(
+adminAppRoutes.get(
   '/application',
   sessionValidation,
   validateSchema(schema.status, 'query'),
   controller.handleApplicationRequest
 );
 
-adminApplicationRoutes.patch(
+adminAppRoutes.patch(
   '/application/:id',
   sessionValidation,
   validateSchema(schema.id, 'params'),
@@ -22,7 +22,7 @@ adminApplicationRoutes.patch(
   controller.handleUpdateRequest
 );
 
-adminApplicationRoutes.get(
+adminAppRoutes.get(
   '/application/:status',
   sessionValidation,
   validateSchema(schema.status, 'params'),

@@ -18,6 +18,7 @@ export const controller = {
     );
 
     return res.status(200).json({
+      status: true,
       message: 'Login successful',
       data: admin,
     });
