@@ -1,108 +1,126 @@
-import { useEffect, useState } from 'react';
-import {
-  IoCheckmarkCircleOutline,
-  IoCloseCircleOutline,
-  IoTimeOutline,
-} from 'react-icons/io5';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { adminApi } from '../../api/admin.api';
+import { ArrowRight, CheckCircle2, Clock, User, XCircle } from 'lucide-react';
 
-const INITIAL_COUNTS = {
-  pending: 0,
-  approved: 0,
-  rejected: 0,
-};
+import { adminOverviewStore } from '../../store/admin/admin.overview.store';
 
 const CARD_CONFIG = [
   {
     key: 'pending',
-    label: 'Pending Requests',
-    icon: IoTimeOutline,
-    cardClass: 'border-amber-200 bg-amber-50',
-    iconClass: 'text-amber-600',
-    valueClass: 'text-amber-700',
+    label: 'Pending',
+    description: 'Awaiting review',
+    icon: Clock,
+    bar: 'bg-amber-400',
+    badge: 'bg-amber-50 text-amber-600 ring-amber-200',
   },
   {
     key: 'approved',
-    label: 'Approved Requests',
-    icon: IoCheckmarkCircleOutline,
-    cardClass: 'border-emerald-200 bg-emerald-50',
-    iconClass: 'text-emerald-600',
-    valueClass: 'text-emerald-700',
+    label: 'Approved',
+    description: 'Onboarded vendors',
+    icon: CheckCircle2,
+    bar: 'bg-emerald-400',
+    badge: 'bg-emerald-50 text-emerald-600 ring-emerald-200',
   },
   {
     key: 'rejected',
-    label: 'Rejected Requests',
-    icon: IoCloseCircleOutline,
-    cardClass: 'border-rose-200 bg-rose-50',
-    iconClass: 'text-rose-600',
-    valueClass: 'text-rose-700',
+    label: 'Rejected',
+    description: 'Declined applications',
+    icon: XCircle,
+    bar: 'bg-rose-400',
+    badge: 'bg-rose-50 text-rose-600 ring-rose-200',
   },
 ];
 
-export default function RequestApplications() {
+function SkeletonCard() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-white p-5 shadow-sm animate-pulse">
+      <div className="absolute top-0 left-0 h-0.5 w-full bg-gray-100" />
+      <div className="flex items-center justify-between mb-4 mt-1">
+        <div className="h-5 w-20 rounded-md bg-gray-100" />
+        <div className="h-4 w-4 rounded bg-gray-100" />
+      </div>
+      <div className="h-9 w-14 rounded bg-gray-100 mb-2" />
+      <div className="h-3 w-28 rounded bg-gray-100" />
+    </div>
+  );
+}
+
+export default function VendorApplications() {
   const navigate = useNavigate();
-  const [statusCounts, setStatusCounts] = useState(INITIAL_COUNTS);
-  const [isLoading, setIsLoading] = useState(true);
+  const statusCounts = adminOverviewStore((state) => state.statusCounts);
+  const isLoading = adminOverviewStore((state) => state.isLoading);
+  const fetchStatusCounts = adminOverviewStore(
+    (state) => state.fetchStatusCounts
+  );
 
   useEffect(() => {
-    const fetchStatusCounts = async () => {
-      setIsLoading(true);
-
-      try {
-        const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
-          adminApi.getStatusCount('pending'),
-          adminApi.getStatusCount('approved'),
-          adminApi.getStatusCount('rejected'),
-        ]);
-
-        setStatusCounts({
-          pending: Number(pendingRes?.data?.count ?? 0),
-          approved: Number(approvedRes?.data?.count ?? 0),
-          rejected: Number(rejectedRes?.data?.count ?? 0),
-        });
-      } catch (err) {
-        if (!err.response || err.response.status >= 500) {
-          navigate('/error/500');
-        }
-      } finally {
-        setIsLoading(false);
+    void fetchStatusCounts().catch((err) => {
+      if (!err.response || err.response.status >= 500) {
+        navigate('/error/500');
       }
-    };
-
-    void fetchStatusCounts();
-  }, [navigate]);
+    });
+  }, [fetchStatusCounts, navigate]);
 
   return (
     <section className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {CARD_CONFIG.map((card) => {
-          const Icon = card.icon;
-          const value = Number.isFinite(Number(statusCounts?.[card.key]))
-            ? Number(statusCounts[card.key])
-            : 0;
+      {/* Section header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <User className="h-4 w-4 text-gray-400" />
+          <h2 className="text-xs font-semibold text-gray-500 tracking-widest uppercase">
+            Vendor Applications
+          </h2>
+        </div>
+      </div>
 
-          return (
-            <button
-              type="button"
-              key={card.key}
-              onClick={() => navigate(`/admin/application?status=${card.key}`)}
-              className={`rounded-lg border p-5 shadow-sm text-left transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none ${card.cardClass}`}
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">
-                  {card.label}
-                </p>
-                <Icon className={`h-6 w-6 ${card.iconClass}`} />
-              </div>
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {isLoading
+          ? CARD_CONFIG.map((c) => <SkeletonCard key={c.key} />)
+          : CARD_CONFIG.map((card) => {
+              const Icon = card.icon;
+              const value = Number.isFinite(Number(statusCounts?.[card.key]))
+                ? Number(statusCounts[card.key])
+                : 0;
 
-              <p className={`mt-3 text-3xl font-bold ${card.valueClass}`}>
-                {isLoading ? '...' : value}
-              </p>
-            </button>
-          );
-        })}
+              return (
+                <button
+                  type="button"
+                  key={card.key}
+                  onClick={() =>
+                    navigate(`/admin/application?status=${card.key}`)
+                  }
+                  className="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-5 shadow-sm text-left transition-all duration-200 hover:border-gray-200 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-300"
+                >
+                  {/* Colored top accent bar */}
+                  <div
+                    className={`absolute top-0 left-0 h-0.5 w-full ${card.bar}`}
+                  />
+
+                  {/* Label + arrow row */}
+                  <div className="flex items-center justify-between mb-4 mt-1">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${card.badge}`}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      {card.label}
+                    </span>
+                    <ArrowRight className="h-4 w-4 text-gray-300 transition-all duration-150 group-hover:text-gray-500 group-hover:translate-x-0.5" />
+                  </div>
+
+                  {/* Count */}
+                  <p className="text-4xl font-semibold tabular-nums text-gray-800 tracking-tight">
+                    {value}
+                  </p>
+
+                  {/* Sub-label */}
+                  <p className="mt-1 text-xs text-gray-400">
+                    {card.description}
+                  </p>
+                </button>
+              );
+            })}
       </div>
     </section>
   );
