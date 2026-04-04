@@ -12,7 +12,8 @@ export default function AdminApplicationPage() {
     search,
   });
 
-  const { applications, refresh, loading } = useApplicationData(status);
+  const { applications, refresh, loading, isDataForCurrentStatus } =
+    useApplicationData(status);
 
   const approveApplication = async (id) => {
     await adminApi.updateStatus(id, { status: 'approved' });
@@ -30,11 +31,11 @@ export default function AdminApplicationPage() {
   return (
     <div className="h-full">
       <ApplicationTable
-        applications={applications}
+        applications={isDataForCurrentStatus ? applications : []}
         status={status}
         onApprove={approveApplication}
         onReject={rejectApplication}
-        loading={loading}
+        loading={loading || !isDataForCurrentStatus}
       />
     </div>
   );

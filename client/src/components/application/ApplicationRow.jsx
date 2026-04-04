@@ -46,7 +46,7 @@ export default function ApplicationRow({
         }`}
         onClick={onToggle}
       >
-        <td className="px-6 py-4">
+        <td className="px-4 py-4">
           <FiChevronDown
             className={`w-5 h-5 transition-transform ${
               isDarkMode ? 'text-slate-500' : 'text-gray-400'
@@ -57,7 +57,7 @@ export default function ApplicationRow({
         {columns.map((column) => (
           <td
             key={column.key}
-            className={`px-6 py-4 ${
+            className={`px-4 py-4 ${
               isDarkMode ? 'text-slate-100' : 'text-gray-900'
             }`}
           >
