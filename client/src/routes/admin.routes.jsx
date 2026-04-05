@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 
-import { adminAuthLoader } from '../loaders/admin.auth.loder';
+import { adminProtected } from '../loaders/admin.auth.loader';
 import AdminApplicationPage from '../pages/admin/AdminApplicationPage';
 import AdminDashboard from '../pages/admin/AdminDashboardPage';
 import AdminLoginPage from '../pages/admin/AdminLoginPage';
@@ -16,7 +16,7 @@ export const adminRoutes = [
       },
 
       {
-        loader: adminAuthLoader.protectedRoute,
+        loader: adminProtected,
         element: <AdminDashboard />,
         children: [
           {

@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
   const navigate = useNavigate();
   const isDarkMode = useDashboardDarkMode();
   const login = adminAuthStore((state) => state.login);
-  const initializeSession = adminAuthStore((state) => state.initializeSession);
+  const checkSessionCache = adminAuthStore((state) => state.checkSessionCache);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -42,14 +42,14 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const isAuthenticated = await initializeSession();
+      const isAuthenticated = await checkSessionCache();
       if (isAuthenticated) {
         navigate('/admin/overview');
       }
     };
 
     checkAuth();
-  }, [initializeSession, navigate]);
+  }, [checkSessionCache, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
