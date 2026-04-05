@@ -1,7 +1,7 @@
 export const repository = {
   async findUserById(client, userId) {
     const result = await client.query(
-      `SELECT role, status
+      `SELECT id, email, role, status
      FROM users 
      WHERE id = $1`,
       [userId]

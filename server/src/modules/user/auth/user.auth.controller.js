@@ -1,9 +1,11 @@
-import { success } from 'zod';
-
 import { USER_AUTH_CONFIG } from './user.auth.config.js';
 import { service } from './user.auth.service.js';
 
 export const controller = {
+  async handleMeRequest(req, res) {
+    return res.status(200).json({ success: true, data: req.user });
+  },
+
   async handleOtpRequest(req, res) {
     await service.processOtpRequest(req.body);
     return res.status(201).json({

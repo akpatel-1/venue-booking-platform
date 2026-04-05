@@ -26,6 +26,13 @@ userAuthRoutes.post(
   controller.handleOtpRequest
 );
 
+userAuthRoutes.get(
+  '/auth/me',
+  middleware.authenticateToken,
+  middleware.ensureAccountActive,
+  controller.handleMeRequest
+);
+
 userAuthRoutes.post('/auth/refresh', controller.handleSessionRotation);
 
 userAuthRoutes.post(

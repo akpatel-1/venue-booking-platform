@@ -373,8 +373,6 @@ export default function VendorKycPage() {
       {showAuthModal && (
         <AuthForm
           isModal
-          showClose
-          exitType="close"
           onClose={() => setShowAuthModal(false)}
           onSuccess={async () => {
             setShowAuthModal(false);
