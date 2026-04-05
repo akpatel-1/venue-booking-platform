@@ -68,7 +68,7 @@ export const adminAuthStore = create((set, get) => ({
     sessionCheckPromise = adminApi
       .checkSession()
       .then((response) => {
-        const admin = response?.data?.admin || null;
+        const admin = response?.data?.data || null;
         set({
           user: admin,
           isAuthenticated: !!admin,

@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
-import useDashboardDarkModePreference from '../../hooks/useDashboardDarkModePreference';
+import useDashboardDarkMode from '../../hooks/useDashboardDarkMode';
 
 export default function ErrorPage({ errorConfig }) {
   const navigate = useNavigate();
-  const isDarkMode = useDashboardDarkModePreference();
+  const isDarkMode = useDashboardDarkMode();
 
   return (
     <div

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const getInitialDarkModePreference = () => {
+const getInitialDarkMode = () => {
   if (typeof window === 'undefined') return false;
 
   const saved = localStorage.getItem('dashboardDarkMode');
@@ -11,8 +11,8 @@ const getInitialDarkModePreference = () => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches;
 };
 
-export default function useDashboardDarkModePreference() {
-  const [isDarkMode, setIsDarkMode] = useState(getInitialDarkModePreference);
+export default function useDashboardDarkMode() {
+  const [isDarkMode, setIsDarkMode] = useState(getInitialDarkMode);
 
   useEffect(() => {
     const handleStorage = (event) => {

@@ -1,15 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
+
 import { AlertCircle, AlertTriangle, Eye, EyeOff, Loader2 } from 'lucide-react';
 
-import useDashboardDarkModePreference from '../../hooks/useDashboardDarkModePreference';
+
+
+import useDashboardDarkMode from '../../hooks/useDashboardDarkMode';
 import { adminAuthStore } from '../../store/admin/admin.auth.store';
 import { loginSchema } from '../../utils/login.schema';
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default function AdminLoginPage() {
   const navigate = useNavigate();
-  const isDarkMode = useDashboardDarkModePreference();
+  const isDarkMode = useDashboardDarkMode();
   const login = adminAuthStore((state) => state.login);
   const initializeSession = adminAuthStore((state) => state.initializeSession);
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -66,7 +83,6 @@ export default function AdminLoginPage() {
     setCredentialError({ emailError: '', passwordError: '' });
     setServerError('');
 
-    // Validate form data before API call
     const result = loginSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors;
