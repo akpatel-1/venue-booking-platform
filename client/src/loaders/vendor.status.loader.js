@@ -7,7 +7,7 @@ export async function vendorApplicationLoader() {
     const res = await vendorApi.getKycStatus();
 
     if (res.data.state === 'approved') {
-      return redirect('/partners/dashboard');
+      return redirect('/partners/overview');
     }
 
     if (res.data.state === 'not_applied') {

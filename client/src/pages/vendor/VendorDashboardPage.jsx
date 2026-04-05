@@ -7,8 +7,8 @@ import Layout from '../../components/dashboard/Layout';
 
 const vendorNavigationLinks = [
   {
-    to: '/partners/dashboard',
-    label: 'Dashboard',
+    to: '/partners/overview',
+    label: 'Overview',
     icon: House,
     color: '#6777F1',
   },
@@ -57,10 +57,7 @@ async function handleLogout() {
 
 export default function VendorDashboard() {
   return (
-    <Layout
-      sidebarLinks={vendorNavigationLinks}
-      onLogout={handleLogout}
-    >
+    <Layout sidebarLinks={vendorNavigationLinks} onLogout={handleLogout}>
       <Outlet />
     </Layout>
   );

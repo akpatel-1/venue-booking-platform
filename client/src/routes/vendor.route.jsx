@@ -1,8 +1,13 @@
+import { userProtectedRotue } from '../loaders/user.auth.loader';
 import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
 import VendorDashboard from '../pages/vendor/VendorDashboardPage';
 import VendorKycPage from '../pages/vendor/VendorKycPage';
 import VendorKycStatusPage from '../pages/vendor/VendorKycStatusPage';
 import VendorLandingPage from '../pages/vendor/VendorLandingPage';
+import VendorOverviewPage from '../pages/vendor/VendorOveriviewPage';
+
+// Alias for correct naming
+const userProtectedRoute = userProtectedRotue;
 
 export const vendorRoutes = [
   {
@@ -19,7 +24,18 @@ export const vendorRoutes = [
     element: <VendorKycStatusPage />,
   },
   {
-    path: '/partners/dashboard',
+    loader: userProtectedRoute,
+    path: '/partners',
     element: <VendorDashboard />,
+    children: [
+      {
+        index: true,
+        element: <VendorOverviewPage />,
+      },
+      {
+        path: 'overview',
+        element: <VendorOverviewPage />,
+      },
+    ],
   },
 ];
