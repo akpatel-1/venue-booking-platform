@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { ArrowRight, MapPin, User } from 'lucide-react';
@@ -57,6 +57,13 @@ export default function VendorLandingPage() {
     () => searchParams.get('redirect') || '/partners/application/status',
     [searchParams]
   );
+
+  useLayoutEffect(() => {
+    // Ensure the page renders from the very top on route entry.
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
 
   useEffect(() => {
     if (authRequired) {
