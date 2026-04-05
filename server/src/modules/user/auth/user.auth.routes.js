@@ -1,9 +1,9 @@
 import express from 'express';
 
 import { validateSchema } from '../../schema.validation.middleware.js';
-import { controller } from './auth.controller.js';
-import { middleware } from './auth.middleware.js';
-import { schema } from './auth.schema.js';
+import { controller } from './user.auth.controller.js';
+import { middleware } from './user.auth.middleware.js';
+import { schema } from './user.auth.schema.js';
 
 export const userAuthRoutes = express.Router();
 

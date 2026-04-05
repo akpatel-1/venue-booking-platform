@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import { USER_AUTH_CONFIG } from './auth.config.js';
-import { repository } from './auth.repository.js';
+import { USER_AUTH_CONFIG } from './user.auth.config.js';
+import { repository } from './user.auth.repository.js';
 
 export const middleware = {
   async authenticateToken(req, res, next) {

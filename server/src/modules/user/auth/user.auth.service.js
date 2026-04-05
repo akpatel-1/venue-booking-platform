@@ -3,11 +3,11 @@ import { ApiError } from '../../../utils/api.error.util.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
 import { ERROR_CONFIG } from '../../error.config.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import { sendOtpEmail } from './auth.email.service.js';
-import { OTP } from './auth.otp.js';
-import { otpRepository } from './auth.otp.repository.js';
-import { repository } from './auth.repository.js';
-import { token } from './auth.token.js';
+import { sendOtpEmail } from './user.auth.email.service.js';
+import { OTP } from './user.auth.otp.js';
+import { otpRepository } from './user.auth.otp.repository.js';
+import { repository } from './user.auth.repository.js';
+import { token } from './user.auth.token.js';
 
 export const service = {
   async processOtpRequest({ email }) {
