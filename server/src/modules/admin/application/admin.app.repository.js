@@ -44,6 +44,16 @@ export const repository = {
     );
   },
 
+  async markUserAsVendor(client, id) {
+    await client.query(
+      `
+      UPDATE users 
+      SET role = 'vendor'
+      WHERE id = $1`,
+      [id]
+    );
+  },
+
   async markVendorAsRejected(client, data) {
     await client.query(
       `

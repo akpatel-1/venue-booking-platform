@@ -32,6 +32,7 @@ export const service = {
       }
 
       await repository.createVendorProfile(client, result);
+      await repository.markUserAsVendor(client, id);
     });
   },
 
