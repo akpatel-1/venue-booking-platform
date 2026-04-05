@@ -44,8 +44,8 @@ const STATES = [
 
 function Field({ label, error, children, className = '' }) {
   return (
-    <div className={`flex flex-col gap-0.5 ${className}`}>
-      <label className="text-[10px] font-bold uppercase tracking-widest text-[#7a7267]">
+    <div className={`flex flex-col gap-1 ${className}`}>
+      <label className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8b7a62]">
         {label}
       </label>
       {children}
@@ -143,28 +143,28 @@ export default function VendorKycPage() {
   };
 
   const inp = (err) =>
-    `w-full rounded-xl border px-3.5 py-2.5 text-xs text-[#1f1a16] placeholder:text-[#9b9386] bg-[#fffdfa] outline-none transition-all duration-150 ${
+    `w-full rounded-xl border px-3.5 py-2.5 text-xs text-[#2b241a] placeholder:text-[#a2937d] bg-[#fffdf8] outline-none transition-all duration-150 ${
       err
         ? 'border-red-500 bg-red-50 focus:border-red-600 focus:ring-2 focus:ring-red-200'
-        : 'border-blue-400 hover:border-blue-500 focus:border-blue-600 focus:ring-2 focus:ring-blue-200'
+        : 'border-[#ead9c2] hover:border-[#f0c992] focus:border-[#ffaf52] focus:ring-2 focus:ring-[#ffdca8]'
     }`;
 
   return (
-    <div className="fixed inset-0 bg-[#faf8f5] flex overflow-hidden">
+    <div className="fixed inset-0 bg-linear-to-b from-[#fff7ec] to-[#fffdf8] flex overflow-hidden">
       <KycLeftBg />
 
       {/* RIGHT — Form Panel */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top accent bar */}
-        <div className="h-1 bg-[#ff4d1c] shrink-0" />
-
         <div className="flex-1 overflow-auto px-6 py-10 sm:px-10 lg:px-14">
-          <div className="mx-auto w-full max-w-5xl rounded-2xl border border-[#e6dfd4] bg-[#fffaf3] p-5 shadow-[0_8px_26px_rgba(0,0,0,0.06)] sm:p-7">
-            <header className="mb-5 shrink-0">
-              <h2 className="text-xl font-black uppercase italic text-[#0d0d0d]">
+          <div className="mx-auto w-full max-w-5xl rounded-3xl border border-[#ead9c2] bg-[#fffaf1]/95 p-6 shadow-[0_16px_40px_rgba(67,44,10,0.12)] sm:p-8 lg:p-10">
+            <header className="mb-7 shrink-0 border-b border-[#f0e2ce] pb-5">
+              <span className="inline-flex items-center rounded-full border border-[#f0d6a8] bg-[#ffe8c4] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#6a5435]">
+                Partner onboarding
+              </span>
+              <h2 className="mt-3 text-2xl font-black uppercase italic tracking-tight text-[#2b241a]">
                 Vendor KYC Verification
               </h2>
-              <p className="text-xs text-[#7a7267] mt-1">
+              <p className="text-sm text-[#7a7267] mt-2 max-w-xl leading-relaxed">
                 Fill in your details and upload your PAN document to continue.
               </p>
             </header>
@@ -173,15 +173,15 @@ export default function VendorKycPage() {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-0"
             >
-              <fieldset disabled={loading} className="flex flex-col gap-3">
+              <fieldset disabled={loading} className="flex flex-col gap-4">
                 {submitError && (
-                  <div className="shrink-0 p-2.5 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg flex gap-2 items-center">
+                  <div className="shrink-0 p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl flex gap-2 items-center">
                     <TriangleAlert className="shrink-0 text-lg" /> {submitError}
                   </div>
                 )}
 
                 {/* Row 1 */}
-                <div className="grid grid-cols-2 gap-3 shrink-0">
+                <div className="grid grid-cols-2 gap-3.5 shrink-0">
                   <Field
                     label="First Name on PAN"
                     error={errors.name}
@@ -193,7 +193,7 @@ export default function VendorKycPage() {
                           e.target.value = e.target.value.toUpperCase();
                         },
                       })}
-                      placeholder="Enter first name "
+                      placeholder="Enter first name"
                       className={`${inp(errors.name)} uppercase`}
                     />
                   </Field>
@@ -215,7 +215,7 @@ export default function VendorKycPage() {
                 </div>
 
                 {/* Row 2 */}
-                <div className="grid grid-cols-2 gap-3 shrink-0">
+                <div className="grid grid-cols-2 gap-3.5 shrink-0">
                   <Field
                     label="Phone Number"
                     error={errors.phone}
@@ -254,7 +254,7 @@ export default function VendorKycPage() {
                 </div>
 
                 {/* Row 4 */}
-                <div className="grid grid-cols-3 gap-3 shrink-0">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 shrink-0">
                   <Field label="State" error={errors.state}>
                     <select
                       {...register('state')}
@@ -287,17 +287,17 @@ export default function VendorKycPage() {
 
                 {/* Row 5 — Upload */}
                 <div className="shrink-0">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#7a7267] block mb-0.5">
+                  <label className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8b7a62] block mb-1">
                     PAN Document
                   </label>
                   <label
                     className={`group flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-all duration-150 ${
                       fileError
                         ? 'border-red-500 bg-red-50'
-                        : 'border-gray-300 border-dashed bg-white hover:border-indigo-500 hover:bg-indigo-50'
+                        : 'border-[#ead9c2] border-dashed bg-[#fffdf8] hover:border-[#ffaf52] hover:bg-[#fff4e3]'
                     }`}
                   >
-                    <span className="grid h-7 w-7 place-items-center rounded-full bg-[#f6efe4] text-[#7a7267] transition-colors duration-150 group-hover:bg-[#ffe6dc] group-hover:text-[#ff4d1c]">
+                    <span className="grid h-7 w-7 place-items-center rounded-full bg-[#fff1dd] text-[#7a7267] transition-colors duration-150 group-hover:bg-[#ffaf52] group-hover:text-[#2b241a]">
                       <Upload size={14} />
                     </span>
                     <span className="text-xs text-[#7a7267] truncate flex-1">
@@ -335,12 +335,12 @@ export default function VendorKycPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 bg-[#ff4d1c] text-white font-bold text-sm rounded-xl border-b-4 border-[#0d0d0d] active:border-b-0 active:translate-y-1 transition-all duration-100 hover:bg-[#e8431a]"
+                    className="w-full py-3 bg-[#ffaf52] text-[#2b241a] font-bold text-sm rounded-xl border border-[#f0c992] shadow-[0_6px_0_#d78c36] active:translate-y-0.5 active:shadow-[0_3px_0_#d78c36] transition-all duration-100 hover:bg-[#ffa73f] disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
                   >
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
                         <svg
-                          className="animate-spin h-4 w-4 text-white"
+                          className="animate-spin h-4 w-4 text-[#2b241a]"
                           viewBox="0 0 24 24"
                           fill="none"
                         >
@@ -358,10 +358,10 @@ export default function VendorKycPage() {
                             d="M4 12a8 8 0 018-8v8z"
                           />
                         </svg>
-                        Processing…
+                        Processing...
                       </span>
                     ) : (
-                      'Submit Verification →'
+                      'Submit Verification'
                     )}
                   </button>
                 </div>

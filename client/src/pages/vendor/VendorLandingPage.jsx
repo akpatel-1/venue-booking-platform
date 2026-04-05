@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { ArrowRight, MapPin, User } from 'lucide-react';
@@ -15,6 +15,7 @@ import {
 import DashMockup from '../../components/landing/DashMockup';
 import FadeSection from '../../components/landing/FadeSection';
 import '../../index.css';
+import { userAuthStore } from '../../store/user/user.auth.store';
 
 const TICKER_DOUBLED = [...TICKER, ...TICKER];
 
@@ -49,27 +50,29 @@ const JoinBtn = ({ label = 'Join as a Partner', onClick, loading = false }) => (
 export default function VendorLandingPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const isAuthenticated = userAuthStore((state) => state.isAuthenticated);
+  const isChecking = userAuthStore((state) => state.isChecking);
+  const checkSession = userAuthStore((state) => state.checkSession);
   const [isNavigating, setIsNavigating] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const authRequired = searchParams.get('auth') === '1';
-  const postLoginRedirect = useMemo(
-    () => searchParams.get('redirect') || '/partners/application/status',
-    [searchParams]
-  );
+  const postLoginRedirect =
+    searchParams.get('redirect') || '/partners/application/status';
 
   useLayoutEffect(() => {
-    // Ensure the page renders from the very top on route entry.
     window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
   }, []);
 
   useEffect(() => {
-    if (authRequired) {
+    checkSession();
+  }, [checkSession]);
+
+  useEffect(() => {
+    if (authRequired && !isAuthenticated) {
       setShowAuthModal(true);
     }
-  }, [authRequired]);
+  }, [authRequired, isAuthenticated]);
 
   const closeAuthModal = () => {
     setShowAuthModal(false);
@@ -79,6 +82,11 @@ export default function VendorLandingPage() {
 
   const handleCheckStatus = async () => {
     if (isNavigating) return;
+
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
 
     setIsNavigating(true);
     try {
@@ -110,14 +118,16 @@ export default function VendorLandingPage() {
         >
           Vyra<span className="text-[#ff4d1c]">.</span>
         </a>
-        <button
-          type="button"
-          onClick={handleCheckStatus}
-          disabled={isNavigating}
-          className="flex items-center gap-2 rounded-full border border-[#ecdac3] bg-[#fff8eb] px-3 py-2.5 text-sm font-medium text-[#5f4a2d] transition-colors hover:bg-[#ffedd1] disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          <User size={15} /> {isNavigating ? 'Loading...' : 'Partner Login'}
-        </button>
+        {!isAuthenticated && !isChecking && (
+          <button
+            type="button"
+            onClick={handleCheckStatus}
+            disabled={isNavigating}
+            className="flex items-center gap-2 rounded-full border border-[#ecdac3] bg-[#fff8eb] px-3 py-2.5 text-sm font-medium text-[#5f4a2d] transition-colors hover:bg-[#ffedd1] disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            <User size={15} /> {isNavigating ? 'Loading...' : 'Partner Login'}
+          </button>
+        )}
       </nav>
 
       {/* HERO */}

@@ -35,32 +35,44 @@ export default function KycStatus({ state, reason }) {
     navigate('/partners/application');
   };
 
+  const handleHome = () => {
+    navigate('/');
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#f5f1eb]">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-linear-to-b from-[#fff7ec] to-[#fffdf8]">
+      <div className="w-full max-w-md">
         <div
-          className="bg-white border-2 border-[#0d0d0d] rounded-xl overflow-hidden"
-          style={{ boxShadow: '6px 6px 0 #0d0d0d' }}
+          className="relative overflow-hidden rounded-3xl border border-[#ead9c2] bg-[#fffaf1]"
+          style={{ boxShadow: '0 16px 36px rgba(67, 44, 10, 0.14)' }}
         >
+          <div
+            className="absolute inset-0 pointer-events-none opacity-35"
+            style={{
+              background:
+                'radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255,175,82,.25) 0%, transparent 75%)',
+            }}
+          />
+
           <div className="h-1.5" style={{ background: s.accent }} />
 
-          <div className="px-8 py-10 text-center">
+          <div className="relative px-8 py-10 text-center">
             <div
-              className="w-14 h-14 rounded-xl border-2 border-[#0d0d0d] flex items-center justify-center text-2xl mx-auto mb-5"
-              style={{ background: s.accent + '18' }}
+              className="w-16 h-16 rounded-2xl border border-[#ecdac3] flex items-center justify-center text-2xl mx-auto mb-5"
+              style={{ background: s.accent + '1F' }}
             >
               {s.icon}
             </div>
             <div className="mb-4 flex justify-center">
               <span
-                className="rounded-full border border-[#0d0d0d]/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]"
+                className="rounded-full border border-[#f0d6a8] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em]"
                 style={{ background: s.accent + '14', color: s.accent }}
               >
                 Status: {s.label}
               </span>
             </div>
 
-            <h2 className="font-display font-extrabold text-2xl tracking-tight text-[#0d0d0d] mb-2">
+            <h2 className="font-display font-extrabold text-2xl tracking-tight text-[#2b241a] mb-2">
               {s.title}
             </h2>
 
@@ -69,23 +81,32 @@ export default function KycStatus({ state, reason }) {
             </p>
 
             {showReason ? (
-              <div className="mt-4 text-left bg-[#f5f1eb] border border-[#0d0d0d]/10 rounded-lg p-3">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#7a7267] mb-1">
+              <div className="mt-4 text-left bg-[#fff4e3] border border-[#f0dcc0] rounded-xl p-3.5">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#7a7267] mb-1">
                   Reason
                 </p>
-                <p className="text-sm text-[#0d0d0d]">{reason}</p>
+                <p className="text-sm text-[#2b241a]">{reason}</p>
               </div>
             ) : null}
 
-            {state === 'rejected' ? (
+            <div className="mt-6 flex flex-col sm:flex-row gap-2.5">
               <button
                 type="button"
-                onClick={handleReapply}
-                className="mt-5 w-full bg-[#0d0d0d] text-white py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+                onClick={handleHome}
+                className="w-full rounded-xl border border-[#ead9c2] bg-white py-2.5 text-sm font-semibold text-[#5f4a2d] hover:bg-[#fff6e9] transition-colors"
               >
-                Reapply
+                Home
               </button>
-            ) : null}
+              {state === 'rejected' ? (
+                <button
+                  type="button"
+                  onClick={handleReapply}
+                  className="w-full rounded-xl border border-[#f0c992] bg-[#ffaf52] py-2.5 text-sm font-semibold text-[#2b241a] hover:bg-[#ffa73f] transition-colors"
+                >
+                  Reapply
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
