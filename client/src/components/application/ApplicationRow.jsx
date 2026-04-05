@@ -42,11 +42,25 @@ export default function ApplicationRow({
     <>
       <tr
         className={`cursor-pointer transition-colors ${
-          isDarkMode ? 'hover:bg-slate-800/60' : 'hover:bg-gray-50'
+          isExpanded
+            ? isDarkMode
+              ? 'bg-sky-900/20 hover:bg-sky-900/30'
+              : 'bg-blue-50 hover:bg-blue-100/70'
+            : isDarkMode
+              ? 'hover:bg-slate-800/60'
+              : 'hover:bg-gray-50'
         }`}
         onClick={onToggle}
       >
-        <td className="px-4 py-4">
+        <td className="relative px-4 py-4">
+          {isExpanded && (
+            <span
+              className={`absolute left-0 top-0 h-full w-1 rounded-r ${
+                isDarkMode ? 'bg-sky-400' : 'bg-blue-500'
+              }`}
+              aria-hidden="true"
+            />
+          )}
           <ChevronDown
             className={`w-5 h-5 transition-transform ${
               isDarkMode ? 'text-slate-500' : 'text-gray-400'

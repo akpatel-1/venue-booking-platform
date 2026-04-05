@@ -59,7 +59,7 @@ export default function TableSection({
       </div>
 
       <div
-        className={`overflow-y-auto overflow-x-auto ${stretch ? 'flex-1 min-h-0' : 'max-h-[calc(100vh-14rem)]'}`}
+        className={`stable-scrollbar-gutter overflow-y-auto overflow-x-auto ${stretch ? 'flex-1 min-h-0' : 'max-h-[calc(100vh-14rem)]'}`}
       >
         <table className="w-full text-sm">
           <thead

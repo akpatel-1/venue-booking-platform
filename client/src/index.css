@@ -12,6 +12,10 @@ html.theme-switching *::after {
   transition: none !important;
 }
 
+.stable-scrollbar-gutter {
+  scrollbar-gutter: stable;
+}
+
 /* index.css */
 @keyframes ticker {
   0% {
