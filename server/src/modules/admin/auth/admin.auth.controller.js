@@ -6,7 +6,7 @@ export const controller = {
     const oldSessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
     const credentials = req.data;
 
-    const { sessionId, admin } = await service.authenticateAdmin(
+    const { sessionId, data } = await service.authenticateAdmin(
       credentials,
       oldSessionId
     );
@@ -20,7 +20,7 @@ export const controller = {
     return res.status(200).json({
       status: true,
       message: 'Login successful',
-      data: admin,
+      ...data,
     });
   },
 

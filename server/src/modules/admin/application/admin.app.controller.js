@@ -1,8 +1,8 @@
 import { service } from './admin.app.service.js';
 
 export const controller = {
-  async handleApplicationRequest(req, res) {
-    const result = await service.processApplicationRequest(req.data.status);
+  async handleAppRequest(req, res) {
+    const result = await service.processAppRequest(req.data.status);
     res.status(200).json({ status: true, applications: result });
   },
 
@@ -11,7 +11,7 @@ export const controller = {
     res.status(201).json({ status: true, message: 'Status updated' });
   },
 
-  async handleApplicationCount(req, res) {
+  async handleAppCount(req, res) {
     const count = await service.processStatusCount(req.data.status);
     res.status(200).json({ status: true, count });
   },

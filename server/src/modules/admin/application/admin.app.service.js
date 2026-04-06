@@ -5,7 +5,7 @@ import { APPLICATION_ERROR_CONFIG } from './admin.app.error.config.js';
 import { repository } from './admin.app.repository.js';
 
 export const service = {
-  async processApplicationRequest(status) {
+  async processAppRequest(status) {
     return await repository.getVendorApplication(pool, status);
   },
 

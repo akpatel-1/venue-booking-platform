@@ -1,8 +1,8 @@
 import express from 'express';
 
 import { adminSession } from './admin.session.controller.js';
-import { sessionValidation } from './admin.session.middleware.js';
+import { validateSession } from './admin.session.middleware.js';
 
 export const adminSessionRoutes = express.Router();
 
-adminSessionRoutes.get('/auth/me', sessionValidation, adminSession);
+adminSessionRoutes.get('/auth/me', validateSession, adminSession);

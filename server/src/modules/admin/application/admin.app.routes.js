@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { validateSchema } from '../../schema.validation.middleware.js';
-import { sessionValidation } from '../session/admin.session.middleware.js';
+import { validateSession } from '../session/admin.session.middleware.js';
 import { controller } from './admin.app.controller.js';
 import { schema } from './admin.app.schema.js';
 
@@ -9,14 +9,14 @@ export const adminAppRoutes = express.Router();
 
 adminAppRoutes.get(
   '/application',
-  sessionValidation,
+  validateSession,
   validateSchema(schema.status, 'query'),
-  controller.handleApplicationRequest
+  controller.handleAppRequest
 );
 
 adminAppRoutes.patch(
   '/application/:id',
-  sessionValidation,
+  validateSession,
   validateSchema(schema.id, 'params'),
   validateSchema(schema.review, 'body'),
   controller.handleUpdateRequest
@@ -24,7 +24,7 @@ adminAppRoutes.patch(
 
 adminAppRoutes.get(
   '/application/:status',
-  sessionValidation,
+  validateSession,
   validateSchema(schema.status, 'params'),
-  controller.handleApplicationCount
+  controller.handleAppCount
 );

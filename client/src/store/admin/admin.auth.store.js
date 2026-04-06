@@ -11,7 +11,7 @@ const store = (set, get) => ({
 
     try {
       const response = await adminApi.checkSession();
-      const admin = response.data?.data || null;
+      const admin = response.data;
       set({ user: admin });
       return !!admin;
     } catch {

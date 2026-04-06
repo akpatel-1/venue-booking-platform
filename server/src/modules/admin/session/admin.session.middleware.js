@@ -3,7 +3,7 @@ import { ERROR_CONFIG } from '../../error.config.js';
 import { ADMIN_AUTH_CONFIG } from '../auth/admin.auth.config.js';
 import { repository } from './admin.session.repository.js';
 
-export async function sessionValidation(req, res, next) {
+export async function validateSession(req, res, next) {
   const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
 
   if (!sessionId) {

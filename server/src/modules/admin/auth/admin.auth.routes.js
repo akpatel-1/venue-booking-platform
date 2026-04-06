@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { validateSchema } from '../../schema.validation.middleware.js';
-import { sessionValidation } from '../session/admin.session.middleware.js';
+import { validateSession } from '../session/admin.session.middleware.js';
 import { controller } from './admin.auth.controller.js';
 import { adminAuthSchema } from './admin.auth.schema.js';
 
@@ -15,6 +15,6 @@ adminAuthRoutes.post(
 
 adminAuthRoutes.post(
   '/auth/logout',
-  sessionValidation,
+  validateSession,
   controller.handleAdminLogout
 );
