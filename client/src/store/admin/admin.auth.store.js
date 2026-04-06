@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 
 import { adminApi } from '../../api/admin.api';
+import { setAdminSessionExpiredHandler } from '../../lib/admin.session.expiry';
+import { adminOverviewStore } from './admin.overview.store';
+import { adminVendorKycStore } from './admin.vendorkyc.store';
 
 const store = (set, get) => ({
   user: null,
@@ -47,3 +50,9 @@ const store = (set, get) => ({
 });
 
 export const adminAuthStore = create(store);
+
+setAdminSessionExpiredHandler(() => {
+  adminAuthStore.setState({ user: null });
+  adminOverviewStore.getState().clearOverview();
+  adminVendorKycStore.getState().clearKycCache();
+});

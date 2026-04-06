@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 
+import SessionExpired from '../components/error/SessionExpired';
 import { adminProtected } from '../loaders/admin.auth.loader';
 import AdminApplicationPage from '../pages/admin/AdminApplicationPage';
 import AdminDashboard from '../pages/admin/AdminDashboardPage';
@@ -13,6 +14,11 @@ export const adminRoutes = [
       {
         path: 'login',
         element: <AdminLoginPage />,
+      },
+
+      {
+        path: 'session-expired',
+        element: <SessionExpired />,
       },
 
       {

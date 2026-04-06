@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { AlertCircle, AlertTriangle, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { z } from 'zod';
 
 import useDashboardDarkMode from '../../hooks/useDashboardDarkMode';
 import { adminAuthStore } from '../../store/admin/admin.auth.store';
+import { getSafeAdminRedirect } from '../../utils/admin.redirect';
 
 const loginSchema = z.object({
   email: z
@@ -28,6 +29,7 @@ const loginSchema = z.object({
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const isDarkMode = useDashboardDarkMode();
   const login = adminAuthStore((state) => state.login);
   const checkSessionCache = adminAuthStore((state) => state.checkSessionCache);
@@ -40,16 +42,20 @@ export default function AdminLoginPage() {
   });
   const [serverError, setServerError] = useState('');
 
+  const redirectTarget = (() => {
+    return getSafeAdminRedirect(searchParams.get('redirect'));
+  })();
+
   useEffect(() => {
     const checkAuth = async () => {
       const isAuthenticated = await checkSessionCache();
       if (isAuthenticated) {
-        navigate('/admin/overview');
+        navigate(redirectTarget, { replace: true });
       }
     };
 
     checkAuth();
-  }, [checkSessionCache, navigate]);
+  }, [checkSessionCache, navigate, redirectTarget]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -101,7 +107,7 @@ export default function AdminLoginPage() {
       const loginResult = await login(formData);
 
       if (loginResult.success) {
-        navigate('/admin/overview');
+        navigate(redirectTarget, { replace: true });
       } else if (loginResult.statusCode >= 500) {
         navigate('/error/500');
       } else {
