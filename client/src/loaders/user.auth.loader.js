@@ -2,8 +2,8 @@ import { redirect } from 'react-router-dom';
 
 import { userAuthStore } from '../store/user/user.auth.store';
 
-export async function userProtectedRotue() {
-  const isVerified = await userAuthStore.getState().checkSession();
+export async function userProtected() {
+  const isVerified = await userAuthStore.getState().checkSessionCache();
 
   if (!isVerified) {
     const redirectPath =

@@ -4,43 +4,30 @@ import { userApi } from '../../api/user.api';
 
 let sessionCheckPromise = null;
 
-export const userAuthStore = create((set) => ({
+export const userAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
-  isChecking: false,
+  hasCheckedSession: false,
 
   setUser: (user) =>
     set({
       user,
       isAuthenticated: !!user,
-      isChecking: false,
+      hasCheckedSession: true,
     }),
 
   clearSession: () =>
     set({
       user: null,
       isAuthenticated: false,
-      isChecking: false,
+      hasCheckedSession: true,
     }),
 
-  requestOtp: async (payload) => {
-    return userApi.requestOtp(payload);
-  },
+  checkSessionCache: async (force = false) => {
+    const { hasCheckedSession, isAuthenticated } = get();
 
-  resendOtp: async (payload) => {
-    return userApi.resendOtp(payload);
-  },
-
-  verifyOtp: async (payload) => {
-    const response = await userApi.verifyOtp(payload);
-    set({ isAuthenticated: true });
-    return response;
-  },
-
-  checkSession: async (force = false) => {
-    if (!force && sessionCheckPromise) {
-      return sessionCheckPromise;
-    }
+    if (!force && hasCheckedSession) return isAuthenticated;
+    if (!force && sessionCheckPromise) return sessionCheckPromise;
 
     set({ isChecking: true });
 
@@ -51,7 +38,7 @@ export const userAuthStore = create((set) => ({
         set({
           user,
           isAuthenticated: !!user,
-          isChecking: false,
+          hasCheckedSession: true,
         });
         return !!user;
       })
@@ -59,7 +46,7 @@ export const userAuthStore = create((set) => ({
         set({
           user: null,
           isAuthenticated: false,
-          isChecking: false,
+          hasCheckedSession: true,
         });
         return false;
       })
@@ -70,18 +57,26 @@ export const userAuthStore = create((set) => ({
     return sessionCheckPromise;
   },
 
+  requestOtp: async (payload) => userApi.requestOtp(payload),
+
+  resendOtp: async (payload) => userApi.resendOtp(payload),
+
+  verifyOtp: async (payload) => {
+    const response = await userApi.verifyOtp(payload);
+    set({ isAuthenticated: true });
+    return response;
+  },
+
   logout: async () => {
     try {
       await userApi.logout();
     } catch (error) {
-      if (error.response?.status >= 500) {
-        throw error;
-      }
+      if (error.response?.status >= 500) throw error;
     } finally {
       set({
         user: null,
         isAuthenticated: false,
-        isChecking: false,
+        hasCheckedSession: true,
       });
     }
   },

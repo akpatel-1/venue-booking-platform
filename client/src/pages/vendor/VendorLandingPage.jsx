@@ -52,7 +52,7 @@ export default function VendorLandingPage() {
   const [searchParams] = useSearchParams();
   const isAuthenticated = userAuthStore((state) => state.isAuthenticated);
   const isChecking = userAuthStore((state) => state.isChecking);
-  const checkSession = userAuthStore((state) => state.checkSession);
+  const checkSessionCache = userAuthStore((state) => state.checkSessionCache);
   const [isNavigating, setIsNavigating] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -65,8 +65,10 @@ export default function VendorLandingPage() {
   }, []);
 
   useEffect(() => {
-    checkSession();
-  }, [checkSession]);
+    if (!authRequired) return;
+
+    checkSessionCache();
+  }, [authRequired, checkSessionCache]);
 
   useEffect(() => {
     if (authRequired && !isAuthenticated) {
@@ -81,9 +83,16 @@ export default function VendorLandingPage() {
   };
 
   const handleCheckStatus = async () => {
-    if (isNavigating) return;
+    if (isNavigating || isChecking) return;
 
     if (!isAuthenticated) {
+      const isVerified = await checkSessionCache();
+
+      if (isVerified) {
+        navigate('/partners/application/status');
+        return;
+      }
+
       setShowAuthModal(true);
       return;
     }

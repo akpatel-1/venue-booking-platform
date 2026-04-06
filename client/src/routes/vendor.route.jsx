@@ -1,4 +1,4 @@
-import { userProtectedRotue } from '../loaders/user.auth.loader';
+import { userProtected } from '../loaders/user.auth.loader';
 import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
 import VendorDashboard from '../pages/vendor/VendorDashboardPage';
 import VendorKycPage from '../pages/vendor/VendorKycPage';
@@ -7,7 +7,7 @@ import VendorLandingPage from '../pages/vendor/VendorLandingPage';
 import VendorOverviewPage from '../pages/vendor/VendorOveriviewPage';
 
 // Alias for correct naming
-const userProtectedRoute = userProtectedRotue;
+const userprotected = userProtected;
 
 export const vendorRoutes = [
   {
@@ -24,7 +24,7 @@ export const vendorRoutes = [
     element: <VendorKycStatusPage />,
   },
   {
-    loader: userProtectedRoute,
+    loader: userprotected,
     path: '/partners',
     element: <VendorDashboard />,
     children: [
