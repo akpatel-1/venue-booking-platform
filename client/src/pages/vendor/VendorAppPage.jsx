@@ -25,7 +25,7 @@ const kycSchema = z.object({
     .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i, 'Invalid PAN format'),
   address: z.string().min(5, 'Full address is required'),
   state: z.string().min(1, 'Select a state'),
-  city: z.string().min(2, 'City is required'),
+  district: z.string().min(2, 'District is required'),
   pincode: z.string().regex(/^\d{6}$/, 'Must be exactly 6 digits'),
 });
 
@@ -56,7 +56,7 @@ function Field({ label, error, children, className = '' }) {
   );
 }
 
-export default function VendorKycPage() {
+export default function VendorAppPage() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [fileError, setFileError] = useState('');
@@ -111,7 +111,7 @@ export default function VendorKycPage() {
       'pan_number',
       'address',
       'state',
-      'city',
+      'district',
       'pincode',
     ];
     fieldsToAppend.forEach((key) => {
@@ -268,11 +268,11 @@ export default function VendorKycPage() {
                       ))}
                     </select>
                   </Field>
-                  <Field label="City" error={errors.city}>
+                  <Field label="District" error={errors.district}>
                     <input
-                      {...register('city')}
-                      placeholder="City"
-                      className={inp(errors.city)}
+                      {...register('district')}
+                      placeholder="District"
+                      className={inp(errors.district)}
                     />
                   </Field>
                   <Field label="Pincode" error={errors.pincode}>

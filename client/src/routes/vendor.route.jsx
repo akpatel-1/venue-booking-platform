@@ -1,8 +1,8 @@
 import { userProtected } from '../loaders/user.auth.loader';
 import { vendorApplicationLoader } from '../loaders/vendor.status.loader';
+import VendorAppPage from '../pages/vendor/VendorAppPage';
+import VendorAppStatusPage from '../pages/vendor/VendorAppStatusPage';
 import VendorDashboard from '../pages/vendor/VendorDashboardPage';
-import VendorKycPage from '../pages/vendor/VendorKycPage';
-import VendorKycStatusPage from '../pages/vendor/VendorKycStatusPage';
 import VendorLandingPage from '../pages/vendor/VendorLandingPage';
 import VendorOverviewPage from '../pages/vendor/VendorOveriviewPage';
 
@@ -16,12 +16,12 @@ export const vendorRoutes = [
   },
   {
     path: '/partners/application',
-    element: <VendorKycPage />,
+    element: <VendorAppPage />,
   },
   {
     loader: vendorApplicationLoader,
     path: '/partners/application/status',
-    element: <VendorKycStatusPage />,
+    element: <VendorAppStatusPage />,
   },
   {
     loader: userprotected,

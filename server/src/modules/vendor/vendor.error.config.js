@@ -25,4 +25,9 @@ export const VENDOR_ERROR_CONFIG = {
     message: 'Verification document is required',
     code: 'DOCUMENT_REQUIRED',
   },
+  VENDOR_NOT_FOUND: {
+    statusCode: 401,
+    message: 'VENDOR not exists',
+    code: 'VENDOR_NOT_FOUND',
+  },
 };

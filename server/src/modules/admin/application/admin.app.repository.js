@@ -7,7 +7,7 @@ export const repository = {
         phone, 
         address,
         pincode, 
-        city, 
+        district, 
         state, 
         pan_number, 
         pan_document_url,

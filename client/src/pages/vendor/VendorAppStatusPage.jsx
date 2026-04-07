@@ -2,7 +2,7 @@ import { useLoaderData } from 'react-router-dom';
 
 import KycStatus from '../../components/application/KycStatus';
 
-export default function VendorKycStatusPage() {
+export default function VendorAppStatusPage() {
   const data = useLoaderData();
 
   if (!data) return null;

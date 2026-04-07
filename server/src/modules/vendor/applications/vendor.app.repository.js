@@ -26,7 +26,7 @@ export const repository = {
   async insertVendorApplication(client, data) {
     const result = await client.query({
       text: `INSERT INTO vendor_applications
-           (user_id, pan_name, phone, address, pincode, city, state, pan_number, pan_document_url)
+           (user_id, pan_name, phone, address, pincode, district, state, pan_number, pan_document_url)
            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
            RETURNING id`,
       values: [
@@ -35,7 +35,7 @@ export const repository = {
         data.phone,
         data.address,
         data.pincode,
-        data.city,
+        data.district,
         data.state,
         data.pan_number,
         data.documentUrl,
