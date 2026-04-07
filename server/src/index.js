@@ -5,6 +5,7 @@ import { adminAuthRoutes } from './modules/admin/auth/admin.auth.routes.js';
 import { adminSessionRoutes } from './modules/admin/session/admin.session.routes.js';
 import { userAuthRoutes } from './modules/user/auth/user.auth.routes.js';
 import { vendorAppRoutes } from './modules/vendor/applications/vendor.app.routes.js';
+import { vendorDashRoutes } from './modules/vendor/dashboard/vendor.dash.routes.js';
 
 export const router = express.Router();
 
@@ -16,4 +17,5 @@ router.use('/admin', adminAppRoutes);
 
 router.use(userAuthRoutes);
 
-router.use('/partners', vendorAppRoutes);
+router.use('/vendors', vendorAppRoutes);
+router.use('/vendors', vendorDashRoutes);
