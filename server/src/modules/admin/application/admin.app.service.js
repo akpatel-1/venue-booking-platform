@@ -5,11 +5,11 @@ import { APPLICATION_ERROR_CONFIG } from './admin.app.error.config.js';
 import { repository } from './admin.app.repository.js';
 
 export const service = {
-  async processAppRequest(status) {
+  async fetchApplication(status) {
     return await repository.getVendorApplication(pool, status);
   },
 
-  async processStatusUpdate(reviewer_Id, data) {
+  async updateApplicationStatus(reviewer_Id, data) {
     const { status } = data;
 
     if (status === 'approved') {
@@ -32,7 +32,7 @@ export const service = {
       }
 
       await repository.createVendorProfile(client, result);
-      await repository.markUserAsVendor(client, id);
+      await repository.markUserAsVendor(client, result.user_id);
     });
   },
 
@@ -45,7 +45,7 @@ export const service = {
     });
   },
 
-  async processStatusCount(status) {
+  async fetchApplicationCount(status) {
     return await repository.getStatusCount(pool, status);
   },
 };

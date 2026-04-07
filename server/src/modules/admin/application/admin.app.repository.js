@@ -30,7 +30,7 @@ export const repository = {
       reviewed_at = NOW(),
       reviewed_by = $2 
       WHERE id = $3
-      RETURNING user_id, pan_name`,
+      RETURNING user_id, pan_name, phone, district, state`,
       [data.status, data.reviewedBy, data.id]
     );
     return result.rows[0] ?? null;
@@ -38,9 +38,9 @@ export const repository = {
 
   async createVendorProfile(client, data) {
     const result = await client.query(
-      `INSERT INTO vendor_profiles(user_id, vendor_name)
-      VALUES ($1, $2)`,
-      [data.user_id, data.pan_name]
+      `INSERT INTO vendor_profiles(user_id, vendor_name, phone, district, state)
+      VALUES ($1, $2, $3, $4, $5)`,
+      [data.user_id, data.pan_name, data.phone, data.district, data.state]
     );
   },
 

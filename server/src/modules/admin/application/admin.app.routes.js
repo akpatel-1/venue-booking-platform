@@ -11,7 +11,7 @@ adminAppRoutes.get(
   '/application',
   validateSession,
   validateSchema(schema.status, 'query'),
-  controller.handleAppRequest
+  controller.listApplications
 );
 
 adminAppRoutes.patch(
@@ -19,12 +19,12 @@ adminAppRoutes.patch(
   validateSession,
   validateSchema(schema.id, 'params'),
   validateSchema(schema.review, 'body'),
-  controller.handleUpdateRequest
+  controller.updateApplication
 );
 
 adminAppRoutes.get(
   '/application/:status',
   validateSession,
   validateSchema(schema.status, 'params'),
-  controller.handleAppCount
+  controller.listApplicationCount
 );
