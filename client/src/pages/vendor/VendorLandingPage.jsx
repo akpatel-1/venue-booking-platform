@@ -79,7 +79,7 @@ export default function VendorLandingPage() {
   const closeAuthModal = () => {
     setShowAuthModal(false);
     if (!authRequired) return;
-    navigate('/partners', { replace: true });
+    navigate('/partners/landing', { replace: true });
   };
 
   const handleCheckStatus = async () => {

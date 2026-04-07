@@ -11,7 +11,7 @@ const userprotected = userProtected;
 
 export const vendorRoutes = [
   {
-    path: '/partners',
+    path: '/partners/landing',
     element: <VendorLandingPage />,
   },
   {

@@ -42,7 +42,7 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
   const requestOtp = userAuthStore((state) => state.requestOtp);
   const resendOtp = userAuthStore((state) => state.resendOtp);
   const verifyOtp = userAuthStore((state) => state.verifyOtp);
-  const checkSession = userAuthStore((state) => state.checkSession);
+  const checkSessionCache = userAuthStore((state) => state.checkSessionCache);
 
   const [step, setStep] = useState('email');
   const [email, setEmail] = useState('');
@@ -76,7 +76,7 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
     let cancelled = false;
 
     const verifyExistingSession = async () => {
-      const isVerified = await checkSession();
+      const isVerified = await checkSessionCache();
 
       if (cancelled || !isVerified) return;
 
@@ -88,7 +88,13 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
     return () => {
       cancelled = true;
     };
-  }, [checkSession, navigate]);
+  }, [checkSessionCache, navigate]);
+
+  useEffect(() => {
+    if (step !== 'otp') return;
+    inputRefs.current[0]?.focus();
+    inputRefs.current[0]?.select();
+  }, [step]);
 
   const clearError = () => setServerError('');
   const resetOtp = () => {
@@ -120,7 +126,6 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
       await requestOtp({ email: normalizedEmail });
       setEmail(normalizedEmail);
       setStep('otp');
-      setTimeout(() => inputRefs.current[0]?.focus(), 0);
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
         navigate('/error/500');
@@ -155,7 +160,7 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
         onSuccess();
       } else {
         const redirectTo = searchParams.get('redirect');
-        navigate(redirectTo);
+        navigate(redirectTo || '/');
       }
     } catch (err) {
       if (!err.response || err.response?.status === 500) {
@@ -311,18 +316,19 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
                     type="email"
                     required
                     value={email}
+                    disabled={step === 'otp'}
                     onChange={(e) => {
                       setEmail(e.target.value);
                       clearError();
                     }}
                     onBlur={() => setEmail((prev) => prev.trim())}
                     placeholder="hello@example.com"
-                    className="flex-1 bg-white border border-[#e8dccb] text-[#2b241a] px-5 py-4 rounded-xl placeholder:text-[#9d927f] text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#ffd9a7] focus:border-[#ffaf52]"
+                    className="flex-1 bg-white border border-[#e8dccb] text-[#2b241a] px-5 py-4 rounded-xl placeholder:text-[#9d927f] text-sm transition-all disabled:cursor-not-allowed disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#ffd9a7] focus:border-[#ffaf52]"
                   />
                   <button
                     type="button"
                     onClick={handleSendOtp}
-                    disabled={isLoading}
+                    disabled={isLoading || step === 'otp'}
                     className="bg-[#ffe9ca] hover:bg-[#ffdcae] text-[#7a4a00] px-4 py-4 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isLoading && step === 'email' ? 'Sending...' : 'Send OTP'}

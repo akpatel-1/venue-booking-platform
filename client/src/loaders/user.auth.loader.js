@@ -9,7 +9,7 @@ export async function userProtected() {
     const redirectPath =
       window.location.pathname + window.location.search + window.location.hash;
     return redirect(
-      `/partners?auth=1&redirect=${encodeURIComponent(redirectPath)}`
+      `/partners/landing?auth=1&redirect=${encodeURIComponent(redirectPath)}`
     );
   }
 

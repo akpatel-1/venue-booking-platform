@@ -18,7 +18,7 @@ export async function vendorApplicationLoader() {
   } catch (err) {
     if (err.response?.status === 401) {
       return redirect(
-        `/partners?auth=1&redirect=${encodeURIComponent('/partners/application/status')}`
+        `/partners/landing?auth=1&redirect=${encodeURIComponent('/partners/application/status')}`
       );
     }
 
