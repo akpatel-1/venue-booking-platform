@@ -4,7 +4,7 @@ import { vendorApi } from '../api/vendor.api';
 
 export async function vendorApplicationLoader() {
   try {
-    const res = await vendorApi.getKycStatus();
+    const res = await vendorApi.getApplicationStatus();
 
     if (res.data.state === 'approved') {
       return redirect('/partners/overview');

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
@@ -54,6 +54,14 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
 
   const inputRefs = useRef([]);
 
+  const dismissModal = useCallback(() => {
+    if (onClose) {
+      onClose();
+      return;
+    }
+    setIsModalDismissed(true);
+  }, [onClose]);
+
   useEffect(() => {
     if (!isModal) return;
 
@@ -61,16 +69,12 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
 
     const handleEscClose = (event) => {
       if (event.key !== 'Escape') return;
-      if (onClose) {
-        onClose();
-        return;
-      }
-      setIsModalDismissed(true);
+      dismissModal();
     };
 
     window.addEventListener('keydown', handleEscClose);
     return () => window.removeEventListener('keydown', handleEscClose);
-  }, [isModal, onClose]);
+  }, [dismissModal, isModal]);
 
   useEffect(() => {
     let cancelled = false;
@@ -411,7 +415,12 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
     if (isModalDismissed) return null;
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(62,40,12,0.24)] backdrop-blur-[3px] p-4 sm:p-6 animate-modal-overlay">
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(62,40,12,0.24)] backdrop-blur-[3px] p-4 sm:p-6 animate-modal-overlay"
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) dismissModal();
+        }}
+      >
         {AuthContent}
       </div>
     );

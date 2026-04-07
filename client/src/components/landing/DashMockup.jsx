@@ -21,7 +21,7 @@ export default function DashMockup() {
           />
         ))}
         <span className="font-body text-xs text-white/40 ml-2">
-          partner.venueos.in/dashboard
+          partner/overview
         </span>
       </div>
 

@@ -125,7 +125,9 @@ export default function VendorAppPage() {
     formData.append('pan_document', file);
 
     try {
-      await vendorApi.postKycApplication(formData, { skipAuthRedirect: true });
+      await vendorApi.postVendorApplication(formData, {
+        skipAuthRedirect: true,
+      });
       setPendingSubmissionData(null);
       navigate('/partners/application/status');
     } catch (err) {

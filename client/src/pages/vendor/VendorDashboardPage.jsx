@@ -38,7 +38,7 @@ const vendorNavigationLinks = [
   },
   {
     to: '/partners/profile',
-    label: 'Profile / KYC',
+    label: 'Profile ',
     icon: User,
     color: '#b55104',
   },

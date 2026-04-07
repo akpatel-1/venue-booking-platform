@@ -99,7 +99,7 @@ export default function VendorLandingPage() {
 
     setIsNavigating(true);
     try {
-      await vendorApi.getKycStatus({ skipAuthRedirect: true });
+      await vendorApi.getApplicationStatus({ skipAuthRedirect: true });
       navigate('/partners/application/status');
     } catch (err) {
       const status = err.response?.status;
@@ -341,7 +341,7 @@ export default function VendorLandingPage() {
           {/* Vyra<span className="text-[#ff4d1c]">z</span> */}
         </a>
         <p className="text-sm text-[#8b7a62]">
-          © 2025 Vyra · Built for local venues across India
+          © 2025 Vyra · Discover and book local experience
         </p>
         <div className="flex gap-6">
           {['Privacy', 'Terms', 'Support'].map((l) => (
