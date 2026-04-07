@@ -22,7 +22,7 @@ export const controller = {
     res.cookie(
       USER_AUTH_CONFIG.ACCESS_COOKIE,
       accessToken,
-      USER_AUTH_CONFIG.REFRESH_COOKIE_OPTIONS
+      USER_AUTH_CONFIG.ACCESS_COOKIE_OPTIONS
     );
 
     res.cookie(
@@ -44,11 +44,11 @@ export const controller = {
     res.cookie(
       USER_AUTH_CONFIG.ACCESS_COOKIE,
       newToken.accessToken,
-      USER_AUTH_CONFIG.REFRESH_COOKIE_OPTIONS
+      USER_AUTH_CONFIG.ACCESS_COOKIE_OPTIONS
     );
 
     res.cookie(
-      USER_AUTH_CONFIG.ACCESS_COOKIE,
+      USER_AUTH_CONFIG.REFRESH_COOKIE,
       newToken.refreshToken,
       USER_AUTH_CONFIG.REFRESH_COOKIE_OPTIONS
     );
