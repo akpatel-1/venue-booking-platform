@@ -77,6 +77,8 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
   }, [dismissModal, isModal]);
 
   useEffect(() => {
+    if (isModal) return;
+
     let cancelled = false;
 
     const verifyExistingSession = async () => {
@@ -84,7 +86,8 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
 
       if (cancelled || !isVerified) return;
 
-      navigate('/');
+      const redirectTo = searchParams.get('redirect');
+      navigate(redirectTo || '/');
     };
 
     verifyExistingSession();
@@ -92,7 +95,7 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
     return () => {
       cancelled = true;
     };
-  }, [checkSessionCache, navigate]);
+  }, [checkSessionCache, isModal, navigate, searchParams]);
 
   useEffect(() => {
     if (step !== 'otp') return;
@@ -290,7 +293,7 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
   /* ── shared inner content ── */
   const AuthContent = (
     <div
-      className={`w-full ${isModal ? 'max-w-xl rounded-3xl border-[#efdfc9] bg-white/95 shadow-[0_36px_90px_-28px_rgba(101,67,33,0.42)] backdrop-blur-sm' : 'max-w-6xl rounded-[2.25rem] border-[#eadcc8] bg-white shadow-[0_25px_50px_-12px_rgba(164,135,94,0.28)]'} overflow-hidden border ${isModal ? 'animate-modal-card' : ''}`}
+      className={`w-full ${isModal ? 'max-w-xl rounded-3xl border-[#efdfc9] bg-white shadow-[0_22px_45px_-24px_rgba(101,67,33,0.32)]' : 'max-w-6xl rounded-[2.25rem] border-[#eadcc8] bg-white shadow-[0_25px_50px_-12px_rgba(164,135,94,0.28)]'} overflow-hidden border ${isModal ? 'transform-gpu' : ''}`}
     >
       <div className="flex flex-col lg:flex-row min-h-160">
         <div
@@ -416,7 +419,7 @@ export default function AuthForm({ isModal = false, onSuccess, onClose }) {
 
     return (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(62,40,12,0.24)] backdrop-blur-[3px] p-4 sm:p-6 animate-modal-overlay"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(62,40,12,0.22)] p-4 sm:p-6"
         onMouseDown={(e) => {
           if (e.target === e.currentTarget) dismissModal();
         }}
