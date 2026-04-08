@@ -8,6 +8,7 @@ export const userAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
   hasCheckedSession: false,
+  isChecking: false,
 
   setUser: (user) =>
     set({
@@ -34,11 +35,12 @@ export const userAuthStore = create((set, get) => ({
     sessionCheckPromise = userApi
       .checkSession()
       .then((response) => {
-        const user = response?.data?.data || null;
+        const user = response?.data?.user || null;
         set({
           user,
           isAuthenticated: !!user,
           hasCheckedSession: true,
+          isChecking: false,
         });
         return !!user;
       })
@@ -47,6 +49,7 @@ export const userAuthStore = create((set, get) => ({
           user: null,
           isAuthenticated: false,
           hasCheckedSession: true,
+          isChecking: false,
         });
         return false;
       })
@@ -63,7 +66,11 @@ export const userAuthStore = create((set, get) => ({
 
   verifyOtp: async (payload) => {
     const response = await userApi.verifyOtp(payload);
-    set({ isAuthenticated: true });
+    set({
+      user: null,
+      isAuthenticated: true,
+      hasCheckedSession: false,
+    });
     return response;
   },
 

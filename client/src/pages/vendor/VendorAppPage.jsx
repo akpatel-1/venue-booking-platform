@@ -7,7 +7,7 @@ import { TriangleAlert, Upload, X } from 'lucide-react';
 import * as z from 'zod';
 
 import { vendorApi } from '../../api/vendor.api';
-import KycLeftBg from '../../components/application/KycLeftBg';
+import KycLeftBg from '../../components/application/ApplicationBg';
 import AuthForm from '../../components/auth/AuthForm';
 
 const kycSchema = z.object({

@@ -2,8 +2,8 @@ import { Outlet } from 'react-router-dom';
 
 import { Calendar, House, Settings, Store, User, Wallet } from 'lucide-react';
 
-import { userApi } from '../../api/user.api';
 import Layout from '../../components/dashboard/Layout';
+import { userAuthStore } from '../../store/user/user.auth.store';
 
 const vendorNavigationLinks = [
   {
@@ -51,7 +51,7 @@ const vendorNavigationLinks = [
 ];
 
 async function handleLogout() {
-  await userApi.logout();
+  await userAuthStore.getState().logout();
   return (window.location.href = '/');
 }
 

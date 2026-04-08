@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 
-import { vendorProfileStore } from '../../store/user/vendor/vendor.profile.store';
+import { vendorProfileStore } from '../../store/vendor/vendor.profile.store';
 
 function getInitials(name) {
   if (!name) return '--';

@@ -209,7 +209,7 @@ export default function UserHomePage() {
   const [date, setDate] = useState('');
 
   const handleListYourVenueClick = () => {
-    navigate('/partners');
+    navigate('/partners/landing');
   };
 
   return (

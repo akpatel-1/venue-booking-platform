@@ -52,6 +52,7 @@ export default function VendorLandingPage() {
   const [searchParams] = useSearchParams();
   const isAuthenticated = userAuthStore((state) => state.isAuthenticated);
   const isChecking = userAuthStore((state) => state.isChecking);
+  const hasCheckedSession = userAuthStore((state) => state.hasCheckedSession);
   const checkSessionCache = userAuthStore((state) => state.checkSessionCache);
   const [isNavigating, setIsNavigating] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -71,10 +72,10 @@ export default function VendorLandingPage() {
   }, [authRequired, checkSessionCache]);
 
   useEffect(() => {
-    if (authRequired && !isAuthenticated) {
+    if (authRequired && !isChecking && !isAuthenticated && !showAuthModal) {
       setShowAuthModal(true);
     }
-  }, [authRequired, isAuthenticated]);
+  }, [authRequired, isAuthenticated, isChecking, showAuthModal]);
 
   const closeAuthModal = () => {
     setShowAuthModal(false);
@@ -86,10 +87,22 @@ export default function VendorLandingPage() {
     if (isNavigating || isChecking) return;
 
     if (!isAuthenticated) {
-      const isVerified = await checkSessionCache();
+      if (hasCheckedSession) {
+        setShowAuthModal(true);
+        return;
+      }
 
-      if (isVerified) {
+      const isVerified = await checkSessionCache();
+      const user = userAuthStore.getState().user;
+      const isVendor = user?.role === 'vendor';
+
+      if (isVerified && isVendor) {
         navigate('/partners/application/status');
+        return;
+      }
+
+      if (isVerified && !isVendor) {
+        navigate('/error/403');
         return;
       }
 
@@ -106,6 +119,11 @@ export default function VendorLandingPage() {
 
       if (status === 401) {
         setShowAuthModal(true);
+        return;
+      }
+
+      if (status === 403) {
+        navigate('/error/403');
         return;
       }
 

@@ -22,6 +22,10 @@ export async function vendorApplicationLoader() {
       );
     }
 
+    if (err.response?.status === 403) {
+      return redirect('/error/403');
+    }
+
     throw err;
   }
 }

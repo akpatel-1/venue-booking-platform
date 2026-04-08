@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { userClient } from '../../../lib/axios.instance';
+import { userClient } from '../../lib/axios.instance';
 
 function normalizeProfile(raw) {
   if (!raw) return null;
