@@ -3,7 +3,7 @@ import { service } from './user.auth.service.js';
 
 export const controller = {
   async handleMeRequest(req, res) {
-    return res.status(200).json({ success: true, data: req.user });
+    return res.status(200).json({ success: true, user: req.user });
   },
 
   async handleOtpRequest(req, res) {
@@ -58,6 +58,19 @@ export const controller = {
 
   async handleLogout(req, res) {
     await service.processLogout(req.userId);
-    res.status(200).json({ success: true, message: 'success' });
+
+    res.clearCookie(
+      USER_AUTH_CONFIG.ACCESS_COOKIE,
+      USER_AUTH_CONFIG.ACCESS_CLEAR_COOKIE_OPTIONS
+    );
+
+    res.clearCookie(
+      USER_AUTH_CONFIG.REFRESH_COOKIE,
+      USER_AUTH_CONFIG.REFRESH_CLEAR_COOKIE_OPTIONS
+    );
+
+    return res
+      .status(200)
+      .json({ success: true, message: 'Logged out successfully' });
   },
 };

@@ -102,7 +102,7 @@ export const service = {
     return rawToken;
   },
 
-  async processLogout() {
-    return await repository.revokeRefreshToken;
+  async processLogout(userId) {
+    await repository.revokeRefreshToken(pool, userId);
   },
 };
