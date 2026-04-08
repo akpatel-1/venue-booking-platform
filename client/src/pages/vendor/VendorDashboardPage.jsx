@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Calendar, House, Settings, Store, User, Wallet } from 'lucide-react';
 
 import Layout from '../../components/dashboard/Layout';
+import { clearStoresByRole } from '../../store/user/clean.all.store';
 import { userAuthStore } from '../../store/user/user.auth.store';
 
 const vendorNavigationLinks = [
@@ -51,7 +52,14 @@ const vendorNavigationLinks = [
 ];
 
 async function handleLogout() {
-  await userAuthStore.getState().logout();
+  const role = userAuthStore.getState().user?.role;
+
+  try {
+    await userAuthStore.getState().logout();
+  } finally {
+    clearStoresByRole(role);
+  }
+
   return (window.location.href = '/');
 }
 
