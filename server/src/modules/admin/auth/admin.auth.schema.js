@@ -10,6 +10,8 @@ export const adminAuthSchema = z.object({
 
   password: z
     .string()
-    .min(1, 'Password is required')
-    .min(12, `Password must be at least 12 characters`),
+    .min(12, 'Password must be at least 12 characters')
+    .refine((val) => val.trim().length > 0, {
+      message: 'Password cannot be only spaces',
+    }),
 });
