@@ -1,11 +1,11 @@
 import express from 'express';
 
-import { validateSchema } from '../../schema.validation.middleware.js';
+import { validateSchema } from '../../../middleware/schema.validation.js';
 import { validateSession } from '../session/admin.session.middleware.js';
 import { controller } from './admin.app.controller.js';
 import { schema } from './admin.app.schema.js';
 
-export const adminAppRoutes = express.Router();
+const adminAppRoutes = express.Router();
 
 adminAppRoutes.get(
   '/application',
@@ -28,3 +28,5 @@ adminAppRoutes.get(
   validateSchema(schema.status, 'params'),
   controller.listApplicationCount
 );
+
+export default adminAppRoutes;

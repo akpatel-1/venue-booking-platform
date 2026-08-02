@@ -1,7 +1,7 @@
 import multer from 'multer';
 
+import { VENDOR_ERROR_CONFIG } from '../modules/vendor/vendor.error.config.js';
 import { ApiError } from '../utils/api.error.util.js';
-import { VENDOR_ERROR_CONFIG } from './vendor/vendor.error.config.js';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 

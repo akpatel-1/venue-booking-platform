@@ -1,11 +1,11 @@
 import express from 'express';
 
-import { validateSchema } from '../../schema.validation.middleware.js';
+import { validateSchema } from '../../../middleware/schema.validation.js';
 import { controller } from './user.auth.controller.js';
 import { middleware } from './user.auth.middleware.js';
 import { schema } from './user.auth.schema.js';
 
-export const userAuthRoutes = express.Router();
+const userAuthRoutes = express.Router();
 
 userAuthRoutes.post(
   '/auth/otp/request',
@@ -41,3 +41,5 @@ userAuthRoutes.post(
   middleware.ensureAccountActive,
   controller.handleLogout
 );
+
+export default userAuthRoutes;

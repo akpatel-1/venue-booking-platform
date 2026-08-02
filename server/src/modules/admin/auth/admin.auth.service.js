@@ -1,7 +1,7 @@
 import argon2 from 'argon2';
 
+import { ERROR_CONFIG } from '../../../config/error.config.js';
 import { ApiError } from '../../../utils/api.error.util.js';
-import { ERROR_CONFIG } from '../../error.config.js';
 import { repository } from '../session/admin.session.repository.js';
 import { findAdminByEmail } from './admin.auth.repository.js';
 

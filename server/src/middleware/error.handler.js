@@ -2,7 +2,7 @@ import multer from 'multer';
 
 import { ApiError } from '../utils/api.error.util.js';
 
-export function errorHandler(err, req, res, next) {
+export default function errorHandler(err, req, res, next) {
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({
       success: false,

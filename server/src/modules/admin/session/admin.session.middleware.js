@@ -1,5 +1,5 @@
+import { ERROR_CONFIG } from '../../../config/error.config.js';
 import { ApiError } from '../../../utils/api.error.util.js';
-import { ERROR_CONFIG } from '../../error.config.js';
 import { ADMIN_AUTH_CONFIG } from '../auth/admin.auth.config.js';
 import { repository } from './admin.session.repository.js';
 

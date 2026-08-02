@@ -1,7 +1,7 @@
+import { ERROR_CONFIG } from '../../../config/error.config.js';
 import { pool } from '../../../infrastructure/database/db.js';
 import { ApiError } from '../../../utils/api.error.util.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
-import { ERROR_CONFIG } from '../../error.config.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
 import { sendOtpEmail } from './user.auth.email.service.js';
 import { OTP } from './user.auth.otp.js';

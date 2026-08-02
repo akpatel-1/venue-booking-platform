@@ -1,6 +1,6 @@
 import { success } from 'zod';
 
-import { service } from './vendor.dash.services.js';
+import { service } from './vendor.dash.service.js';
 
 export const controller = {
   async getVendorProfile(req, res) {
