@@ -1,6 +1,6 @@
 import multer from 'multer';
 
-import { ApiError } from '../utils/api.error.util.js';
+import ApiError from '../utils/api.error.util.js';
 
 export default function errorHandler(err, req, res, next) {
   if (err instanceof ApiError) {

@@ -1,6 +1,6 @@
-import { ApiError } from '../utils/api.error.util.js';
+import ApiError from '../utils/api.error.util.js';
 
-export function validateSchema(schema, source = 'body') {
+export default function validateSchema(schema, source = 'body') {
   return (req, res, next) => {
     const data = req[source] || {};
 
@@ -17,7 +17,10 @@ export function validateSchema(schema, source = 'body') {
       });
     }
 
-    req.data = Object.assign(req.data || {}, result.data);
+    req.data = {
+      ...req.data,
+      ...result.data,
+    };
     next();
   };
 }

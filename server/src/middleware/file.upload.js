@@ -1,11 +1,11 @@
 import multer from 'multer';
 
 import { VENDOR_ERROR_CONFIG } from '../modules/vendor/vendor.error.config.js';
-import { ApiError } from '../utils/api.error.util.js';
+import ApiError from '../utils/api.error.util.js';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 
-export function upload(maxSize) {
+export default function upload(maxSize) {
   return multer({
     storage: multer.memoryStorage(),
     limits: {
