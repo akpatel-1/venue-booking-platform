@@ -1,22 +1,21 @@
 import express from 'express';
 
-import { validateSchema } from '../../../middleware/schema.validation.js';
-import { validateSession } from '../session/admin.session.middleware.js';
-import { controller } from './admin.auth.controller.js';
-import { adminAuthSchema } from './admin.auth.schema.js';
+import validateSchema from '../../../middleware/schema.validation.js';
+import validateAdminSession from '../session/admin.session.middleware.js';
+import {
+  handleAdminLogin,
+  handleAdminLogout,
+} from './admin.auth.controller.js';
+import adminAuthSchema from './admin.auth.schema.js';
 
 const adminAuthRoutes = express.Router();
 
 adminAuthRoutes.post(
   '/auth/login',
   validateSchema(adminAuthSchema),
-  controller.handleAdminLogin
+  handleAdminLogin
 );
 
-adminAuthRoutes.post(
-  '/auth/logout',
-  validateSession,
-  controller.handleAdminLogout
-);
+adminAuthRoutes.post('/auth/logout', validateAdminSession, handleAdminLogout);
 
 export default adminAuthRoutes;

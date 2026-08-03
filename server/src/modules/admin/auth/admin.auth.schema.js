@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const adminAuthSchema = z.object({
+const adminAuthSchema = z.object({
   email: z
     .string()
     .trim()
@@ -15,3 +15,5 @@ export const adminAuthSchema = z.object({
       message: 'Password cannot be only spaces',
     }),
 });
+
+export default adminAuthSchema;

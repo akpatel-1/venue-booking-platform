@@ -1,42 +1,34 @@
+import { deleteAdminSession } from '../session/admin.session.repository.js';
 import { ADMIN_AUTH_CONFIG } from './admin.auth.config.js';
-import { service } from './admin.auth.service.js';
+import { authenticateAdmin } from './admin.auth.service.js';
 
-export const controller = {
-  async handleAdminLogin(req, res) {
-    const oldSessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
-    const credentials = req.data;
+export async function handleAdminLogin(req, res) {
+  const { sessionId, admin } = await authenticateAdmin(req.data);
 
-    const { sessionId, data } = await service.authenticateAdmin(
-      credentials,
-      oldSessionId
-    );
+  res.cookie(
+    ADMIN_AUTH_CONFIG.COOKIE_NAME,
+    sessionId,
+    ADMIN_AUTH_CONFIG.ADMIN_COOKIE_OPTIONS
+  );
 
-    res.cookie(
-      ADMIN_AUTH_CONFIG.COOKIE_NAME,
-      sessionId,
-      ADMIN_AUTH_CONFIG.COOKIE_OPTIONS
-    );
+  return res.status(200).json({
+    status: true,
+    message: 'Login successful',
+    admin,
+  });
+}
 
-    return res.status(200).json({
-      status: true,
-      message: 'Login successful',
-      ...data,
-    });
-  },
+export async function handleAdminLogout(req, res) {
+  const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
+  await deleteAdminSession(sessionId);
 
-  async handleAdminLogout(req, res) {
-    const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
+  res.clearCookie(
+    ADMIN_AUTH_CONFIG.COOKIE_NAME,
+    ADMIN_AUTH_CONFIG.ADMIN_CLEAR_COOKIE_OPTIONS
+  );
 
-    await service.terminateAdminSession(sessionId);
-
-    res.clearCookie(
-      ADMIN_AUTH_CONFIG.COOKIE_NAME,
-      ADMIN_AUTH_CONFIG.CLEAR_COOKIE_OPTIONS
-    );
-
-    return res.status(200).json({
-      success: true,
-      message: 'Logged out successfully',
-    });
-  },
-};
+  return res.status(200).json({
+    success: true,
+    message: 'Logged out successfully',
+  });
+}
