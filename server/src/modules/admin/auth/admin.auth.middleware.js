@@ -1,7 +1,7 @@
 import { ERROR_CONFIG } from '../../../config/error.config.js';
 import ApiError from '../../../utils/api.error.util.js';
-import { ADMIN_AUTH_CONFIG } from '../auth/admin.auth.config.js';
-import { getAdminSession } from './admin.session.repository.js';
+import { getAdminSession } from '../session/admin.session.repository.js';
+import { ADMIN_AUTH_CONFIG } from './admin.auth.config.js';
 
 export default async function validateAdminSession(req, res, next) {
   const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];

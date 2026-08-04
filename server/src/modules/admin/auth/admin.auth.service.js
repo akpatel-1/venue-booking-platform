@@ -6,7 +6,7 @@ import {
   createAdminSession,
   deleteAdminSession,
 } from '../session/admin.session.repository.js';
-import findAdminByEmail from './admin.auth.repository.js';
+import { findAdminByEmail } from './admin.auth.repository.js';
 
 export async function authenticateAdmin({ email, password }) {
   const admin = await verifyAdminCredentials(email, password);

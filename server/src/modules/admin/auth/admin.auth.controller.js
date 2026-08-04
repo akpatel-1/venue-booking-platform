@@ -1,5 +1,6 @@
 import { deleteAdminSession } from '../session/admin.session.repository.js';
 import { ADMIN_AUTH_CONFIG } from './admin.auth.config.js';
+import { findAdminById } from './admin.auth.repository.js';
 import { authenticateAdmin } from './admin.auth.service.js';
 
 export async function handleAdminLogin(req, res) {
@@ -31,4 +32,10 @@ export async function handleAdminLogout(req, res) {
     success: true,
     message: 'Logged out successfully',
   });
+}
+
+export async function handleAdminSession(req, res) {
+  const admin = await findAdminById(req.admin.id);
+
+  return res.status(200).json({ success: true, admin });
 }
