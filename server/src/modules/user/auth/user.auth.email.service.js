@@ -1,9 +1,9 @@
 import { ERROR_CONFIG } from '../../../config/error.config.js';
 import resend from '../../../infrastructure/email/email.js';
 import { generateOtpTemplate } from '../../../infrastructure/email/templates/otp.template.js';
-import { ApiError } from '../../../utils/api.error.util.js';
+import ApiError from '../../../utils/api.error.util.js';
 
-export async function sendOtpEmail(email, otp) {
+export default async function sendOtpEmail(email, otp) {
   // try {
   //   const response = await resend.emails.send({
   //     from: 'Venuz <onboarding@resend.dev>',

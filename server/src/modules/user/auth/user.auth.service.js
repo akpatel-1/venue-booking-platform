@@ -1,108 +1,119 @@
 import { ERROR_CONFIG } from '../../../config/error.config.js';
 import { pool } from '../../../infrastructure/database/db.js';
-import { ApiError } from '../../../utils/api.error.util.js';
+import ApiError from '../../../utils/api.error.util.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
 import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import { sendOtpEmail } from './user.auth.email.service.js';
-import { OTP } from './user.auth.otp.js';
-import { otpRepository } from './user.auth.otp.repository.js';
-import { repository } from './user.auth.repository.js';
-import { token } from './user.auth.token.js';
+import sendOtpEmail from './user.auth.email.service.js';
+import { generateOtpPair, verifyOtp } from './user.auth.otp.js';
+import {
+  checkCoolDown,
+  checkRateLimit,
+  deleteOtp,
+  getOtp,
+  storeOtp,
+} from './user.auth.otp.repository.js';
+import {
+  createAuthMethod,
+  createRefreshToken,
+  createUser,
+  findUser,
+  markRefreshTokenAsRevoked,
+} from './user.auth.repository.js';
+import {
+  generateAccessToken,
+  generateAuthToken,
+  generateHash,
+} from './user.auth.token.js';
 
-export const service = {
-  async processOtpRequest({ email }) {
-    const hashedEmail = token.generateHash(email);
-    await otpRepository.checkCoolDown(hashedEmail);
-    await otpRepository.checkRateLimit(hashedEmail);
-    const { otp, hashedOtp } = OTP.generateOtp();
-    await otpRepository.create(hashedEmail, hashedOtp);
+export async function processOtpRequest({ email }) {
+  await checkCoolDown(email);
+  await checkRateLimit(email);
+  const { otp, hashedOtp } = generateOtpPair();
+  await storeOtp(email, hashedOtp);
 
-    try {
-      await sendOtpEmail(email, otp);
-    } catch (err) {
-      await otpRepository.delete(hashedEmail);
-      throw err;
-    }
-  },
+  try {
+    await sendOtpEmail(email, otp);
+  } catch (err) {
+    await deleteOtp(email);
+    throw err;
+  }
+}
 
-  async processOtpVerification({ email, otp }) {
-    return withTransaction(pool, async (client) => {
-      await this._verifyOtpHash(email, otp);
+export async function processOtpVerification({ email, otp }) {
+  await verifyOtpHash(email, otp);
+  const authTokens = await withTransaction(pool, async (client) => {
+    const userId = await findOrCreateUser(client, email);
+    const refreshToken = await createRefreshSession(client, userId);
+    const accessToken = generateAccessToken(userId);
+    return { accessToken, refreshToken };
+  });
+  await deleteOtp(email);
+  return authTokens;
+}
 
-      const userId = await this._findOrCreateUser(client, email);
-      const refreshToken = await this.createSession(client, userId);
-      const accessToken = token.generateAccessToken(userId);
+async function verifyOtpHash(email, otp) {
+  const otpRecord = await getOtp(email);
 
-      return { accessToken, refreshToken };
-    });
-  },
+  if (!otpRecord || !verifyOtp(otp, otpRecord.hashedOtp)) {
+    throw new ApiError(USER_ERROR_CONFIG.INVALID_OR_EXPIRED_OTP);
+  }
+}
 
-  async _verifyOtpHash(email, otp) {
-    const hashedEmail = token.generateHash(email);
-    const otpRecord = await otpRepository.get(hashedEmail);
+async function findOrCreateUser(client, email) {
+  const existingId = await findUser(client, email);
+  if (existingId) return existingId;
 
-    if (!otpRecord || !otpRecord.hashedOtp) {
-      throw new ApiError(USER_ERROR_CONFIG.INVALID_OR_EXPIRED_OTP);
-    }
-    if (!OTP.verifyOtp(otp, otpRecord.hashedOtp)) {
-      throw new ApiError(USER_ERROR_CONFIG.INVALID_OR_EXPIRED_OTP);
-    }
-    await otpRepository.delete(hashedEmail);
-  },
+  const userId = await createUser(client, email);
 
-  async _findOrCreateUser(client, email) {
-    const existingId = await repository.findUser(client, email);
-    if (existingId) return existingId;
+  await createAuthMethod(client, {
+    userId,
+    authProvider: 'otp',
+    providerIdentifier: email,
+  });
 
-    const userId = await repository.createUser(client, email);
+  return userId;
+}
 
-    await repository.createAuthMethods(client, {
-      userId,
-      authProvider: 'otp',
-      providerIdentifier: email,
-    });
+export async function rotateRefreshToken(refreshToken) {
+  if (!refreshToken) {
+    throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
+  }
 
-    return userId;
-  },
+  const hashedRefreshToken = generateHash(refreshToken);
 
-  async processSessionRotation(refreshToken) {
-    if (!refreshToken) {
+  const { userId, rawToken } = await withTransaction(pool, async (client) => {
+    const userId = await markRefreshTokenAsRevoked(client, hashedRefreshToken);
+
+    if (!userId) {
       throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
     }
 
-    const hashedRefreshToken = token.generateHash(refreshToken);
+    const rawToken = await createRefreshSession(client, userId);
+    return { userId, rawToken };
+  });
 
-    const { userId, rawToken } = await withTransaction(pool, async (client) => {
-      const userId = await repository.markRefreshTokenAsRevoked(client, {
-        tokenHash: hashedRefreshToken,
-      });
+  const accessToken = generateAccessToken(userId);
+  return { accessToken, refreshToken: rawToken };
+}
 
-      if (!userId) {
-        throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
-      }
+async function createRefreshSession(client, userId) {
+  const { rawToken, hashedToken } = generateAuthToken();
 
-      const rawToken = await this.createSession(client, userId);
-      return { userId, rawToken };
-    });
+  await createRefreshToken(client, {
+    userId,
+    tokenHash: hashedToken,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    revokedAt: null,
+  });
 
-    const accessToken = token.generateAccessToken(userId);
-    return { accessToken, refreshToken: rawToken };
-  },
+  return rawToken;
+}
 
-  async createSession(client, userId) {
-    const { rawToken, hashedToken } = token.generateAuthToken();
+export async function processLogout(refreshToken) {
+  if (!refreshToken) {
+    throw new ApiError(ERROR_CONFIG.SESSION_EXPIRED);
+  }
+  const hashedRefreshToken = generateHash(refreshToken);
 
-    await repository.createRefreshToken(client, {
-      userId,
-      tokenHash: hashedToken,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      revokedAt: null,
-    });
-
-    return rawToken;
-  },
-
-  async processLogout(userId) {
-    await repository.revokeRefreshToken(pool, userId);
-  },
-};
+  await markRefreshTokenAsRevoked(pool, hashedRefreshToken);
+}

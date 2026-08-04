@@ -1,69 +1,60 @@
-export const repository = {
-  async findUserById(client, userId) {
-    const result = await client.query(
-      `SELECT id, email, role, status
+export async function findUserById(client, userId) {
+  const result = await client.query(
+    `SELECT id, email, role, status
      FROM users 
      WHERE id = $1`,
-      [userId]
-    );
-    return result.rows[0] ?? null;
-  },
+    [userId]
+  );
+  return result.rows[0] ?? null;
+}
 
-  async findUser(client, email) {
-    const result = await client.query(
-      `SELECT id 
+export async function findUser(client, email) {
+  const result = await client.query(
+    `SELECT id 
      FROM users 
      WHERE email = $1`,
-      [email]
-    );
-    return result.rows[0]?.id ?? null;
-  },
+    [email]
+  );
+  return result.rows[0]?.id ?? null;
+}
 
-  async createUser(client, email) {
-    const result = await client.query(
-      `INSERT INTO users (email)
+export async function createUser(client, email) {
+  const result = await client.query(
+    `INSERT INTO users (email)
      VALUES ($1) 
      RETURNING id`,
-      [email]
-    );
-    return result.rows[0].id;
-  },
+    [email]
+  );
+  return result.rows[0].id;
+}
 
-  async createAuthMethods(client, data) {
-    await client.query(
-      `INSERT INTO user_auth_methods
+export async function createAuthMethod(client, data) {
+  await client.query(
+    `INSERT INTO user_auth_methods
      (user_id, auth_provider, provider_identifier)
      VALUES ($1, $2, $3)`,
-      [data.userId, data.authProvider, data.providerIdentifier]
-    );
-  },
+    [data.userId, data.authProvider, data.providerIdentifier]
+  );
+}
 
-  async createRefreshToken(client, data) {
-    await client.query(
-      `INSERT INTO refresh_tokens 
+export async function createRefreshToken(client, data) {
+  await client.query(
+    `INSERT INTO refresh_tokens 
      (user_id, token_hash, expires_at, revoked_at) 
      VALUES ($1, $2, $3, $4)`,
-      [data.userId, data.tokenHash, data.expiresAt, data.revokedAt]
-    );
-  },
+    [data.userId, data.tokenHash, data.expiresAt, data.revokedAt]
+  );
+}
 
-  async markRefreshTokenAsRevoked(client, { tokenHash }) {
-    const result = await client.query(
-      `UPDATE refresh_tokens
+export async function markRefreshTokenAsRevoked(client, tokenHash) {
+  const result = await client.query(
+    `UPDATE refresh_tokens
     SET revoked_at = NOW()
     WHERE token_hash = $1
-    RETURNING user_id`,
-      [tokenHash]
-    );
-    return result.rows[0]?.user_id ?? null;
-  },
-
-  async revokeRefreshToken(client, userId) {
-    const result = await client.query(
-      `UPDATE refresh_tokens
-      SET revoked_at = NOW()
-      WHERE user_id = $1`,
-      [userId]
-    );
-  },
-};
+    AND revoked_at IS NULL
+    AND expires_at > NOW()
+    RETURNING user_id;`,
+    [tokenHash]
+  );
+  return result.rows[0]?.user_id ?? null;
+}
