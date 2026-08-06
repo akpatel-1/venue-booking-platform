@@ -1,23 +1,15 @@
 import express from 'express';
 
 import validateSchema from '../../../middleware/schema.validation.js';
-import {
-  handleAdminLogin,
-  handleAdminLogout,
-  handleAdminSession,
-} from './controller.js';
+import { handleLogin, handleLogout, handleSession } from './controller.js';
 import validateAdminSession from './middleware.js';
-import adminAuthSchema from './schema.js';
+import schema from './schema.js';
 
-const adminAuthRoutes = express.Router();
+const router = express.Router();
 
-adminAuthRoutes.post(
-  '/auth/login',
-  validateSchema(adminAuthSchema),
-  handleAdminLogin
-);
+router.post('/auth/login', validateSchema(schema), handleLogin);
 
-adminAuthRoutes.post('/auth/logout', validateAdminSession, handleAdminLogout);
+router.post('/auth/logout', validateAdminSession, handleLogout);
 
-adminAuthRoutes.get('/auth/me', validateAdminSession, handleAdminSession);
-export default adminAuthRoutes;
+router.get('/auth/me', validateAdminSession, handleSession);
+export default router;

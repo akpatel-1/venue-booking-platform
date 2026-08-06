@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const adminAuthSchema = z.object({
+const schema = z.object({
   email: z
     .string()
     .trim()
@@ -16,4 +16,4 @@ const adminAuthSchema = z.object({
     }),
 });
 
-export default adminAuthSchema;
+export default schema;

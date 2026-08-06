@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const userAuthSchema = {
+const schema = {
   email: z.object({
     email: z.string().trim().toLowerCase().min(1).email(),
   }),
@@ -14,4 +14,4 @@ const userAuthSchema = {
   }),
 };
 
-export default userAuthSchema;
+export default schema;

@@ -9,36 +9,31 @@ import {
   handleSessionRotation,
 } from './controller.js';
 import { authenticateToken, ensureAccountActive } from './middleware.js';
-import userAuthSchema from './schema.js';
+import schema from './schema.js';
 
-const userAuthRoutes = express.Router();
+const router = express.Router();
 
-userAuthRoutes.post(
+router.post(
   '/auth/otp/request',
-  validateSchema(userAuthSchema.email),
+  validateSchema(schema.email),
   handleOtpRequest
 );
 
-userAuthRoutes.post(
+router.post(
   '/auth/otp/verify',
-  validateSchema(userAuthSchema.verify),
+  validateSchema(schema.verify),
   handleOtpVerification
 );
 
-userAuthRoutes.get(
-  '/auth/me',
-  authenticateToken,
-  ensureAccountActive,
-  handleMeRequest
-);
+router.get('/auth/me', authenticateToken, ensureAccountActive, handleMeRequest);
 
-userAuthRoutes.post('/auth/refresh', handleSessionRotation);
+router.post('/auth/refresh', handleSessionRotation);
 
-userAuthRoutes.post(
+router.post(
   '/auth/logout',
   authenticateToken,
   ensureAccountActive,
   handleLogout
 );
 
-export default userAuthRoutes;
+export default router;

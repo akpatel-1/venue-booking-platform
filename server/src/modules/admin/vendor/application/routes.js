@@ -9,16 +9,16 @@ import {
   updateApplicationStatus,
 } from './service.js';
 
-const adminVendorApplicationRoutes = express.Router();
+const router = express.Router();
 
-adminVendorApplicationRoutes.get(
+router.get(
   '/application',
   validateSession,
   validateSchema(schema.status, 'query'),
   fetchApplication
 );
 
-adminVendorApplicationRoutes.patch(
+router.patch(
   '/application/:id',
   validateSession,
   validateSchema(schema.id, 'params'),
@@ -26,11 +26,11 @@ adminVendorApplicationRoutes.patch(
   updateApplicationStatus
 );
 
-adminVendorApplicationRoutes.get(
+router.get(
   '/application/:status',
   validateSession,
   validateSchema(schema.status, 'params'),
   fetchApplicationCount
 );
 
-export default adminVendorApplicationRoutes;
+export default router;

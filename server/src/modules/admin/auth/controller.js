@@ -3,7 +3,7 @@ import { ADMIN_AUTH_CONFIG } from './config.js';
 import { findAdminById } from './repository.js';
 import { authenticateAdmin } from './service.js';
 
-export async function handleAdminLogin(req, res) {
+export async function handleLogin(req, res) {
   const { sessionId, admin } = await authenticateAdmin(req.data);
 
   res.cookie(
@@ -19,7 +19,7 @@ export async function handleAdminLogin(req, res) {
   });
 }
 
-export async function handleAdminLogout(req, res) {
+export async function handleLogout(req, res) {
   const sessionId = req.cookies[ADMIN_AUTH_CONFIG.COOKIE_NAME];
   await deleteAdminSession(sessionId);
 
@@ -34,7 +34,7 @@ export async function handleAdminLogout(req, res) {
   });
 }
 
-export async function handleAdminSession(req, res) {
+export async function handleSession(req, res) {
   const admin = await findAdminById(req.admin.id);
 
   return res.status(200).json({ success: true, admin });

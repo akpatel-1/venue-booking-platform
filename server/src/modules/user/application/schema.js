@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const applicationSchema = z.object({
+const schema = z.object({
   pan_name: z.string().min(2, 'Full name is required').trim().toUpperCase(),
   phone: z
     .string()
@@ -20,4 +20,4 @@ const applicationSchema = z.object({
     .regex(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
 });
 
-export default applicationSchema;
+export default schema;
