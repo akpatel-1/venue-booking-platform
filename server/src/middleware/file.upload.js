@@ -1,11 +1,10 @@
 import multer from 'multer';
 
-import { VENDOR_ERROR_CONFIG } from '../modules/vendor/vendor.error.config.js';
 import ApiError from '../utils/api.error.util.js';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 
-export default function upload(maxSize) {
+export default function fileUploadToR2(maxSize) {
   return multer({
     storage: multer.memoryStorage(),
     limits: {
@@ -15,7 +14,13 @@ export default function upload(maxSize) {
       if (ALLOWED_TYPES.includes(file.mimetype)) {
         cb(null, true);
       } else {
-        cb(new ApiError(VENDOR_ERROR_CONFIG.FILE_TYPE_MISMATCH));
+        cb(
+          new ApiError({
+            statusCode: 400,
+            message: 'Invalid file type. Only JPG and PNG are allowed.',
+            code: 'FILE_TYPE_MISMATCH',
+          })
+        );
       }
     },
   });

@@ -29,4 +29,14 @@ export const USER_ERROR_CONFIG = {
     message: 'Authentication required.',
     code: 'ACCESS_TOKEN_MISSING',
   },
+  APPLICATION_ALREADY_EXISTS: {
+    statusCode: 409,
+    message: 'Application already exists.',
+    code: 'APPLICATION_ALREADY_EXISTS',
+  },
+  DOCUMENT_REQUIRED: {
+    statusCode: 400,
+    message: 'Verification document is required',
+    code: 'DOCUMENT_REQUIRED',
+  },
 };

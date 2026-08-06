@@ -1,0 +1,18 @@
+import {
+  getApplicationStatus,
+  processApplication,
+} from './user.application.service.js';
+
+export async function handleApplicationStatus(req, res) {
+  const data = await getApplicationStatus(req.userId);
+  res.status(200).json({ success: true, data });
+}
+
+export async function submitApplication(req, res) {
+  const id = await processApplication(req.userId, req.data, req.file);
+  res.status(201).json({
+    success: true,
+    message: 'Application successfully submitted',
+    data: { id },
+  });
+}
