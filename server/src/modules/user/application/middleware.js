@@ -10,7 +10,7 @@ export async function requireDocument(req, res, next) {
   next();
 }
 export async function checkExistingApplication(req, res, next) {
-  const status = await findLatestApplicationStatusByUserId(pool, req.userId);
+  const status = await findLatestApplicationStatusByUserId(pool, req.user.id);
 
   if (status && status !== 'rejected') {
     throw new ApiError(USER_ERROR_CONFIG.APPLICATION_ALREADY_EXISTS);

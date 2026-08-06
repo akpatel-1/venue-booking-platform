@@ -16,7 +16,7 @@ export async function authenticateToken(req, res, next) {
   const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);
 
   if (typeof payload === 'object' && payload.sub) {
-    req.userId = payload.sub;
+    req.user = { id: payload.sub };
   } else {
     throw new ApiError(USER_ERROR_CONFIG.INVALID_TOKEN);
   }
@@ -25,7 +25,7 @@ export async function authenticateToken(req, res, next) {
 }
 
 export async function ensureAccountActive(req, res, next) {
-  const user = await findUserById(pool, req.userId);
+  const user = await findUserById(pool, req.user.id);
 
   if (!user) {
     throw new ApiError(USER_ERROR_CONFIG.USER_NOT_FOUND);
