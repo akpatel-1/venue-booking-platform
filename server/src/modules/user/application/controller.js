@@ -1,7 +1,4 @@
-import {
-  getApplicationStatus,
-  processApplication,
-} from './user.application.service.js';
+import { getApplicationStatus, processApplication } from './service.js';
 
 export async function handleApplicationStatus(req, res) {
   const data = await getApplicationStatus(req.userId);

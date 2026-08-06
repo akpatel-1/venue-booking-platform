@@ -7,12 +7,9 @@ import {
   handleOtpRequest,
   handleOtpVerification,
   handleSessionRotation,
-} from './user.auth.controller.js';
-import {
-  authenticateToken,
-  ensureAccountActive,
-} from './user.auth.middleware.js';
-import userAuthSchema from './user.auth.schema.js';
+} from './controller.js';
+import { authenticateToken, ensureAccountActive } from './middleware.js';
+import userAuthSchema from './schema.js';
 
 const userAuthRoutes = express.Router();
 

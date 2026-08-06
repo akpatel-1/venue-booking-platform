@@ -1,7 +1,7 @@
 import { pool } from '../../../infrastructure/database/db.js';
 import ApiError from '../../../utils/api.error.util.js';
-import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import { findLatestApplicationStatusByUserId } from './user.application.repository.js';
+import { USER_ERROR_CONFIG } from '../error.config.js';
+import { findLatestApplicationStatusByUserId } from './repository.js';
 
 export async function requireDocument(req, res, next) {
   if (!req.file) {

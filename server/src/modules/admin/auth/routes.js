@@ -5,9 +5,9 @@ import {
   handleAdminLogin,
   handleAdminLogout,
   handleAdminSession,
-} from './admin.auth.controller.js';
-import validateAdminSession from './admin.auth.middleware.js';
-import adminAuthSchema from './admin.auth.schema.js';
+} from './controller.js';
+import validateAdminSession from './middleware.js';
+import adminAuthSchema from './schema.js';
 
 const adminAuthRoutes = express.Router();
 

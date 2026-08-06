@@ -1,7 +1,7 @@
-import { deleteAdminSession } from '../session/admin.session.repository.js';
-import { ADMIN_AUTH_CONFIG } from './admin.auth.config.js';
-import { findAdminById } from './admin.auth.repository.js';
-import { authenticateAdmin } from './admin.auth.service.js';
+import { deleteAdminSession } from '../session/repository.js';
+import { ADMIN_AUTH_CONFIG } from './config.js';
+import { findAdminById } from './repository.js';
+import { authenticateAdmin } from './service.js';
 
 export async function handleAdminLogin(req, res) {
   const { sessionId, admin } = await authenticateAdmin(req.data);

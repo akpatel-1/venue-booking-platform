@@ -10,7 +10,7 @@ import { withTransaction } from '../../../utils/transaction.util.js';
 import {
   findLatestApplicationByUserId,
   insertVendorApplication,
-} from './user.application.repository.js';
+} from './repository.js';
 
 export async function getApplicationStatus(userId) {
   const application = await findLatestApplicationByUserId(pool, userId);

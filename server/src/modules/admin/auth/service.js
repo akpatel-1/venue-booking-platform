@@ -5,8 +5,8 @@ import ApiError from '../../../utils/api.error.util.js';
 import {
   createAdminSession,
   deleteAdminSession,
-} from '../session/admin.session.repository.js';
-import { findAdminByEmail } from './admin.auth.repository.js';
+} from '../session/repository.js';
+import { findAdminByEmail } from './repository.js';
 
 export async function authenticateAdmin({ email, password }) {
   const admin = await verifyAdminCredentials(email, password);

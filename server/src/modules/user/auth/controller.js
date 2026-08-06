@@ -1,10 +1,10 @@
-import { USER_AUTH_CONFIG } from './user.auth.config.js';
+import { USER_AUTH_CONFIG } from './config.js';
 import {
   processLogout,
   processOtpRequest,
   processOtpVerification,
   rotateRefreshToken,
-} from './user.auth.service.js';
+} from './service.js';
 
 export async function handleMeRequest(req, res) {
   return res.status(200).json({ success: true, user: req.user });

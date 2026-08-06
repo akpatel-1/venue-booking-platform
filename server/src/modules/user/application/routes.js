@@ -2,19 +2,10 @@ import express from 'express';
 
 import fileUploadToR2 from '../../../middleware/file.upload.js';
 import validateSchema from '../../../middleware/schema.validation.js';
-import {
-  authenticateToken,
-  ensureAccountActive,
-} from '../auth/user.auth.middleware.js';
-import {
-  handleApplicationStatus,
-  submitApplication,
-} from './user.application.controller.js';
-import {
-  checkExistingApplication,
-  requireDocument,
-} from './user.application.middleware.js';
-import applicationSchema from './user.application.schema.js';
+import { authenticateToken, ensureAccountActive } from '../auth/middleware.js';
+import { handleApplicationStatus, submitApplication } from './controller.js';
+import { checkExistingApplication, requireDocument } from './middleware.js';
+import applicationSchema from './schema.js';
 
 const userApplicationRoutes = express.Router();
 

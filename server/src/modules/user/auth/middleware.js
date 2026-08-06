@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 
 import { pool } from '../../../infrastructure/database/db.js';
 import ApiError from '../../../utils/api.error.util.js';
-import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import { USER_AUTH_CONFIG } from './user.auth.config.js';
-import { findUserById } from './user.auth.repository.js';
+import { USER_ERROR_CONFIG } from '../error.config.js';
+import { USER_AUTH_CONFIG } from './config.js';
+import { findUserById } from './repository.js';
 
 export async function authenticateToken(req, res, next) {
   const accessToken = req.cookies[USER_AUTH_CONFIG.ACCESS_COOKIE];

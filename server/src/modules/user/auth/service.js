@@ -2,28 +2,28 @@ import { ERROR_CONFIG } from '../../../config/error.config.js';
 import { pool } from '../../../infrastructure/database/db.js';
 import ApiError from '../../../utils/api.error.util.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
-import { USER_ERROR_CONFIG } from '../user.error.config.js';
-import sendOtpEmail from './user.auth.email.service.js';
-import { generateOtpPair, verifyOtp } from './user.auth.otp.js';
+import { USER_ERROR_CONFIG } from '../error.config.js';
+import sendOtpEmail from './email.service.js';
 import {
   checkCoolDown,
   checkRateLimit,
   deleteOtp,
   getOtp,
   storeOtp,
-} from './user.auth.otp.repository.js';
+} from './otp.repository.js';
+import { generateOtpPair, verifyOtp } from './otp.utils.js';
 import {
   createAuthMethod,
   createRefreshToken,
   createUser,
   findUser,
   markRefreshTokenAsRevoked,
-} from './user.auth.repository.js';
+} from './repository.js';
 import {
   generateAccessToken,
   generateAuthToken,
   generateHash,
-} from './user.auth.token.js';
+} from './token.js';
 
 export async function processOtpRequest({ email }) {
   await checkCoolDown(email);
