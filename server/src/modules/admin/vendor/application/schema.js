@@ -2,15 +2,29 @@ import { z } from 'zod';
 
 const ALLOWED_STATUS = new Set(['pending', 'approved', 'rejected']);
 
+const REJECTION_REASONS = [
+  'pan_image_unclear',
+  'pan_name_mismatch',
+  'invalid_pan_number',
+  'invalid_address',
+  'invalid_phone',
+  'document_not_supported',
+  'duplicate_application',
+];
+
+const rejectionReasonSchema = z.enum(REJECTION_REASONS);
+
+const statusSchema = z
+  .string({ message: 'Status is required' })
+  .trim()
+  .transform((val) => val.toLowerCase())
+  .refine((val) => ALLOWED_STATUS.has(val), {
+    message: 'Invalid status value',
+  });
+
 const schema = {
   status: z.object({
-    status: z
-      .string({ message: 'Status is required' })
-      .trim()
-      .refine((val) => ALLOWED_STATUS.has(val.toLowerCase()), {
-        message: 'Invalid status value',
-      })
-      .transform((val) => val.toLowerCase()),
+    status: statusSchema,
   }),
 
   id: z.object({
@@ -19,30 +33,20 @@ const schema = {
 
   review: z
     .object({
-      status: z
-        .string({ message: 'Status is required' })
-        .trim()
-        .refine((val) => ALLOWED_STATUS.has(val.toLowerCase()), {
-          message: 'Invalid status value',
-        })
-        .transform((val) => val.toLowerCase()),
+      status: statusSchema,
 
-      rejection_reason: z
-        .string()
-        .trim()
-        .min(3, { message: 'Reason too short' })
-        .max(200, { message: 'Reason too long' })
-        .optional(),
+      rejection_reason: rejectionReasonSchema.optional(),
     })
     .refine(
       (data) => {
         if (data.status === 'rejected') {
           return !!data.rejection_reason;
         }
-        return true;
+        return !data.rejection_reason;
       },
       {
-        message: 'Rejection reason is required when status is rejected',
+        message:
+          'Rejection reason is required when status is rejected and forbidden otherwise',
         path: ['rejection_reason'],
       }
     ),

@@ -2,35 +2,35 @@ import express from 'express';
 
 import validateSchema from '../../../../middleware/schema.validation.js';
 import validateSession from '../../auth/middleware.js';
-import { schema } from './schema.js';
 import {
-  fetchApplication,
-  fetchApplicationCount,
-  updateApplicationStatus,
-} from './service.js';
+  listApplicationCount,
+  listApplications,
+  updateApplication,
+} from './controller.js';
+import schema from './schema.js';
 
 const router = express.Router();
 
 router.get(
-  '/application',
+  '/vendor/applications',
   validateSession,
   validateSchema(schema.status, 'query'),
-  fetchApplication
+  listApplications
 );
 
 router.patch(
-  '/application/:id',
+  '/vendor/applications/:id',
   validateSession,
   validateSchema(schema.id, 'params'),
   validateSchema(schema.review, 'body'),
-  updateApplicationStatus
+  updateApplication
 );
 
 router.get(
-  '/application/:status',
+  '/applications/:status',
   validateSession,
   validateSchema(schema.status, 'params'),
-  fetchApplicationCount
+  listApplicationCount
 );
 
 export default router;

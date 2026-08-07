@@ -1,56 +1,120 @@
 import { pool } from '../../../../infrastructure/database/db.js';
 import ApiError from '../../../../utils/api.error.util.js';
+import { getPrivateUrl } from '../../../../utils/r2.storage.utils.js';
 import { withTransaction } from '../../../../utils/transaction.util.js';
 import { APPLICATION_ERROR_CONFIG } from './error.config.js';
 import {
   createVendorProfile,
+  findApplicationsByStatus,
   getStatusCount,
-  getVendorApplication,
   markUserAsVendor,
   markVendorAsApproved,
   markVendorAsRejected,
 } from './repository.js';
 
-export async function fetchApplication(status) {
-  return await getVendorApplication(pool, status);
+export async function getApplications(status) {
+  const applications = await findApplicationsByStatus(pool, status);
+  switch (status) {
+    case 'pending':
+      return formatPendingResponse(applications);
+
+    case 'approved':
+      return formatApprovedResponse(applications);
+
+    case 'rejected':
+      return formatRejectedResponse(applications);
+
+    default:
+      throw new ApiError(APPLICATION_ERROR_CONFIG.INVALID_STATUS);
+  }
 }
 
-export async function updateApplicationStatus(reviewerId, data) {
-  const { status } = data;
+async function formatPendingResponse(applications) {
+  return Promise.all(
+    applications.map(async (item) => {
+      return {
+        id: item.id,
+        pan_name: item.pan_name,
+        phone: item.phone,
+        address: item.address,
+        district: item.district,
+        state: item.state,
+        pincode: item.pincode,
+        pan_number: item.pan_number,
+        pan_document_url: await getPrivateUrl(item.pan_document_key),
+      };
+    })
+  );
+}
+function formatApprovedResponse(applications) {
+  return applications.map((item) => {
+    return {
+      id: item.id,
+      pan_name: item.pan_name,
+      phone: item.phone,
+      district: item.district,
+      state: item.state,
+      submitted_at: item.submitted_at,
+      reviewed_at: item.reviewed_at,
+      reviewed_by: item.reviewed_by,
+    };
+  });
+}
 
-  if (status === 'approved') {
-    return await handleApproved(reviewerId, data.id);
+function formatRejectedResponse(applications) {
+  return applications.map((item) => {
+    return {
+      id: item.id,
+      pan_name: item.pan_name,
+      phone: item.phone,
+      district: item.district,
+      state: item.state,
+      submitted_at: item.submitted_at,
+      reviewed_at: item.reviewed_at,
+      reviewed_by: item.reviewed_by,
+      rejection_reason: item.rejection_reason,
+    };
+  });
+}
+
+export async function reviewApplication(reviewerId, data) {
+  if (data.status === 'approved') {
+    return handleApproved(reviewerId, data.id);
   }
 
-  return await handleRejected(reviewerId, data);
+  return handleRejected(reviewerId, data);
 }
 
 async function handleApproved(reviewerId, id) {
   await withTransaction(pool, async (client) => {
-    const result = await markVendorAsApproved(client, {
+    const application = await markVendorAsApproved(client, {
       id,
       status: 'approved',
       reviewedBy: reviewerId,
     });
 
-    if (!result) {
-      throw new ApiError(APPLICATION_ERROR_CONFIG.USER_NOT_FOUND);
+    if (!application) {
+      throw new ApiError(APPLICATION_ERROR_CONFIG.APPLICATION_NOT_PENDING);
     }
 
-    await createVendorProfile(client, result);
-    await markUserAsVendor(client, result.user_id);
+    await createVendorProfile(client, application);
+    await markUserAsVendor(client, application.user_id);
   });
 }
 
 async function handleRejected(reviewerId, data) {
-  await markVendorAsRejected(pool, {
+  const application = await markVendorAsRejected(pool, {
     id: data.id,
     status: 'rejected',
     rejectionReason: data.rejection_reason,
     reviewedBy: reviewerId,
   });
+
+  if (!application) {
+    throw new ApiError(APPLICATION_ERROR_CONFIG.APPLICATION_NOT_PENDING);
+  }
 }
 
-export async function fetchApplicationCount(status) {
+export async function getApplicationsCount(status) {
   return await getStatusCount(pool, status);
 }

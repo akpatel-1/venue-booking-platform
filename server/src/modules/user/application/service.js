@@ -2,10 +2,7 @@ import path from 'path';
 
 import { pool } from '../../../infrastructure/database/db.js';
 import ApiError from '../../../utils/api.error.util.js';
-import {
-  deleteFromR2,
-  fileUploadToR2,
-} from '../../../utils/r2.storage.utils.js';
+import { deleteFromR2, uploadToR2 } from '../../../utils/r2.storage.utils.js';
 import { withTransaction } from '../../../utils/transaction.util.js';
 import {
   findLatestApplicationByUserId,
@@ -35,7 +32,7 @@ export async function processApplication(userId, userData, userFile) {
   const fileExtension = path.extname(userFile.originalname);
   const documentKey = `vendor-application/${userId}/${Date.now()}-pan${fileExtension}`;
   try {
-    await fileUploadToR2(userFile.buffer, documentKey, userFile.mimetype);
+    await uploadToR2(userFile.buffer, documentKey, userFile.mimetype);
 
     return await withTransaction(pool, async (client) => {
       return await insertVendorApplication(client, {

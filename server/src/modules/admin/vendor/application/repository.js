@@ -1,4 +1,4 @@
-export async function getVendorApplication(client, status) {
+export async function findApplicationsByStatus(client, status) {
   const result = await client.query(
     `SELECT 
         id,
@@ -25,13 +25,20 @@ export async function getVendorApplication(client, status) {
 export async function markVendorAsApproved(client, data) {
   const result = await client.query(
     `UPDATE vendor_applications
-      SET status = $1,
-      reviewed_at = NOW(),
-      reviewed_by = $2 
-      WHERE id = $3
-      RETURNING user_id, pan_name, phone, district, state`,
+     SET status = $1,
+         reviewed_at = NOW(),
+         reviewed_by = $2
+     WHERE id = $3
+       AND status = 'pending'
+     RETURNING
+       user_id,
+       pan_name,
+       phone,
+       district,
+       state`,
     [data.status, data.reviewedBy, data.id]
   );
+
   return result.rows[0] ?? null;
 }
 
@@ -54,16 +61,19 @@ export async function markUserAsVendor(client, id) {
 }
 
 export async function markVendorAsRejected(client, data) {
-  await client.query(
-    `
-    UPDATE vendor_applications
-    SET status = $1,
-    rejection_reason = $2,
-    reviewed_at = NOW(),
-    reviewed_by = $3
-    WHERE id = $4`,
+  const result = await client.query(
+    `UPDATE vendor_applications
+     SET status = $1,
+         rejection_reason = $2,
+         reviewed_at = NOW(),
+         reviewed_by = $3
+     WHERE id = $4
+       AND status = 'pending'
+     RETURNING id`,
     [data.status, data.rejectionReason, data.reviewedBy, data.id]
   );
+
+  return result.rows[0] ?? null;
 }
 
 export async function getStatusCount(client, status) {

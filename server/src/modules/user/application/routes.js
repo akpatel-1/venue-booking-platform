@@ -1,6 +1,6 @@
 import express from 'express';
 
-import fileUploadToR2 from '../../../middleware/file.upload.js';
+import uploadToR2 from '../../../middleware/file.upload.js';
 import validateSchema from '../../../middleware/schema.validation.js';
 import { authenticateToken, ensureAccountActive } from '../auth/middleware.js';
 import { handleApplicationStatus, submitApplication } from './controller.js';
@@ -20,7 +20,7 @@ router.post(
   '/application',
   authenticateToken,
   ensureAccountActive,
-  fileUploadToR2(5 * 1024 * 1024).single('pan_document'),
+  uploadToR2(5 * 1024 * 1024).single('pan_document'),
   requireDocument,
   validateSchema(schema),
   checkExistingApplication,

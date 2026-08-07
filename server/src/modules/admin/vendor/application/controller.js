@@ -1,20 +1,20 @@
 import {
-  fetchApplication,
-  fetchApplicationCount,
-  updateApplicationStatus,
+  getApplications,
+  getApplicationsCount,
+  reviewApplication,
 } from './service.js';
 
 export async function listApplications(req, res) {
-  const result = await fetchApplication(req.data.status);
-  res.status(200).json({ status: true, applications: result });
+  const data = await getApplications(req.data.status);
+  res.status(200).json({ status: true, data });
 }
 
 export async function updateApplication(req, res) {
-  await updateApplicationStatus(req.admin.id, req.data);
+  await reviewApplication(req.admin.id, req.data);
   res.status(201).json({ status: true, message: 'Status updated' });
 }
 
 export async function listApplicationCount(req, res) {
-  const count = await fetchApplicationCount(req.data.status);
+  const count = await getApplicationsCount(req.data.status);
   res.status(200).json({ status: true, count });
 }
