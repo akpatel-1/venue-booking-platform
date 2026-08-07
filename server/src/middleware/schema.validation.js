@@ -1,4 +1,4 @@
-import ApiError from '../utils/api.error.util.js';
+import ApiError from '../utils/api.error.js';
 
 export default function validateSchema(schema, source = 'body') {
   return (req, res, next) => {

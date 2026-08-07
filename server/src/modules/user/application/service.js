@@ -1,9 +1,9 @@
 import path from 'path';
 
 import { pool } from '../../../infrastructure/database/db.js';
-import ApiError from '../../../utils/api.error.util.js';
-import { deleteFromR2, uploadToR2 } from '../../../utils/r2.storage.utils.js';
-import { withTransaction } from '../../../utils/transaction.util.js';
+import ApiError from '../../../utils/api.error.js';
+import { deleteFromR2, uploadToR2 } from '../../../utils/r2.storage.js';
+import { withTransaction } from '../../../utils/transaction.js';
 import {
   findLatestApplicationByUserId,
   insertVendorApplication,

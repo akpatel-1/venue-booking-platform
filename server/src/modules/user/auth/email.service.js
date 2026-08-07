@@ -1,7 +1,7 @@
 import { ERROR_CONFIG } from '../../../config/error.config.js';
 import resend from '../../../infrastructure/email/email.js';
 import { generateOtpTemplate } from '../../../infrastructure/email/templates/otp.template.js';
-import ApiError from '../../../utils/api.error.util.js';
+import ApiError from '../../../utils/api.error.js';
 
 export default async function sendOtpEmail(email, otp) {
   // try {

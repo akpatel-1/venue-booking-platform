@@ -1,7 +1,7 @@
 import { pool } from '../../../../infrastructure/database/db.js';
-import ApiError from '../../../../utils/api.error.util.js';
-import { getPrivateUrl } from '../../../../utils/r2.storage.utils.js';
-import { withTransaction } from '../../../../utils/transaction.util.js';
+import ApiError from '../../../../utils/api.error.js';
+import { getPrivateUrl } from '../../../../utils/r2.storage.js';
+import { withTransaction } from '../../../../utils/transaction.js';
 import { APPLICATION_ERROR_CONFIG } from './error.config.js';
 import {
   createVendorProfile,
