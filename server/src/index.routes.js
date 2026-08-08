@@ -8,6 +8,5 @@ const router = express.Router();
 
 router.use('/admin', adminRoutes);
 router.use(userRoutes);
-router.use('/vendors', vendorRoutes);
-
+router.use('/vendor', vendorRoutes);
 export default router;

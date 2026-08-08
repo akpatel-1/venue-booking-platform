@@ -20,11 +20,7 @@ export const VENDOR_ERROR_CONFIG = {
     message: 'Application processing failed',
     code: 'APPLICATION_ERROR',
   },
-  DOCUMENT_REQUIRED: {
-    statusCode: 400,
-    message: 'Verification document is required',
-    code: 'DOCUMENT_REQUIRED',
-  },
+
   VENDOR_NOT_FOUND: {
     statusCode: 401,
     message: 'VENDOR not exists',
