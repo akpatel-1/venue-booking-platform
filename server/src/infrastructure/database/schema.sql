@@ -40,13 +40,13 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
   token_hash TEXT NOT NULL UNIQUE,
   expires_at TIMESTAMPTZ NOT NULL,
   revoked_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS vendor_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID UNIQUE NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  vendor_name TEXT NOT NUll,
+  vendor_name TEXT NOT NULL,
   is_suspended BOOLEAN NOT NULL DEFAULT FALSE,
   suspension_reason TEXT,
   phone TEXT,
@@ -88,3 +88,129 @@ CREATE UNIQUE INDEX IF NOT EXISTS unique_pending_application
 CREATE INDEX IF NOT EXISTS idx_vendor_status
   ON vendor_applications (status);
 
+
+CREATE TYPE venue_category AS ENUM('waterpark', 'amusement_park', 'turf', 'playzone');
+
+CREATE TYPE application_status AS ENUM('pending', 'approved', 'rejected');
+
+CREATE EXTENSION postgis WITH SCHEMA extensions;
+
+CREATE TABLE IF NOT EXISTS venue_applications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  vendor_id UUID NOT NULL REFERENCES vendor_profiles (id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  venue_details TEXT NOT NULL,
+  category venue_category NOT NULL,
+  address TEXT NOT NULL,
+  district TEXT NOT NULL,
+  state TEXT NOT NULL,
+  pincode VARCHAR(6) NOT NULL,
+  geo_loc GEOGRAPHY(Point, 4326) NOT NULL,
+  images text[] NOT NULL CHECK (array_length(images, 1) = 5),
+  proof_document_key TEXT NOT NULL,
+  status application_status NOT NULL DEFAULT 'pending',
+  rejection_reason TEXT,
+  submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  reviewed_at TIMESTAMPTZ,
+  reviewed_by UUID REFERENCES admins (id),
+  CONSTRAINT check_pincode CHECK (pincode ~ '^[0-9]{6}$'),
+  CONSTRAINT venue_rejection_reason_check CHECK (
+    (
+      status = 'rejected'
+      AND rejection_reason IS NOT NULL
+    )
+    OR (
+      status <> 'rejected'
+      AND rejection_reason IS NULL
+    )
+  )
+);
+
+CREATE TYPE booking_types AS ENUM('whole_day', 'time_slot');
+
+CREATE TYPE venue_status AS ENUM('live', 'suspended', 'draft');
+
+CREATE TABLE IF NOT EXISTS venues (
+  id uuid primary key default gen_random_uuid (),
+  vendor_id uuid not null references vendor_profiles (id) on delete cascade,
+  application_id uuid not null references venue_applications (id),
+  name text not null,
+  description text not null,
+  category venue_category not null,
+  address text not null,
+  district text not null,
+  state text not null,
+  pincode varchar(6) not null,
+  geo_loc geography (point, 4326) not null,
+  cover_image_key text not null,
+  images text[] not null check (array_length(images, 1) between 1 and 10),
+  booking_type booking_types not null,
+  opening_time time not null,
+  closing_time time not null,
+  status venue_status not null default 'draft',
+  suspension_reason text,
+  approved_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at TIMESTAMPTZ not null default NOW(),
+  constraint check_pincode check (pincode ~ '^[0-9]{6}$'),
+  constraint unique_venue_application unique (application_id),
+  check (opening_time < closing_time),
+  constraint venue_suspension_check check (
+    (
+      status = 'suspended'
+      AND suspension_reason IS NOT NULL
+    )
+    OR (
+      status <> 'suspended'
+      AND suspension_reason IS NULL
+    )
+  )
+);
+
+CREATE TABLE IF NOT EXISTS venue_pricing (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  venue_id UUID NOT NULL REFERENCES venues (id) ON DELETE CASCADE,
+  day_type TEXT NOT NULL CHECK (day_type IN ('weekday', 'weekend')),
+  duration_minutes INTEGER,
+  price INTEGER NOT NULL CHECK (price >= 0),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT valid_duration CHECK (
+    duration_minutes IS NULL
+    OR duration_minutes > 0
+  )
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS unique_venue_pricing ON venue_pricing (
+  venue_id,
+  day_type,
+  COALESCE(duration_minutes, 0)
+);
+
+CREATE TABLE IF NOT EXISTS venue_reverifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  venue_id UUID NOT NULL REFERENCES venues (id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  category venue_category NOT NULL,
+  address TEXT NOT NULL,
+  district TEXT NOT NULL,
+  state TEXT NOT NULL,
+  pincode VARCHAR(6) NOT NULL,
+  geo_loc GEOGRAPHY(point, 4326) NOT NULL,
+  status application_status NOT NULL DEFAULT 'pending',
+  rejection_reason TEXT,
+  submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  reviewed_at TIMESTAMPTZ,
+  reviewed_by UUID REFERENCES admins (id),
+  CONSTRAINT check_pincode CHECK (pincode ~ '^[0-9]{6}$'),
+  CHECK (
+    (
+      status = 'rejected'
+      AND rejection_reason IS NOT NULL
+    )
+    OR (
+      status <> 'rejected'
+      AND rejection_reason IS NULL
+    )
+  )
+);
