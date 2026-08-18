@@ -4,7 +4,7 @@ import ApiError from '../utils/api.error.js';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 
-export default function uploadToR2(maxSize) {
+export default function upload(maxSize) {
   return multer({
     storage: multer.memoryStorage(),
     limits: {
