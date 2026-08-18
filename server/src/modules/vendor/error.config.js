@@ -26,4 +26,9 @@ export const VENDOR_ERROR_CONFIG = {
     message: 'VENDOR not exists',
     code: 'VENDOR_NOT_FOUND',
   },
+  VENDOR_SUSPENDED: {
+    statusCode: 403,
+    message: 'VENDOR is suspended',
+    code: 'VENDOR_SUSPENDED',
+  },
 };

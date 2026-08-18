@@ -4,12 +4,12 @@ import {
   authenticateToken,
   ensureAccountActive,
 } from '../../user/auth/middleware.js';
-import verifyVendorRole from '../middleware.js';
+import ensureVendorAccess from '../middleware.js';
 import getVendorProfile from './controller.js';
 
 const router = express.Router();
 
-router.use(authenticateToken, ensureAccountActive, verifyVendorRole);
+router.use(authenticateToken, ensureAccountActive, ensureVendorAccess);
 
 router.get('/profile', getVendorProfile);
 
