@@ -1,0 +1,46 @@
+import { fileTypeFromBuffer } from 'file-type';
+
+import { ERROR_CONFIG } from '../config/error.config.js';
+import ApiError from '../utils/api.error.js';
+
+export function requireFile(req, res, next) {
+  if (!req.file) {
+    throw new ApiError(ERROR_CONFIG.File_REQUIRED);
+  }
+  next();
+}
+
+export async function validateFileType(req, res, next) {
+  if (req.file) {
+    await validateFileBuffer(file);
+  }
+
+  if (req.files) {
+    if (Array.isArray(req.files)) {
+      for (const file of req.files) {
+        await validateFileBuffer(file);
+      }
+    } else {
+      for (const files of Object.values(req.files)) {
+        for (file of files) {
+          await validateFileBuffer(file);
+        }
+      }
+    }
+  }
+  next();
+}
+
+async function validateFileBuffer(file) {
+  const type = await fileTypeFromBuffer(file.buffer);
+
+  if (!type) {
+    throw new ApiError(ERROR_CONFIG.INVALID_FILE_CONTENT);
+  }
+
+  const allowedTypes = ['image/jpeg', 'image/png'];
+
+  if (!allowedTypes.includes(type.mime)) {
+    throw new ApiError(ERROR_CONFIG.FILE_TYPE_MISMATCH);
+  }
+}

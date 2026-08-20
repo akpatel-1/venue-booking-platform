@@ -1,10 +1,11 @@
 import express from 'express';
 
 import upload from '../../../middleware/file.upload.js';
+import { requireFile } from '../../../middleware/file.validation.js';
 import validateSchema from '../../../middleware/schema.validation.js';
 import { authenticateToken, ensureAccountActive } from '../auth/middleware.js';
 import { handleApplicationStatus, submitApplication } from './controller.js';
-import { checkExistingApplication, requireDocument } from './middleware.js';
+import { checkExistingApplication } from './middleware.js';
 import schema from './schema.js';
 
 const router = express.Router();
@@ -20,8 +21,8 @@ router.post(
   '/application',
   authenticateToken,
   ensureAccountActive,
-  upload(5 * 1024 * 1024).single('pan_document'),
-  requireDocument,
+  upload(5 * 1024 * 1024, 1, 8).single('pan_document'),
+  requireFile,
   validateSchema(schema),
   checkExistingApplication,
   submitApplication

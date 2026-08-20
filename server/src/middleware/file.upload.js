@@ -1,27 +1,33 @@
 import multer from 'multer';
+import path from 'path';
 
+import { ERROR_CONFIG } from '../config/error.config.js';
 import ApiError from '../utils/api.error.js';
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
+const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png'];
 
-export default function upload(maxSize) {
+const ALLOWED_MIMETYPES = ['image/jpeg', 'image/png'];
+
+export default function upload(fileSize, files, fields) {
   return multer({
     storage: multer.memoryStorage(),
     limits: {
-      fileSize: maxSize,
+      fileSize,
+      files,
+      fields,
     },
     fileFilter: (req, file, cb) => {
-      if (ALLOWED_TYPES.includes(file.mimetype)) {
-        cb(null, true);
-      } else {
-        cb(
-          new ApiError({
-            statusCode: 400,
-            message: 'Invalid file type. Only JPG and PNG are allowed.',
-            code: 'FILE_TYPE_MISMATCH',
-          })
-        );
+      const extension = path.extname(file.originalname).toLowerCase();
+
+      const validExtension = ALLOWED_EXTENSIONS.includes(extension);
+
+      const validMimeType = ALLOWED_MIMETYPES.includes(file.mimetype);
+
+      if (validExtension && validMimeType) {
+        return cb(null, true);
       }
+
+      cb(new ApiError(ERROR_CONFIG.FILE_TYPE_MISMATCH));
     },
   });
 }
