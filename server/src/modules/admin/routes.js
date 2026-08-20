@@ -1,7 +1,7 @@
 import express from 'express';
 
 import adminAuthRoutes from './auth/routes.js';
-import adminVendorApplicationRoutes from './vendor/venue/application/routes.js';
+import adminVendorApplicationRoutes from './vendor/application/routes.js';
 
 const router = express.Router();
 
