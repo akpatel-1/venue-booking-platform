@@ -30,6 +30,11 @@ export const ERROR_CONFIG = {
     message: 'Request body is required',
     code: 'BODY_REQUIRED',
   },
+  File_REQUIRED: {
+    statusCode: 400,
+    message: 'File is required',
+    code: 'File_REQUIRED',
+  },
   EMAIL_SEND_FAILED: {
     statusCode: 500,
     message: 'Failed to send OTP email',
@@ -39,5 +44,15 @@ export const ERROR_CONFIG = {
     statusCode: 403,
     message: 'You do not have permission to access this resource',
     code: 'FORBIDDEN_ACCESS',
+  },
+  INVALID_FILE_CONTENT: {
+    statusCode: 400,
+    message: 'Unable to determine file type.',
+    code: 'INVALID_FILE_CONTENT',
+  },
+  FILE_TYPE_MISMATCH: {
+    statusCode: 400,
+    message: 'Invalid file type. Only JPEG, JPG and PNG are allowed.',
+    code: 'FILE_TYPE_MISMATCH',
   },
 };
