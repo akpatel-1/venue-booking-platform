@@ -39,4 +39,9 @@ export const USER_ERROR_CONFIG = {
     message: 'Verification document is required',
     code: 'DOCUMENT_REQUIRED',
   },
+  TOKEN_EXPIRED: {
+    statusCode: 401,
+    message: 'Token has expired',
+    code: 'TOKEN_EXPIRED',
+  },
 };

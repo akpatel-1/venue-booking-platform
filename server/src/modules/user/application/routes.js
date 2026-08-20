@@ -1,7 +1,10 @@
 import express from 'express';
 
 import upload from '../../../middleware/file.upload.js';
-import { requireFile } from '../../../middleware/file.validation.js';
+import {
+  requireFile,
+  validateFileType,
+} from '../../../middleware/file.validation.js';
 import validateSchema from '../../../middleware/schema.validation.js';
 import { authenticateToken, ensureAccountActive } from '../auth/middleware.js';
 import { handleApplicationStatus, submitApplication } from './controller.js';
@@ -23,6 +26,7 @@ router.post(
   ensureAccountActive,
   upload(5 * 1024 * 1024, 1, 8).single('pan_document'),
   requireFile,
+  validateFileType,
   validateSchema(schema),
   checkExistingApplication,
   submitApplication

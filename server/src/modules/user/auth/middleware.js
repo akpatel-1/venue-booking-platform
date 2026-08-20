@@ -13,12 +13,21 @@ export async function authenticateToken(req, res, next) {
     throw new ApiError(USER_ERROR_CONFIG.ACCESS_TOKEN_MISSING);
   }
 
-  const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);
+  try {
+    const payload = jwt.verify(accessToken, process.env.ACCESS_SECRET);
 
-  if (typeof payload === 'object' && payload.sub) {
-    req.user = { id: payload.sub };
-  } else {
-    throw new ApiError(USER_ERROR_CONFIG.INVALID_TOKEN);
+    if (typeof payload === 'object' && payload.sub) {
+      req.user = { id: payload.sub };
+    }
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      throw new ApiError(USER_ERROR_CONFIG.TOKEN_EXPIRED);
+    }
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new ApiError(USER_ERROR_CONFIG.INVALID_TOKEN);
+    }
+
+    throw error;
   }
 
   next();
