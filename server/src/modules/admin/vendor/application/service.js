@@ -14,22 +14,7 @@ import {
 
 export async function getApplications(status) {
   const applications = await findApplicationsByStatus(pool, status);
-  switch (status) {
-    case 'pending':
-      return formatPendingResponse(applications);
 
-    case 'approved':
-      return formatApprovedResponse(applications);
-
-    case 'rejected':
-      return formatRejectedResponse(applications);
-
-    default:
-      throw new ApiError(APPLICATION_ERROR_CONFIG.INVALID_STATUS);
-  }
-}
-
-async function formatPendingResponse(applications) {
   return Promise.all(
     applications.map(async (item) => {
       return {
@@ -42,39 +27,14 @@ async function formatPendingResponse(applications) {
         pincode: item.pincode,
         pan_number: item.pan_number,
         pan_document_url: await getPrivateUrl(item.pan_document_key),
+        status: item.status,
+        submitted_at: item.submitted_at,
+        reviewed_at: item.reviewed_at,
+        reviewed_by: item.reviewed_by,
+        rejection_reason: item.rejection_reason,
       };
     })
   );
-}
-function formatApprovedResponse(applications) {
-  return applications.map((item) => {
-    return {
-      id: item.id,
-      pan_name: item.pan_name,
-      phone: item.phone,
-      district: item.district,
-      state: item.state,
-      submitted_at: item.submitted_at,
-      reviewed_at: item.reviewed_at,
-      reviewed_by: item.reviewed_by,
-    };
-  });
-}
-
-function formatRejectedResponse(applications) {
-  return applications.map((item) => {
-    return {
-      id: item.id,
-      pan_name: item.pan_name,
-      phone: item.phone,
-      district: item.district,
-      state: item.state,
-      submitted_at: item.submitted_at,
-      reviewed_at: item.reviewed_at,
-      reviewed_by: item.reviewed_by,
-      rejection_reason: item.rejection_reason,
-    };
-  });
 }
 
 export async function reviewApplication(reviewerId, data) {
