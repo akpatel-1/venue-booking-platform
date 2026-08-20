@@ -1,7 +1,7 @@
 import express from 'express';
 
-import validateSchema from '../../../../middleware/schema.validation.js';
-import validateSession from '../../auth/middleware.js';
+import validateSchema from '../../../../../middleware/schema.validation.js';
+import validateSession from '../../../auth/middleware.js';
 import {
   listApplicationCount,
   listApplications,
