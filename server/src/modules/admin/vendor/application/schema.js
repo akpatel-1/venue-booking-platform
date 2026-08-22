@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const ALLOWED_STATUS = new Set(['pending', 'approved', 'rejected']);
+const ALLOWED_STATUS = new Set(['approved', 'rejected']);
 
 const REJECTION_REASONS = [
   'pan_image_unclear',
