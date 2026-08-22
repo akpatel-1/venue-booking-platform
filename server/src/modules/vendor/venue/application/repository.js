@@ -45,5 +45,5 @@ export async function insertIntoVenueApplications(client, data) {
     ]
   );
 
-  return result.rows[0].id;
+  return result.rows[0];
 }

@@ -10,19 +10,29 @@ const REJECTION_REASONS = [
   'duplicate_application',
 ];
 
-const rejectionReasonSchema = z.enum(REJECTION_REASONS);
+const rejectionReasonSchema = z.enum(REJECTION_REASONS, {
+  message: 'Invalid rejection reason',
+});
 
 const applicationStatusSchema = z
   .string()
   .trim()
   .toLowerCase()
-  .pipe(z.enum(['pending', 'approved', 'rejected']));
+  .pipe(
+    z.enum(['pending', 'approved', 'rejected'], {
+      message: 'Status must be pending, approved, or rejected',
+    })
+  );
 
 const reviewStatusSchema = z
   .string()
   .trim()
   .toLowerCase()
-  .pipe(z.enum(['approved', 'rejected']));
+  .pipe(
+    z.enum(['approved', 'rejected'], {
+      message: 'Review status must be either approved or rejected',
+    })
+  );
 
 const schema = {
   status: z.object({

@@ -7,7 +7,9 @@ const schema = z.object({
 
   venue_details: z.string().trim().min(10, 'Venue details is required'),
 
-  category: z.enum(ALLOWED_CATEGORY),
+  category: z.enum(ALLOWED_CATEGORY, {
+    message: 'Allowed category are waterpark, amusement_park or playzone',
+  }),
 
   address: z.string().trim().min(5, 'Full address is required'),
 
