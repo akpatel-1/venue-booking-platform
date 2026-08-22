@@ -28,7 +28,7 @@ const schema = {
   }),
 
   id: z.object({
-    id: z.string().trim().uuid({ message: 'Invalid application id' }),
+    id: z.string().trim().uuid({ message: 'Invalid vendor application id' }),
   }),
 
   review: z
