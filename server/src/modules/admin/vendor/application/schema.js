@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-const ALLOWED_STATUS = new Set(['approved', 'rejected']);
-
 const REJECTION_REASONS = [
   'pan_image_unclear',
   'pan_name_mismatch',
@@ -14,17 +12,21 @@ const REJECTION_REASONS = [
 
 const rejectionReasonSchema = z.enum(REJECTION_REASONS);
 
-const statusSchema = z
-  .string({ message: 'Status is required' })
+const applicationStatusSchema = z
+  .string()
   .trim()
-  .transform((val) => val.toLowerCase())
-  .refine((val) => ALLOWED_STATUS.has(val), {
-    message: 'Invalid status value',
-  });
+  .toLowerCase()
+  .pipe(z.enum(['pending', 'approved', 'rejected']));
+
+const reviewStatusSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.enum(['approved', 'rejected']));
 
 const schema = {
   status: z.object({
-    status: statusSchema,
+    status: applicationStatusSchema,
   }),
 
   id: z.object({
@@ -33,7 +35,7 @@ const schema = {
 
   review: z
     .object({
-      status: statusSchema,
+      status: reviewStatusSchema,
 
       rejection_reason: rejectionReasonSchema.optional(),
     })
