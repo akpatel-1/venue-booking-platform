@@ -1,7 +1,70 @@
 import z from 'zod';
 
-const schema = z.object({
-  status: z.enum(['pending', 'approved', 'rejected']),
+const REJECTION_REASONS = [
+  'venue_name_mismatch',
+  'venue_address_mismatch',
+  'document_unclear',
+  'document_expired',
+  'invalid_document',
+  'document_not_supported',
+  'venue_photos_unclear',
+  'venue_photos_inappropriate',
+  'venue_not_found',
+  'venue_not_operational',
+  'suspicious_or_fraudulent_information',
+];
+
+const rejectionReasonSchema = z.enum(REJECTION_REASONS, {
+  message: 'Invalid rejection reason',
 });
+
+const applicationStatusSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.enum(['pending', 'approved', 'rejected']));
+
+const reviewStatusSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(
+    z.enum(['approved', 'rejected'], {
+      message: 'Status must be either approved or rejected',
+    })
+  );
+
+const schema = {
+  status: z.object({
+    status: applicationStatusSchema,
+  }),
+
+  id: z.object({
+    id: z.string().trim().uuid({
+      message: 'Invalid venue application id',
+    }),
+  }),
+
+  review: z
+    .object({
+      status: reviewStatusSchema,
+
+      rejection_reason: rejectionReasonSchema.optional(),
+    })
+    .refine(
+      (data) => {
+        if (data.status === 'rejected') {
+          return !!data.rejection_reason;
+        }
+
+        return !data.rejection_reason;
+      },
+      {
+        message:
+          'Rejection reason is required when status is rejected and forbidden otherwise',
+        path: ['rejection_reason'],
+      }
+    ),
+};
 
 export default schema;

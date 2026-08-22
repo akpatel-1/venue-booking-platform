@@ -1,15 +1,22 @@
 import express from 'express';
 
 import validateSchema from '../../../../middleware/schema.validation.js';
-import { listApplications } from './controller.js';
+import { listApplications, reviewApplication } from './controller.js';
 import schema from './schema.js';
 
 const router = express.Router();
 
 router.get(
   '/venue/applications',
-  validateSchema(schema, 'query'),
+  validateSchema(schema.status, 'query'),
   listApplications
+);
+
+router.patch(
+  '/venue/application/:id',
+  validateSchema(schema.id, 'params'),
+  validateSchema(schema.review, 'body'),
+  reviewApplication
 );
 
 export default router;

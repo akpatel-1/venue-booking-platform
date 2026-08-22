@@ -1,6 +1,14 @@
+import { pool } from '../../../../infrastructure/database/db.js';
+import ApiError from '../../../../utils/api.error.js';
 import { getPrivateUrl } from '../../../../utils/r2.storage.js';
+import { withTransaction } from '../../../../utils/transaction.js';
 import { APPLICATION_ERROR_CONFIG } from './error.config.js';
-import { fetchApplications } from './repository.js';
+import {
+  createVenue,
+  fetchApplications,
+  markVenueAsApproved,
+  markVenueAsRejected,
+} from './repository.js';
 
 export async function getApplications(status) {
   const applications = await fetchApplications(status);
@@ -28,4 +36,21 @@ export async function getApplications(status) {
       };
     })
   );
+}
+
+export async function updateApplication(reviewed_by, data) {
+  if (data.status === 'rejected') {
+    const result = await markVenueAsRejected(reviewed_by, data);
+    if (!result) {
+      throw new ApiError(APPLICATION_ERROR_CONFIG.APPLICATION_NOT_PENDING);
+    }
+    return result;
+  }
+  return withTransaction(pool, async (client) => {
+    const result = await markVenueAsApproved(client, reviewed_by, data);
+    if (!result) {
+      throw new ApiError(APPLICATION_ERROR_CONFIG.APPLICATION_NOT_PENDING);
+    }
+    return await createVenue(client, result);
+  });
 }
