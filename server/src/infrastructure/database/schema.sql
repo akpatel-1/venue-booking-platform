@@ -131,31 +131,34 @@ CREATE TYPE booking_types AS ENUM('whole_day', 'time_slot');
 CREATE TYPE venue_status AS ENUM('live', 'suspended', 'draft');
 
 CREATE TABLE IF NOT EXISTS venues (
-  id uuid primary key default gen_random_uuid (),
-  vendor_id uuid not null references vendor_profiles (id) on delete cascade,
-  application_id uuid not null references venue_applications (id),
-  name text not null,
-  description text not null,
-  category venue_category not null,
-  address text not null,
-  district text not null,
-  state text not null,
-  pincode varchar(6) not null,
-  geo_loc geography (point, 4326) not null,
-  cover_image_key text not null,
-  images text[] not null check (array_length(images, 1) between 1 and 10),
-  booking_type booking_types not null,
-  opening_time time not null,
-  closing_time time not null,
-  status venue_status not null default 'draft',
-  suspension_reason text,
-  approved_at timestamptz,
-  created_at timestamptz not null default now(),
-  updated_at TIMESTAMPTZ not null default NOW(),
-  constraint check_pincode check (pincode ~ '^[0-9]{6}$'),
-  constraint unique_venue_application unique (application_id),
-  check (opening_time < closing_time),
-  constraint venue_suspension_check check (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  vendor_id UUID NOT NULL REFERENCES vendor_profiles (id) ON DELETE CASCADE,
+  application_id UUID NOT NULL REFERENCES venue_applications (id),
+  name TEXT NOT NULL,
+  description TEXT,
+  category venue_category NOT NULL,
+  address TEXT NOT NULL,
+  district TEXT NOT NULL,
+  state TEXT NOT NULL,
+  pincode VARCHAR(6) NOT NULL,
+  geo_loc GEOGRAPHY(Point, 4326) NOT NULL,
+  cover_image_key TEXT,
+  images TEXT[] CHECK (images IS NULL OR array_length(images, 1) BETWEEN 1 AND 10),
+  booking_type booking_types,
+  opening_time TIME,
+  closing_time TIME,
+  status venue_status NOT NULL DEFAULT 'draft',
+  suspension_reason TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT check_pincode CHECK (pincode ~ '^[0-9]{6}$'),
+  CONSTRAINT unique_venue_application UNIQUE (application_id),
+  CONSTRAINT venue_hours_check CHECK (
+    opening_time IS NULL
+    OR closing_time IS NULL
+    OR opening_time < closing_time
+  ),
+  CONSTRAINT venue_suspension_check CHECK (
     (
       status = 'suspended'
       AND suspension_reason IS NOT NULL
