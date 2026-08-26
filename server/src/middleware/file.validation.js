@@ -12,7 +12,7 @@ export function requireFile(req, res, next) {
 
 export async function validateFileType(req, res, next) {
   if (req.file) {
-    await validateFileBuffer(file);
+    await validateFileBuffer(req.file);
   }
 
   if (req.files) {
