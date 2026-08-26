@@ -22,3 +22,10 @@ export async function fetchReverificationApplication(venueId) {
 
   return result.rows[0] ?? null;
 }
+
+export async function updatedCoverImage(data) {
+  await pool.query(
+    `UPDATE venues  SET cover_image_id = $1 WHERE id = $2 AND vendor_id = $3`,
+    [data.coverImageId, data.venueId, data.vendorId]
+  );
+}
