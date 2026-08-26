@@ -2,7 +2,7 @@ import { pool } from '../../../../infrastructure/database/db.js';
 
 export async function fetchVenue(vendorId, venueId) {
   const result = await pool.query(
-    `SELECT id, name, description, category, address, district, state, pincode, geo_loc, cover_image_key, images, booking_type, opening_time, closing_time, status, suspension_reason, created_at, updated_at FROM venues WHERE id = $1 AND vendor_id = $2`,
+    `SELECT id, name, description, category, address, district, state, pincode, geo_loc, cover_image_id, images, booking_type, opening_time, closing_time, status, suspension_reason, created_at, updated_at FROM venues WHERE id = $1 AND vendor_id = $2`,
     [venueId, vendorId]
   );
   return result.rows[0] ?? null;
