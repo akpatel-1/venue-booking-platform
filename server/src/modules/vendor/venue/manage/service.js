@@ -1,5 +1,5 @@
 import ERROR_CONFIG from './error.config.js';
-import { fetchVenue } from './repository.js';
+import { fetchReverificationApplication, fetchVenue } from './repository.js';
 
 export async function getVenueDetails(venueId, vendorId) {
   const venue = await fetchVenue(venueId, vendorId);
@@ -8,5 +8,7 @@ export async function getVenueDetails(venueId, vendorId) {
     throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
   }
 
-  return venue;
+  const reverification = await fetchReverificationApplication(venueId);
+
+  return { venue, reverification };
 }
