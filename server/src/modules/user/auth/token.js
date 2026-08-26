@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 
 export function generateAuthToken() {

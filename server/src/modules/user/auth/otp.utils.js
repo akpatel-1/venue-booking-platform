@@ -1,5 +1,4 @@
 import crypto, { verify } from 'crypto';
-import 'dotenv/config';
 
 const secret = process.env.OTP_SECRET;
 
