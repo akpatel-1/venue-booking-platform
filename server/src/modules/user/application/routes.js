@@ -24,7 +24,7 @@ router.post(
   '/application',
   authenticateToken,
   ensureAccountActive,
-  upload(5 * 1024 * 1024, 1, 8).single('pan_document'),
+  upload(1, 8).single('pan_document'),
   requireFile,
   validateFileType,
   validateSchema(schema),

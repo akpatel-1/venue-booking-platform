@@ -8,11 +8,11 @@ const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png'];
 
 const ALLOWED_MIMETYPES = ['image/jpeg', 'image/png'];
 
-export default function upload(fileSize, files, fields) {
+export default function upload(files, fields) {
   return multer({
     storage: multer.memoryStorage(),
     limits: {
-      fileSize,
+      fileSize: 5 * 1024 * 1024,
       files,
       fields,
     },
