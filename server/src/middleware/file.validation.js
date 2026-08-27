@@ -5,8 +5,16 @@ import ApiError from '../utils/api.error.js';
 
 export function requireFile(req, res, next) {
   if (!req.file) {
-    throw new ApiError(ERROR_CONFIG.File_REQUIRED);
+    throw new ApiError(ERROR_CONFIG.FILE_REQUIRED);
   }
+  next();
+}
+
+export function requireFiles(req, res, next) {
+  if (!req.files || req.files.length === 0) {
+    throw new ApiError(ERROR_CONFIG.FILE_REQUIRED);
+  }
+
   next();
 }
 
