@@ -30,10 +30,15 @@ export const ERROR_CONFIG = {
     message: 'Request body is required',
     code: 'BODY_REQUIRED',
   },
-  File_REQUIRED: {
+  FILE_REQUIRED: {
     statusCode: 400,
     message: 'File is required',
-    code: 'File_REQUIRED',
+    code: 'FILE_REQUIRED',
+  },
+  FILES_REQUIRED: {
+    statusCode: 400,
+    message: 'Files are required',
+    code: 'FILES_REQUIRED',
   },
   EMAIL_SEND_FAILED: {
     statusCode: 500,

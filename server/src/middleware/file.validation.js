@@ -12,7 +12,7 @@ export function requireFile(req, res, next) {
 
 export function requireFiles(req, res, next) {
   if (!req.files || req.files.length === 0) {
-    throw new ApiError(ERROR_CONFIG.FILE_REQUIRED);
+    throw new ApiError(ERROR_CONFIG.FILES_REQUIRED);
   }
 
   next();
