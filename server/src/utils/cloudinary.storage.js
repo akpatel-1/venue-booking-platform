@@ -12,7 +12,7 @@ export function uploadToCloudinary(buffer, publicId) {
           return reject(error);
         }
 
-        resolve(result);
+        resolve(result.public_id);
       }
     );
 

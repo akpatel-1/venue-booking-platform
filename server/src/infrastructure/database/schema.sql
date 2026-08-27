@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS venues (
   pincode VARCHAR(6) NOT NULL,
   geo_loc GEOGRAPHY(Point, 4326) NOT NULL,
   cover_image_id TEXT,
-  images TEXT[] CHECK (images IS NULL OR array_length(images, 1) BETWEEN 1 AND 10),
+  images TEXT[] NOT NULL DEFAULT '{}' CHECK (cardinality(images) <= 10),
   booking_type booking_types,
   opening_time TIME,
   closing_time TIME,
