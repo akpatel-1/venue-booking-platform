@@ -7,7 +7,7 @@ import {
   validateFileType,
 } from '../../../../middleware/file.validation.js';
 import validateSchema from '../../../../middleware/schema.validation.js';
-import { getVenue, uploadImage } from './controller.js';
+import { getVenue, uploadImage, uploadImages } from './controller.js';
 import schema from './schema.js';
 
 const router = express.Router();
@@ -16,11 +16,20 @@ router.get('/venues/:id', validateSchema(schema, 'params'), getVenue);
 
 router.patch(
   '/venues/:id/cover',
-  validateSchema(schema, 'params'),
   upload(1, 0).single('cover_image'),
+  validateSchema(schema, 'params'),
   requireFile,
   validateFileType,
   uploadImage
+);
+
+router.patch(
+  '/venues/:id/images',
+  validateSchema(schema.id, 'params'),
+  upload(10, 10).array('venue_images', 10),
+  validateSchema(schema.deleteIds),
+  validateFileType,
+  uploadImages
 );
 
 export default router;

@@ -14,6 +14,11 @@ const ERROR_CONFIG = {
     message: 'A maximum of 10 files can be uploaded ',
     code: 'FILE_UPLOAD_LIMIT_EXCEEDED',
   },
+  INVALID_IMAGE_ID: {
+    statusCode: 400,
+    message: 'image_id is invalid for deletion',
+    code: 'INVALID_IMAGE_ID',
+  },
 };
 
 export default ERROR_CONFIG;

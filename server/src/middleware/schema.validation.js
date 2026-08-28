@@ -7,8 +7,7 @@ export default function validateSchema(schema, source = 'body') {
     const result = schema.safeParse(data);
 
     if (!result.success) {
-      const fieldErrors = result.error.flatten().fieldErrors;
-      const firstError = Object.values(fieldErrors)[0]?.[0];
+      const firstError = result.error.issues[0]?.message;
 
       throw new ApiError({
         statusCode: 400,

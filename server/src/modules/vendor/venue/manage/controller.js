@@ -1,4 +1,8 @@
-import { getVenueDetails, uploadCoverImage } from './service.js';
+import {
+  getVenueDetails,
+  uploadCoverImage,
+  uploadVenueImages,
+} from './service.js';
 
 export async function getVenue(req, res) {
   const data = await getVenueDetails(req.vendor.id, req.params.id);
@@ -13,4 +17,17 @@ export async function uploadImage(req, res) {
   res
     .status(201)
     .json({ success: true, message: 'Cover image uploaded sucessfully' });
+}
+
+export async function uploadImages(req, res) {
+  const data = {
+    vendorId: req.vendor.id,
+    venueId: req.params.id,
+    data: req.data,
+    files: req.files,
+  };
+  await uploadVenueImages(data);
+  res
+    .status(201)
+    .json({ success: true, message: 'Venue images edited sucessfully' });
 }

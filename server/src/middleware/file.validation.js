@@ -30,7 +30,7 @@ export async function validateFileType(req, res, next) {
       }
     } else {
       for (const files of Object.values(req.files)) {
-        for (file of files) {
+        for (const file of files) {
           await validateFileBuffer(file);
         }
       }

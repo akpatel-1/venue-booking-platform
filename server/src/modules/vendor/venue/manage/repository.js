@@ -42,3 +42,19 @@ export async function updateCoverImage(vendorId, venueId) {
     [venueId, vendorId]
   );
 }
+
+export async function getVenueImages(vendorId, venueId) {
+  const result = await pool.query(
+    `
+  SELECT images FROM venues WHERE id = $1 AND vendor_id = $2 `,
+    [venueId, vendorId]
+  );
+  return result.rows[0]?.images;
+}
+
+export async function updateVenueImages(data) {
+  await pool.query(
+    `UPDATE venues SET images = $1 WHERE id = $2 AND vendor_id = $3`,
+    [data.finalFiles, data.venueId, data.vendorId]
+  );
+}
