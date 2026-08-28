@@ -4,8 +4,7 @@ import ERROR_CONFIG from './error.config.js';
 import {
   fetchReverificationApplication,
   fetchVenue,
-  getCoverImageId,
-  updatedCoverImage,
+  getCoverImage,
 } from './repository.js';
 
 export async function getVenueDetails(venueId, vendorId) {
@@ -22,22 +21,23 @@ export async function getVenueDetails(venueId, vendorId) {
 
 export async function uploadCoverImage(vendorId, venueId, file) {
   try {
-    let coverImageId = await getCoverImageId(venueId, vendorId);
+    const venue = await getCoverImage(vendorId, venueId);
 
-    if (!coverImageId) {
-      coverImageId = `venues/${vendorId}/cover`;
-
-      await uploadToCloudinary(file.buffer, coverImageId);
-
-      return await updatedCoverImage({
-        vendorId,
-        venueId,
-        coverImageId,
-      });
+    if (!venue) {
+      throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
     }
 
-    return await uploadToCloudinary(file.buffer, coverImageId);
+    const coverImageId = `venues/${vendorId}/${venueId}/cover_image`;
+    await uploadToCloudinary(file.buffer, coverImageId);
+
+    if (!venue.has_cover_image) {
+      return await updateCoverImage(vendorId, venueId);
+    }
   } catch (err) {
+    if (err instanceof ApiError) {
+      throw err;
+    }
+
     throw new ApiError(ERROR_CONFIG.FILE_UPLOAD_FAILED);
   }
 }

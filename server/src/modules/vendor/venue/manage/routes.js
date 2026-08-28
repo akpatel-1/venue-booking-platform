@@ -12,10 +12,10 @@ import schema from './schema.js';
 
 const router = express.Router();
 
-router.get('/venue/:id', validateSchema(schema, 'params'), getVenue);
+router.get('/venues/:id', validateSchema(schema, 'params'), getVenue);
 
 router.patch(
-  '/venue/:id/cover',
+  '/venues/:id/cover',
   validateSchema(schema, 'params'),
   upload(1, 0).single('cover_image'),
   requireFile,

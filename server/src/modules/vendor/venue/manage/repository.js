@@ -23,18 +23,22 @@ export async function fetchReverificationApplication(venueId) {
   return result.rows[0] ?? null;
 }
 
-export async function getCoverImageId(venueId, vendorId) {
+export async function getCoverImage(vendorId, venueId) {
   const result = await pool.query(
     `
-    SELECT cover_image_id FROM venues WHERE id = $1 and vendor_id = $2`,
+    SELECT has_cover_image
+    FROM venues
+    WHERE id = $1 AND vendor_id = $2
+    `,
     [venueId, vendorId]
   );
-  return result.rows[0]?.cover_image_id ?? null;
+
+  return result.rows[0] ?? null;
 }
 
-export async function updatedCoverImage(data) {
+export async function updateCoverImage(vendorId, venueId) {
   await pool.query(
-    `UPDATE venues  SET cover_image_id = $1 WHERE id = $2 AND vendor_id = $3`,
-    [data.coverImageId, data.venueId, data.vendorId]
+    `UPDATE venues  SET has_cover_image = TRUE WHERE id = $1 AND vendor_id = $2`,
+    [venueId, vendorId]
   );
 }

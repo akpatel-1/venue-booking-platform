@@ -6,6 +6,7 @@ export function uploadToCloudinary(buffer, publicId) {
       {
         public_id: publicId,
         resource_type: 'image',
+        invalidate: true,
       },
       (error, result) => {
         if (error) {
