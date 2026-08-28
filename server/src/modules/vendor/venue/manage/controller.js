@@ -23,7 +23,7 @@ export async function uploadImages(req, res) {
   const data = {
     vendorId: req.vendor.id,
     venueId: req.params.id,
-    data: req.data,
+    ...req.data,
     files: req.files,
   };
   await uploadVenueImages(data);

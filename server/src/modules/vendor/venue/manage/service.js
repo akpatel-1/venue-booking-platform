@@ -46,7 +46,12 @@ export async function uploadCoverImage(vendorId, venueId, file) {
   }
 }
 
-export async function uploadVenueImages({ vendorId, venueId, data, files }) {
+export async function uploadVenueImages({
+  vendorId,
+  venueId,
+  deleteIds,
+  files,
+}) {
   try {
     const dbImages = await getVenueImages(vendorId, venueId);
 
@@ -54,7 +59,7 @@ export async function uploadVenueImages({ vendorId, venueId, data, files }) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
     }
 
-    const deleteFiles = data.deleteIds.map(
+    const deleteFiles = deleteIds.map(
       (id) => `venues/${vendorId}/${venueId}/venue_image-${id}`
     );
 
