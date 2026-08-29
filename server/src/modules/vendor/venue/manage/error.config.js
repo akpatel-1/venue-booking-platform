@@ -24,6 +24,11 @@ const ERROR_CONFIG = {
     message: 'A reverification request is already pending',
     code: 'REVERIFICATION_ALREADY_PENDING',
   },
+  PRICING_UPLAOD_FAILED: {
+    statusCode: 400,
+    message: 'Failed to update venue pricing',
+    code: 'PRICING_UPLAOD_FAILED',
+  },
 };
 
 export default ERROR_CONFIG;

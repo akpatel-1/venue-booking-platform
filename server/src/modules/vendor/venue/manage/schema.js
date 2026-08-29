@@ -30,6 +30,22 @@ const timeSchema = z
     message: 'Invalid time format',
   });
 
+const wholeDayPricingSchema = z.object({
+  day_type: z.enum(['weekday', 'weekend']),
+  price: z.number().int().positive(),
+});
+
+const timeSlotPricingSchema = z.object({
+  day_type: z.enum(['weekday', 'weekend']),
+  duration_minutes: z
+    .number()
+    .int()
+    .refine((value) => [30, 60, 90, 120, 150, 180, 210].includes(value), {
+      message: 'Invalid duration time',
+    }),
+  price: z.number().int().positive(),
+});
+
 const schema = {
   venueId: z.object({
     venueId: z.string().trim().uuid({
@@ -79,6 +95,18 @@ const schema = {
       message: 'Opening time must be before closing time',
       path: ['closing_time'],
     }),
+
+  pricing: z.discriminatedUnion('booking_type', [
+    z.object({
+      booking_type: z.literal('whole_day'),
+      pricing: z.array(wholeDayPricingSchema).min(1),
+    }),
+
+    z.object({
+      booking_type: z.literal('time_slot'),
+      pricing: z.array(timeSlotPricingSchema).min(1),
+    }),
+  ]),
 };
 
 export default schema;

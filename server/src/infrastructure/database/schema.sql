@@ -150,7 +150,6 @@ CREATE TABLE IF NOT EXISTS venues (
   status venue_status NOT NULL DEFAULT 'draft',
   suspension_reason TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT check_pincode CHECK (pincode ~ '^[0-9]{6}$'),
   CONSTRAINT unique_venue_application UNIQUE (application_id),
   CONSTRAINT venue_hours_check CHECK (

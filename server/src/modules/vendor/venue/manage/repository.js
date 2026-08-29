@@ -132,3 +132,52 @@ export async function updateVenueDetailsTime(
 
   return result.rows[0] ?? null;
 }
+
+export async function updateBookingType(client, data) {
+  const result = await client.query(
+    `
+    UPDATE venues SET booking_type = $1 WHERE id = $2 AND vendor_id = $3 AND suspension_reason IS NULL RETURNING id`,
+    [data.booking_type, data.venueId, data.vendorId]
+  );
+  return result.rows[0]?.id ?? null;
+}
+
+export async function deleteVenuePricing(client, venueId) {
+  await client.query(
+    `DELETE FROM venue_pricing WHERE venue_id = $1 RETURNING id`,
+    [venueId]
+  );
+}
+
+export async function insertWholeDayPricing(client, venueId, pricing) {
+  for (const item of pricing) {
+    await client.query(
+      `
+      INSERT INTO venue_pricing (
+        venue_id,
+        day_type,
+        price
+      )
+      VALUES ($1, $2, $3)
+      `,
+      [venueId, item.day_type, item.price]
+    );
+  }
+}
+
+export async function insertTimeSlotPricing(client, venueId, pricing) {
+  for (const item of pricing) {
+    await client.query(
+      `
+      INSERT INTO venue_pricing (
+        venue_id,
+        day_type,
+        duration_minutes,
+        price
+      )
+      VALUES ($1, $2, $3, $4)
+      `,
+      [venueId, item.day_type, item.duration_minutes, item.price]
+    );
+  }
+}

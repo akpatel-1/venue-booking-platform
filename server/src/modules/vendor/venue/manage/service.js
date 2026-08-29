@@ -49,7 +49,7 @@ export async function uploadVenueImages({
   files,
 }) {
   try {
-    const dbImages = await repository.getVenueDetailsImages(vendorId, venueId);
+    const dbImages = await repository.getVenueDetails(vendorId, venueId);
 
     if (!dbImages) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
@@ -92,7 +92,7 @@ export async function uploadVenueImages({
       ...uploadFiles,
     ];
 
-    return await repository.updateVenueDetailsImages({
+    return await repository.updateVenueDetails({
       vendorId,
       venueId,
       finalFiles,
@@ -103,7 +103,7 @@ export async function uploadVenueImages({
   }
 }
 
-export async function updateVenueDetailsDetails(vendorId, venueId, data) {
+export async function updateVenueDetails(vendorId, venueId, data) {
   return withTransaction(pool, async (client) => {
     const venue = await repository.fetchVenueDetails(client, vendorId, venueId);
     if (!venue) {
@@ -127,12 +127,12 @@ export async function updateVenueDetailsDetails(vendorId, venueId, data) {
   });
 }
 
-export async function updateVenueDetailsHours(
+export async function updateVenueHours(
   vendorId,
   venueId,
   { opening_time, closing_time }
 ) {
-  const venue = await repository.updateVenueDetailsTime(
+  const venue = await repository.updateVenueDetails(
     vendorId,
     venueId,
     opening_time,
@@ -144,4 +144,26 @@ export async function updateVenueDetailsHours(
   }
 
   return venue;
+}
+
+export async function updateVenuePricing(vendorId, venueId, data) {
+  return withTransaction(pool, async (client) => {
+    const venue = await repository.updateBookingType(client, {
+      vendorId,
+      venueId,
+      bookingType: data.booking_type,
+    });
+
+    if (!venue) {
+      throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
+    }
+
+    await repository.deleteVenuePricing(client, venueId);
+
+    if (data.booking_type === 'whole_day') {
+      await repository.insertWholeDayPricing(client, venueId, data.pricing);
+    } else {
+      await repository.insertTimeSlotPricing(client, venueId, data.pricing);
+    }
+  });
 }

@@ -41,11 +41,19 @@ export async function updateVenueDetails(req, res) {
   });
 }
 
-export async function updateVenueHours(req, res, next) {
+export async function updateVenueHours(req, res) {
   await service.updateVenueHours(req.vendor.id, req.params.venueId, req.body);
 
   res.status(201).json({
     success: true,
     message: 'Venue hours updated successfully',
+  });
+}
+
+export async function updateVenuePricing(req, res) {
+  await service.updateVenuePricing(req.vendor.id, req.params.venueId, req.body);
+  res.status(201).json({
+    success: true,
+    message: 'Venue pricing updated successfully',
   });
 }

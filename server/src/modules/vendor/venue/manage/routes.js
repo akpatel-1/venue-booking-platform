@@ -50,4 +50,11 @@ router.patch(
   controller.updateVenueHours
 );
 
+router.patch(
+  '/venues/:venueId/pricing',
+  validateSchema(schema.venueId, 'params'),
+  validateSchema(schema.pricing),
+  controller.updateVenuePricing
+);
+
 export default router;
