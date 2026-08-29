@@ -4,7 +4,7 @@ import { findAdminById } from './repository.js';
 import { authenticateAdmin } from './service.js';
 
 export async function handleLogin(req, res) {
-  const { sessionId, admin } = await authenticateAdmin(req.data);
+  const { sessionId, admin } = await authenticateAdmin(req.body);
 
   res.cookie(
     ADMIN_AUTH_CONFIG.COOKIE_NAME,

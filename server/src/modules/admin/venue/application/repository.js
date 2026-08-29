@@ -12,21 +12,21 @@ export async function fetchApplications(status) {
   return result.rows;
 }
 
-export async function markVenueAsRejected(reviewed_by, data) {
+export async function markVenueAsRejected(reviewerId, applicationId, data) {
   const result = await pool.query(
-    `UPDATE venue_applications SET status = $1, rejection_reason = $2, reviewed_at = NOW(), reviewed_by = $3 WHERE id = $4 AND status = 'pending' RETURNING id`,
-    [data.status, data.rejection_reason, reviewed_by, data.id]
+    `UPDATE venue_applications SET status = 'rejected', rejection_reason = $1, reviewed_at = NOW(), reviewed_by = $2 WHERE id = $3 AND status = 'pending' RETURNING id`,
+    [data.rejection_reason, reviewerId, applicationId]
   );
   return result.rows[0] ?? null;
 }
 
-export async function markVenueAsApproved(client, reviewed_by, data) {
+export async function markVenueAsApproved(client, reviewerId, applicationId) {
   const result = await client.query(
     `UPDATE venue_applications 
-    SET status = $1, reviewed_at = NOW(), reviewed_by = $2
-    WHERE id = $3 AND status = 'pending' 
+    SET status = 'approved', reviewed_at = NOW(), reviewed_by = $1
+    WHERE id = $2 AND status = 'pending' 
     RETURNING id, vendor_id, name, category, address, district, state, pincode, geo_loc`,
-    [data.status, reviewed_by, data.id]
+    [reviewerId, applicationId]
   );
   return result.rows[0] ?? null;
 }

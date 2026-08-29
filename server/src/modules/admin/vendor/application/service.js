@@ -37,18 +37,18 @@ export async function getApplications(status) {
   );
 }
 
-export async function reviewApplication(reviewerId, data) {
+export async function reviewApplication(reviewerId, applicationId, data) {
   if (data.status === 'approved') {
-    return handleApproved(reviewerId, data.id);
+    return handleApproved(reviewerId, applicationId);
   }
 
-  return handleRejected(reviewerId, data);
+  return handleRejected(reviewerId, applicationId, data.rejection_reason);
 }
 
-async function handleApproved(reviewerId, id) {
+async function handleApproved(reviewerId, applicationId) {
   await withTransaction(pool, async (client) => {
     const application = await markVendorAsApproved(client, {
-      id,
+      applicationId,
       status: 'approved',
       reviewedBy: reviewerId,
     });
@@ -62,19 +62,19 @@ async function handleApproved(reviewerId, id) {
   });
 }
 
-async function handleRejected(reviewerId, data) {
+async function handleRejected(reviewerId, applicationId, rejectionReason) {
   const application = await markVendorAsRejected(pool, {
-    id: data.id,
-    status: 'rejected',
-    rejectionReason: data.rejection_reason,
-    reviewedBy: reviewerId,
+    applicationId,
+    rejectionReason,
+    reviewerId,
   });
 
   if (!application) {
     throw new ApiError(APPLICATION_ERROR_CONFIG.APPLICATION_NOT_PENDING);
   }
+  return application;
 }
 
 export async function getApplicationsCount(status) {
-  return await getStatusCount(pool, status);
+  return getStatusCount(pool, status);
 }

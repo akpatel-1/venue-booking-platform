@@ -7,7 +7,7 @@ import {
 } from './service.js';
 
 export async function getVenue(req, res) {
-  const data = await getVenueDetails(req.vendor.id, req.params.id);
+  const data = await getVenueDetails(req.vendor.id, req.params.venueId);
   res.status(200).json({
     success: true,
     data: data,
@@ -15,7 +15,7 @@ export async function getVenue(req, res) {
 }
 
 export async function uploadImage(req, res) {
-  await uploadCoverImage(req.vendor.id, req.params.id, req.file);
+  await uploadCoverImage(req.vendor.id, req.params.venueId, req.file);
   res
     .status(201)
     .json({ success: true, message: 'Cover image uploaded sucessfully' });
@@ -24,8 +24,8 @@ export async function uploadImage(req, res) {
 export async function uploadImages(req, res) {
   const data = {
     vendorId: req.vendor.id,
-    venueId: req.params.id,
-    ...req.data,
+    venueId: req.params.venueId,
+    ...req.body,
     files: req.files,
   };
   await uploadVenueImages(data);
@@ -35,8 +35,11 @@ export async function uploadImages(req, res) {
 }
 
 export async function updateVenue(req, res) {
-  console.log(req.data);
-  const data = await updateVenueDetails(req.vendor.id, req.data);
+  const data = await updateVenueDetails(
+    req.vendor.id,
+    req.params.venueId,
+    req.body
+  );
   res.status(201).json({
     success: true,
     message: 'Venue changes submitted for re-verification',
@@ -45,7 +48,7 @@ export async function updateVenue(req, res) {
 }
 
 export async function updateHours(req, res, next) {
-  await updateVenueHours(req.vendor.id, req.params.id, req.data);
+  await updateVenueHours(req.vendor.id, req.params.venueId, req.body);
 
   res.status(201).json({
     success: true,

@@ -13,8 +13,8 @@ router.get(
 );
 
 router.patch(
-  '/venue/applications/:id',
-  validateSchema(schema.id, 'params'),
+  '/venue/applications/:applicationId',
+  validateSchema(schema.applicationId, 'params'),
   validateSchema(schema.review, 'body'),
   reviewApplication
 );

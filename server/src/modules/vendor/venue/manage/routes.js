@@ -18,20 +18,24 @@ import schema from './schema.js';
 
 const router = express.Router();
 
-router.get('/venues/:id', validateSchema(schema, 'params'), getVenue);
+router.get(
+  '/venues/:venueId',
+  validateSchema(schema.venueId, 'params'),
+  getVenue
+);
 
 router.patch(
-  '/venues/:id/cover',
+  '/venues/:venueId/cover',
   upload(1, 0).single('cover_image'),
-  validateSchema(schema, 'params'),
+  validateSchema(schema.venueId, 'params'),
   requireFile,
   validateFileType,
   uploadImage
 );
 
 router.patch(
-  '/venues/:id/images',
-  validateSchema(schema.id, 'params'),
+  '/venues/:venueId/images',
+  validateSchema(schema.venueId, 'params'),
   upload(10, 10).array('venue_images', 10),
   validateSchema(schema.deleteIds),
   validateFileType,
@@ -39,15 +43,15 @@ router.patch(
 );
 
 router.patch(
-  '/venues/:id/reverification',
-  validateSchema(schema.id, 'params'),
+  '/venues/:venueId/reverification',
+  validateSchema(schema.venueId, 'params'),
   validateSchema(schema.reverification),
   updateVenue
 );
 
 router.patch(
-  '/venues/:id/operation-hours',
-  validateSchema(schema.id, 'params'),
+  '/venues/:venueId/operation-hours',
+  validateSchema(schema.venueId, 'params'),
   validateSchema(schema.hours),
   updateHours
 );

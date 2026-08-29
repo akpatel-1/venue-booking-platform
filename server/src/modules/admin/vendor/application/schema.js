@@ -39,8 +39,11 @@ const schema = {
     status: applicationStatusSchema,
   }),
 
-  id: z.object({
-    id: z.string().trim().uuid({ message: 'Invalid vendor application id' }),
+  applicationId: z.object({
+    applicationId: z
+      .string()
+      .trim()
+      .uuid({ message: 'Invalid vendor application id' }),
   }),
 
   review: z

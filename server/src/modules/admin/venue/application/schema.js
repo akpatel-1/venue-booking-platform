@@ -39,8 +39,8 @@ const schema = {
     status: applicationStatusSchema,
   }),
 
-  id: z.object({
-    id: z.string().trim().uuid({
+  applicationId: z.object({
+    applicationId: z.string().trim().uuid({
       message: 'Invalid venue application id',
     }),
   }),

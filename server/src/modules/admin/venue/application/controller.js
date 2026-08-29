@@ -6,7 +6,11 @@ export async function listApplications(req, res) {
 }
 
 export async function reviewApplication(req, res) {
-  const data = await updateApplication(req.admin.id, req.data);
+  const data = await updateApplication(
+    req.admin.id,
+    req.params.applicationId,
+    req.body
+  );
   res.status(201).json({
     success: true,
     message: 'Application updated successfully',

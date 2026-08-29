@@ -38,19 +38,20 @@ export async function getApplications(status) {
   );
 }
 
-export async function updateApplication(reviewed_by, data) {
+export async function updateApplication(reviewerId, applicationId, data) {
   if (data.status === 'rejected') {
-    const result = await markVenueAsRejected(reviewed_by, data);
+    const result = await markVenueAsRejected(reviewerId, applicationId, data);
+
     if (!result) {
       throw new ApiError(APPLICATION_ERROR_CONFIG.APPLICATION_NOT_PENDING);
     }
     return result;
   }
   return withTransaction(pool, async (client) => {
-    const result = await markVenueAsApproved(client, reviewed_by, data);
+    const result = await markVenueAsApproved(client, reviewerId, applicationId);
     if (!result) {
       throw new ApiError(APPLICATION_ERROR_CONFIG.APPLICATION_NOT_PENDING);
     }
-    return await createVenue(client, result);
+    return createVenue(client, result);
   });
 }

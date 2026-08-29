@@ -11,15 +11,21 @@ export default function validateSchema(schema, source = 'body') {
 
       throw new ApiError({
         statusCode: 400,
-        message: firstError || 'Validation Error',
+        message: firstError || 'Invalid request data',
         code: 'VALIDATION_ERROR',
       });
     }
 
-    req.data = {
-      ...req.data,
-      ...result.data,
-    };
+    if (source === 'query') {
+      Object.defineProperty(req, 'query', {
+        value: result.data,
+        writable: true,
+        configurable: true,
+      });
+    } else {
+      req[source] = result.data;
+    }
+
     next();
   };
 }

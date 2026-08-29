@@ -11,7 +11,7 @@ export async function handleMeRequest(req, res) {
 }
 
 export async function handleOtpRequest(req, res) {
-  await processOtpRequest(req.data);
+  await processOtpRequest(req.body);
   return res.status(201).json({
     success: true,
     message: 'OTP sent successfully. Please check your email to continue.',
@@ -19,7 +19,7 @@ export async function handleOtpRequest(req, res) {
 }
 
 export async function handleOtpVerification(req, res) {
-  const { accessToken, refreshToken } = await processOtpVerification(req.data);
+  const { accessToken, refreshToken } = await processOtpVerification(req.body);
 
   res.cookie(
     USER_AUTH_CONFIG.ACCESS_COOKIE,

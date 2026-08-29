@@ -17,8 +17,8 @@ router.get(
 );
 
 router.patch(
-  '/vendor/applications/:id',
-  validateSchema(schema.id, 'params'),
+  '/vendor/applications/:applicationId',
+  validateSchema(schema.applicationId, 'params'),
   validateSchema(schema.review, 'body'),
   updateApplication
 );

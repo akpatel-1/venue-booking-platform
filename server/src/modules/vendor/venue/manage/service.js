@@ -112,9 +112,9 @@ export async function uploadVenueImages({
   }
 }
 
-export async function updateVenueDetails(vendorId, data) {
+export async function updateVenueDetails(vendorId, venueId, data) {
   return withTransaction(pool, async (client) => {
-    const venue = await fetchVenueDetails(client, vendorId, data.id);
+    const venue = await fetchVenueDetails(client, vendorId, venueId);
     if (!venue) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
     }

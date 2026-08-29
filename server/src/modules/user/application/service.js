@@ -28,17 +28,17 @@ export async function getApplicationStatus(userId) {
   };
 }
 
-export async function processApplication(userId, userData, userFile) {
-  const fileExtension = path.extname(userFile.originalname);
+export async function processApplication(userId, data, file) {
+  const fileExtension = path.extname(file.originalname);
   const documentKey = `vendor-application/${userId}/${Date.now()}-pan${fileExtension}`;
   let upload = false;
   try {
-    await uploadToR2(userFile.buffer, documentKey, userFile.mimetype);
+    await uploadToR2(file.buffer, documentKey, file.mimetype);
     upload = true;
     return await withTransaction(pool, async (client) => {
       return await insertVendorApplication(client, {
         userId,
-        ...userData,
+        ...data,
         documentKey,
       });
     });

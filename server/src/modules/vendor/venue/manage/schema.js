@@ -31,8 +31,8 @@ const timeSchema = z
   });
 
 const schema = {
-  id: z.object({
-    id: z.string().trim().uuid({
+  venueId: z.object({
+    venueId: z.string().trim().uuid({
       message: 'Invalid venue id',
     }),
   }),
