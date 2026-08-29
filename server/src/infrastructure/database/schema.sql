@@ -154,9 +154,13 @@ CREATE TABLE IF NOT EXISTS venues (
   CONSTRAINT check_pincode CHECK (pincode ~ '^[0-9]{6}$'),
   CONSTRAINT unique_venue_application UNIQUE (application_id),
   CONSTRAINT venue_hours_check CHECK (
-    opening_time IS NULL
-    OR closing_time IS NULL
-    OR opening_time < closing_time
+  (opening_time IS NULL AND closing_time IS NULL)
+  OR
+  (
+    opening_time IS NOT NULL
+    AND closing_time IS NOT NULL
+    AND opening_time < closing_time
+  )
   ),
   CONSTRAINT venue_suspension_check CHECK (
     (

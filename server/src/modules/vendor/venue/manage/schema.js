@@ -23,6 +23,13 @@ const reverificationSchema = z.object({
   longitude: z.coerce.number().min(-180).max(180),
 });
 
+const timeSchema = z
+  .string()
+  .trim()
+  .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+    message: 'Invalid time format',
+  });
+
 const schema = {
   id: z.object({
     id: z.string().trim().uuid({
@@ -56,10 +63,21 @@ const schema = {
         })
     ),
   }),
+
   reverification: reverificationSchema
     .partial()
     .refine((data) => Object.keys(data).length > 0, {
       message: 'At least one field is required for reverification',
+    }),
+
+  hours: z
+    .object({
+      opening_time: timeSchema,
+      closing_time: timeSchema,
+    })
+    .refine(({ opening_time, closing_time }) => opening_time < closing_time, {
+      message: 'Opening time must be before closing time',
+      path: ['closing_time'],
     }),
 };
 

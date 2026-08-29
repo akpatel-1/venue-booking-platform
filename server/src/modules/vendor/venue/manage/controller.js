@@ -1,6 +1,7 @@
 import {
   getVenueDetails,
   updateVenueDetails,
+  updateVenueHours,
   uploadCoverImage,
   uploadVenueImages,
 } from './service.js';
@@ -36,11 +37,18 @@ export async function uploadImages(req, res) {
 export async function updateVenue(req, res) {
   console.log(req.data);
   const data = await updateVenueDetails(req.vendor.id, req.data);
-  res
-    .status(201)
-    .json({
-      success: true,
-      message: 'Venue changes submitted for re-verification',
-      data,
-    });
+  res.status(201).json({
+    success: true,
+    message: 'Venue changes submitted for re-verification',
+    data,
+  });
+}
+
+export async function updateHours(req, res, next) {
+  await updateVenueHours(req.vendor.id, req.params.id, req.data);
+
+  res.status(201).json({
+    success: true,
+    message: 'Venue hours updated successfully',
+  });
 }

@@ -9,6 +9,7 @@ import {
 import validateSchema from '../../../../middleware/schema.validation.js';
 import {
   getVenue,
+  updateHours,
   updateVenue,
   uploadImage,
   uploadImages,
@@ -42,6 +43,13 @@ router.patch(
   validateSchema(schema.id, 'params'),
   validateSchema(schema.reverification),
   updateVenue
+);
+
+router.patch(
+  '/venues/:id/operation-hours',
+  validateSchema(schema.id, 'params'),
+  validateSchema(schema.hours),
+  updateHours
 );
 
 export default router;

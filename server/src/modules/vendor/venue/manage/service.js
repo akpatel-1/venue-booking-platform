@@ -15,6 +15,7 @@ import {
   insertIntoVenueReverification,
   updateCoverImage,
   updateVenueImages,
+  updateVenueTime,
 } from './repository.js';
 
 export async function getVenueDetails(venueId, vendorId) {
@@ -130,4 +131,23 @@ export async function updateVenueDetails(vendorId, data) {
       throw err;
     }
   });
+}
+
+export async function updateVenueHours(
+  vendorId,
+  venueId,
+  { opening_time, closing_time }
+) {
+  const venue = await updateVenueTime(
+    vendorId,
+    venueId,
+    opening_time,
+    closing_time
+  );
+
+  if (!venue) {
+    throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
+  }
+
+  return venue;
 }

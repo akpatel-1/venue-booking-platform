@@ -109,3 +109,26 @@ export async function insertIntoVenueReverification(client, data) {
 
   return result.rows[0];
 }
+
+export async function updateVenueTime(
+  venueId,
+  vendorId,
+  openingTime,
+  closingTime
+) {
+  const result = await pool.query(
+    `
+      UPDATE venues
+      SET
+        opening_time = $1,
+        closing_time = $2,
+        updated_at = NOW()
+      WHERE id = $3
+        AND vendor_id = $4
+      RETURNING id
+    `,
+    [openingTime, closingTime, venueId, vendorId]
+  );
+
+  return result.rows[0] ?? null;
+}
