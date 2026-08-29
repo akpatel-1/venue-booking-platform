@@ -58,3 +58,54 @@ export async function updateVenueImages(data) {
     [data.finalFiles, data.venueId, data.vendorId]
   );
 }
+
+export async function fetchVenueDetails(client, vendorId, venueId) {
+  const result = await client.query(
+    `
+  SELECT name, category, address, district, state, pincode, ST_Y(geo_loc::geometry) AS latitude,
+  ST_X(geo_loc::geometry) AS longitude FROM venues WHERE id = $1 AND vendor_id = $2`,
+    [venueId, vendorId]
+  );
+  return result.rows[0] ?? null;
+}
+
+export async function insertIntoVenueReverification(client, data) {
+  const result = await client.query(
+    `
+    INSERT INTO venue_reverifications (
+      venue_id,
+      name,
+      category,
+      address,
+      district,
+      state,
+      pincode,
+      geo_loc
+    )
+    VALUES (
+      $1,
+      $2,
+      $3,
+      $4,
+      $5,
+      $6,
+      $7,
+      ST_SetSRID(ST_MakePoint($9, $8), 4326)::geography
+    )
+    RETURNING id, status
+    `,
+    [
+      data.id,
+      data.name,
+      data.category,
+      data.address,
+      data.district,
+      data.state,
+      data.pincode,
+      data.latitude,
+      data.longitude,
+    ]
+  );
+
+  return result.rows[0];
+}

@@ -7,7 +7,12 @@ import {
   validateFileType,
 } from '../../../../middleware/file.validation.js';
 import validateSchema from '../../../../middleware/schema.validation.js';
-import { getVenue, uploadImage, uploadImages } from './controller.js';
+import {
+  getVenue,
+  updateVenue,
+  uploadImage,
+  uploadImages,
+} from './controller.js';
 import schema from './schema.js';
 
 const router = express.Router();
@@ -30,6 +35,13 @@ router.patch(
   validateSchema(schema.deleteIds),
   validateFileType,
   uploadImages
+);
+
+router.patch(
+  '/venues/:id/reverification',
+  validateSchema(schema.id, 'params'),
+  validateSchema(schema.reverification),
+  updateVenue
 );
 
 export default router;

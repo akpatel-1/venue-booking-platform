@@ -19,6 +19,11 @@ const ERROR_CONFIG = {
     message: 'image_id is invalid for deletion',
     code: 'INVALID_IMAGE_ID',
   },
+  REVERIFICATION_ALREADY_PENDING: {
+    statusCode: 409,
+    message: 'A reverification request is already pending',
+    code: 'REVERIFICATION_ALREADY_PENDING',
+  },
 };
 
 export default ERROR_CONFIG;

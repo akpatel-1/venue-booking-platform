@@ -217,3 +217,6 @@ CREATE TABLE IF NOT EXISTS venue_reverifications (
     )
   )
 );
+CREATE UNIQUE INDEX unique_pending_venue_reverification
+ON venue_reverifications (venue_id)
+WHERE status = 'pending';

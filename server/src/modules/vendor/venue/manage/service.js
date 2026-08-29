@@ -1,14 +1,18 @@
+import { pool } from '../../../../infrastructure/database/db.js';
 import ApiError from '../../../../utils/api.error.js';
 import {
   deleteFromCloudinary,
   uploadToCloudinary,
 } from '../../../../utils/cloudinary.storage.js';
+import { withTransaction } from '../../../../utils/transaction.js';
 import ERROR_CONFIG from './error.config.js';
 import {
   fetchReverificationApplication,
   fetchVenue,
+  fetchVenueDetails,
   getCoverImage,
   getVenueImages,
+  insertIntoVenueReverification,
   updateCoverImage,
   updateVenueImages,
 } from './repository.js';
@@ -105,4 +109,25 @@ export async function uploadVenueImages({
     if (err instanceof ApiError) throw err;
     throw new ApiError(ERROR_CONFIG.FILE_UPLOAD_FAILED);
   }
+}
+
+export async function updateVenueDetails(vendorId, data) {
+  return withTransaction(pool, async (client) => {
+    const venue = await fetchVenueDetails(client, vendorId, data.id);
+    if (!venue) {
+      throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
+    }
+    try {
+      return await insertIntoVenueReverification(client, { ...venue, ...data });
+    } catch (err) {
+      if (
+        err.code === '23505' &&
+        err.constraint === 'unique_pending_venue_reverification'
+      ) {
+        throw new ApiError(ERROR_CONFIG.REVERIFICATION_ALREADY_PENDING);
+      }
+
+      throw err;
+    }
+  });
 }

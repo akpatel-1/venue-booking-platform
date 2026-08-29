@@ -1,5 +1,6 @@
 import {
   getVenueDetails,
+  updateVenueDetails,
   uploadCoverImage,
   uploadVenueImages,
 } from './service.js';
@@ -30,4 +31,16 @@ export async function uploadImages(req, res) {
   res
     .status(201)
     .json({ success: true, message: 'Venue images edited sucessfully' });
+}
+
+export async function updateVenue(req, res) {
+  console.log(req.data);
+  const data = await updateVenueDetails(req.vendor.id, req.data);
+  res
+    .status(201)
+    .json({
+      success: true,
+      message: 'Venue changes submitted for re-verification',
+      data,
+    });
 }
