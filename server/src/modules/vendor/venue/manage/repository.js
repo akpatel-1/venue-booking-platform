@@ -43,7 +43,7 @@ export async function updateCoverImage(vendorId, venueId) {
   );
 }
 
-export async function getVenueImages(vendorId, venueId) {
+export async function getVenueDetailsImages(vendorId, venueId) {
   const result = await pool.query(
     `
   SELECT images FROM venues WHERE id = $1 AND vendor_id = $2 `,
@@ -52,7 +52,7 @@ export async function getVenueImages(vendorId, venueId) {
   return result.rows[0]?.images;
 }
 
-export async function updateVenueImages(data) {
+export async function updateVenueDetailsImages(data) {
   await pool.query(
     `UPDATE venues SET images = $1 WHERE id = $2 AND vendor_id = $3`,
     [data.finalFiles, data.venueId, data.vendorId]
@@ -110,7 +110,7 @@ export async function insertIntoVenueReverification(client, data) {
   return result.rows[0];
 }
 
-export async function updateVenueTime(
+export async function updateVenueDetailsTime(
   venueId,
   vendorId,
   openingTime,

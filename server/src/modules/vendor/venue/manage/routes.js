@@ -7,13 +7,7 @@ import {
   validateFileType,
 } from '../../../../middleware/file.validation.js';
 import validateSchema from '../../../../middleware/schema.validation.js';
-import {
-  getVenue,
-  updateHours,
-  updateVenue,
-  uploadImage,
-  uploadImages,
-} from './controller.js';
+import * as controller from './controller.js';
 import schema from './schema.js';
 
 const router = express.Router();
@@ -21,7 +15,7 @@ const router = express.Router();
 router.get(
   '/venues/:venueId',
   validateSchema(schema.venueId, 'params'),
-  getVenue
+  controller.getVenueDetails
 );
 
 router.patch(
@@ -30,7 +24,7 @@ router.patch(
   validateSchema(schema.venueId, 'params'),
   requireFile,
   validateFileType,
-  uploadImage
+  controller.uploadCoverImage
 );
 
 router.patch(
@@ -39,21 +33,21 @@ router.patch(
   upload(10, 10).array('venue_images', 10),
   validateSchema(schema.deleteIds),
   validateFileType,
-  uploadImages
+  controller.uploadVenueImages
 );
 
 router.patch(
   '/venues/:venueId/reverification',
   validateSchema(schema.venueId, 'params'),
   validateSchema(schema.reverification),
-  updateVenue
+  controller.updateVenueDetails
 );
 
 router.patch(
   '/venues/:venueId/operation-hours',
   validateSchema(schema.venueId, 'params'),
   validateSchema(schema.hours),
-  updateHours
+  controller.updateVenueHours
 );
 
 export default router;

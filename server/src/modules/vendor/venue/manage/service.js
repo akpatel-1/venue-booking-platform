@@ -6,33 +6,24 @@ import {
 } from '../../../../utils/cloudinary.storage.js';
 import { withTransaction } from '../../../../utils/transaction.js';
 import ERROR_CONFIG from './error.config.js';
-import {
-  fetchReverificationApplication,
-  fetchVenue,
-  fetchVenueDetails,
-  getCoverImage,
-  getVenueImages,
-  insertIntoVenueReverification,
-  updateCoverImage,
-  updateVenueImages,
-  updateVenueTime,
-} from './repository.js';
+import * as repository from './repository.js';
 
 export async function getVenueDetails(venueId, vendorId) {
-  const venue = await fetchVenue(venueId, vendorId);
+  const venue = await repository.fetchVenue(venueId, vendorId);
 
   if (!venue) {
     throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
   }
 
-  const reverification = await fetchReverificationApplication(venueId);
+  const reverification =
+    await repository.fetchReverificationApplication(venueId);
 
   return { venue, reverification };
 }
 
 export async function uploadCoverImage(vendorId, venueId, file) {
   try {
-    const venue = await getCoverImage(vendorId, venueId);
+    const venue = await repository.getCoverImage(vendorId, venueId);
 
     if (!venue) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
@@ -42,7 +33,7 @@ export async function uploadCoverImage(vendorId, venueId, file) {
     await uploadToCloudinary(file.buffer, coverImageId);
 
     if (!venue.has_cover_image) {
-      return await updateCoverImage(vendorId, venueId);
+      return await repository.updateCoverImage(vendorId, venueId);
     }
   } catch (err) {
     if (err instanceof ApiError) throw err;
@@ -58,7 +49,7 @@ export async function uploadVenueImages({
   files,
 }) {
   try {
-    const dbImages = await getVenueImages(vendorId, venueId);
+    const dbImages = await repository.getVenueDetailsImages(vendorId, venueId);
 
     if (!dbImages) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
@@ -101,7 +92,7 @@ export async function uploadVenueImages({
       ...uploadFiles,
     ];
 
-    return await updateVenueImages({
+    return await repository.updateVenueDetailsImages({
       vendorId,
       venueId,
       finalFiles,
@@ -112,14 +103,17 @@ export async function uploadVenueImages({
   }
 }
 
-export async function updateVenueDetails(vendorId, venueId, data) {
+export async function updateVenueDetailsDetails(vendorId, venueId, data) {
   return withTransaction(pool, async (client) => {
-    const venue = await fetchVenueDetails(client, vendorId, venueId);
+    const venue = await repository.fetchVenueDetails(client, vendorId, venueId);
     if (!venue) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
     }
     try {
-      return await insertIntoVenueReverification(client, { ...venue, ...data });
+      return await repository.insertIntoVenueReverification(client, {
+        ...venue,
+        ...data,
+      });
     } catch (err) {
       if (
         err.code === '23505' &&
@@ -133,12 +127,12 @@ export async function updateVenueDetails(vendorId, venueId, data) {
   });
 }
 
-export async function updateVenueHours(
+export async function updateVenueDetailsHours(
   vendorId,
   venueId,
   { opening_time, closing_time }
 ) {
-  const venue = await updateVenueTime(
+  const venue = await repository.updateVenueDetailsTime(
     vendorId,
     venueId,
     opening_time,
