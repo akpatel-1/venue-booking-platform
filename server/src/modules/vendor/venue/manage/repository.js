@@ -2,7 +2,7 @@ import { pool } from '../../../../infrastructure/database/db.js';
 
 export async function fetchVenue(vendorId, venueId) {
   const result = await pool.query(
-    `SELECT id, name, description, category, address, district, state, pincode, geo_loc, cover_image_id, images, booking_type, opening_time, closing_time, status, suspension_reason, created_at, updated_at FROM venues WHERE id = $1 AND vendor_id = $2`,
+    `SELECT id, name, description, category, address, district, state, pincode, geo_loc, cover_image_id, images, booking_type, opening_time, closing_time, status, suspension_reason, created_at FROM venues WHERE id = $1 AND vendor_id = $2`,
     [venueId, vendorId]
   );
   return result.rows[0] ?? null;
@@ -52,7 +52,7 @@ export async function getVenueDetailsImages(vendorId, venueId) {
   return result.rows[0]?.images;
 }
 
-export async function updateVenueDetailsImages(data) {
+export async function updateVenueImages(data) {
   await pool.query(
     `UPDATE venues SET images = $1 WHERE id = $2 AND vendor_id = $3`,
     [data.finalFiles, data.venueId, data.vendorId]
@@ -122,7 +122,6 @@ export async function updateVenueDetailsTime(
       SET
         opening_time = $1,
         closing_time = $2,
-        updated_at = NOW()
       WHERE id = $3
         AND vendor_id = $4
       RETURNING id

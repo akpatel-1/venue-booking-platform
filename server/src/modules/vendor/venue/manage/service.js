@@ -49,7 +49,7 @@ export async function uploadVenueImages({
   files,
 }) {
   try {
-    const dbImages = await repository.getVenueDetails(vendorId, venueId);
+    const dbImages = await repository.getVenueDetailsImages(vendorId, venueId);
 
     if (!dbImages) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
@@ -92,7 +92,7 @@ export async function uploadVenueImages({
       ...uploadFiles,
     ];
 
-    return await repository.updateVenueDetails({
+    return await repository.updateVenueImages({
       vendorId,
       venueId,
       finalFiles,
@@ -132,9 +132,9 @@ export async function updateVenueHours(
   venueId,
   { opening_time, closing_time }
 ) {
-  const venue = await repository.updateVenueDetails(
-    vendorId,
+  const venue = await repository.updateVenueDetailsTime(
     venueId,
+    vendorId,
     opening_time,
     closing_time
   );
