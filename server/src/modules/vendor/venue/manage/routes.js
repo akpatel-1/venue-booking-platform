@@ -37,10 +37,10 @@ router.patch(
 );
 
 router.patch(
-  '/venues/:venueId/reverification',
+  'venues/:venueId/description',
   validateSchema(schema.venueId, 'params'),
-  validateSchema(schema.reverification),
-  controller.updateVenueDetails
+  validateSchema(schema.description),
+  controller.updateVenueDescription
 );
 
 router.patch(
@@ -55,6 +55,13 @@ router.patch(
   validateSchema(schema.venueId, 'params'),
   validateSchema(schema.pricing),
   controller.updateVenuePricing
+);
+
+router.patch(
+  '/venues/:venueId/reverification',
+  validateSchema(schema.venueId, 'params'),
+  validateSchema(schema.reverification),
+  controller.updateReverificationDetails
 );
 
 export default router;

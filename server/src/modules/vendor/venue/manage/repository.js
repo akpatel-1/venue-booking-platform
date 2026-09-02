@@ -69,45 +69,14 @@ export async function fetchVenueDetails(client, vendorId, venueId) {
   return result.rows[0] ?? null;
 }
 
-export async function insertIntoVenueReverification(client, data) {
-  const result = await client.query(
+export async function updateVenueDescription(vendorId, venueId, description) {
+  const result = await pool.query(
     `
-    INSERT INTO venue_reverifications (
-      venue_id,
-      name,
-      category,
-      address,
-      district,
-      state,
-      pincode,
-      geo_loc
-    )
-    VALUES (
-      $1,
-      $2,
-      $3,
-      $4,
-      $5,
-      $6,
-      $7,
-      ST_SetSRID(ST_MakePoint($9, $8), 4326)::geography
-    )
-    RETURNING id, status
-    `,
-    [
-      data.id,
-      data.name,
-      data.category,
-      data.address,
-      data.district,
-      data.state,
-      data.pincode,
-      data.latitude,
-      data.longitude,
-    ]
+    UPDATE venues SET description = $1 WHERE id = $2 AND vendor_id = $3 RETURNING id`,
+    [description, venueId, vendorId]
   );
 
-  return result.rows[0];
+  return result.rows[0]?.id ?? null;
 }
 
 export async function updateVenueTime(
@@ -118,13 +87,13 @@ export async function updateVenueTime(
 ) {
   const result = await pool.query(
     `
-      UPDATE venues
-      SET
-        opening_time = $1,
-        closing_time = $2,
-      WHERE id = $3
-        AND vendor_id = $4
-      RETURNING id
+    UPDATE venues
+    SET
+    opening_time = $1,
+    closing_time = $2,
+    WHERE id = $3
+    AND vendor_id = $4
+    RETURNING id
     `,
     [openingTime, closingTime, venueId, vendorId]
   );
@@ -156,9 +125,9 @@ export async function insertWholeDayPricing(client, venueId, pricing) {
         venue_id,
         day_type,
         price
-      )
-      VALUES ($1, $2, $3)
-      `,
+        )
+        VALUES ($1, $2, $3)
+        `,
       [venueId, item.day_type, item.price]
     );
   }
@@ -168,15 +137,56 @@ export async function insertTimeSlotPricing(client, venueId, pricing) {
   for (const item of pricing) {
     await client.query(
       `
-      INSERT INTO venue_pricing (
-        venue_id,
-        day_type,
-        duration_minutes,
-        price
-      )
-      VALUES ($1, $2, $3, $4)
-      `,
+        INSERT INTO venue_pricing (
+          venue_id,
+          day_type,
+          duration_minutes,
+          price
+          )
+          VALUES ($1, $2, $3, $4)
+          `,
       [venueId, item.day_type, item.duration_minutes, item.price]
     );
   }
+}
+
+export async function insertIntoVenueReverification(client, data) {
+  const result = await client.query(
+    `
+        INSERT INTO venue_reverifications (
+          venue_id,
+          name,
+          category,
+          address,
+          district,
+          state,
+          pincode,
+          geo_loc
+        )
+        VALUES (
+          $1,
+          $2,
+          $3,
+          $4,
+          $5,
+          $6,
+          $7,
+          ST_SetSRID(ST_MakePoint($9, $8), 4326)::geography
+        )
+        RETURNING id, status
+        `,
+    [
+      data.id,
+      data.name,
+      data.category,
+      data.address,
+      data.district,
+      data.state,
+      data.pincode,
+      data.latitude,
+      data.longitude,
+    ]
+  );
+
+  return result.rows[0];
 }

@@ -80,11 +80,13 @@ const schema = {
     ),
   }),
 
-  reverification: reverificationSchema
-    .partial()
-    .refine((data) => Object.keys(data).length > 0, {
-      message: 'At least one field is required for reverification',
-    }),
+  description: z.object({
+    description: z
+      .string()
+      .trim()
+      .min(10, 'Description must be at least 10 characters')
+      .max(1000, 'Description must not exceed 1000 characters'),
+  }),
 
   hours: z
     .object({
@@ -107,6 +109,12 @@ const schema = {
       pricing: z.array(timeSlotPricingSchema).min(1),
     }),
   ]),
+
+  reverification: reverificationSchema
+    .partial()
+    .refine((data) => Object.keys(data).length > 0, {
+      message: 'At least one field is required for reverification',
+    }),
 };
 
 export default schema;

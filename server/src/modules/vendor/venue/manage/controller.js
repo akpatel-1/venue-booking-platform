@@ -28,16 +28,16 @@ export async function uploadVenueImages(req, res) {
     .json({ success: true, message: 'Venue images edited sucessfully' });
 }
 
-export async function updateVenueDetails(req, res) {
-  const data = await service.updateVenueDetails(
+export async function updateVenueDescription(req, res) {
+  await service.updateVenueDescription(
     req.vendor.id,
     req.params.venueId,
-    req.body
+    req.body.description
   );
+
   res.status(201).json({
     success: true,
-    message: 'Venue changes submitted for re-verification',
-    data,
+    message: 'Venue description updated successfully',
   });
 }
 
@@ -55,5 +55,18 @@ export async function updateVenuePricing(req, res) {
   res.status(201).json({
     success: true,
     message: 'Venue pricing updated successfully',
+  });
+}
+
+export async function updateReverificationDetails(req, res) {
+  const data = await service.updateReverificationDetails(
+    req.vendor.id,
+    req.params.venueId,
+    req.body
+  );
+  res.status(201).json({
+    success: true,
+    message: 'Venue changes submitted for re-verification',
+    data,
   });
 }
