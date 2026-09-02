@@ -49,7 +49,7 @@ export async function uploadVenueImages({
   files,
 }) {
   try {
-    const dbImages = await repository.getVenueDetailsImages(vendorId, venueId);
+    const dbImages = await repository.getVenueImages(vendorId, venueId);
 
     if (!dbImages) {
       throw new ApiError(ERROR_CONFIG.VENUE_NOT_FOUND);
@@ -132,7 +132,7 @@ export async function updateVenueHours(
   venueId,
   { opening_time, closing_time }
 ) {
-  const venue = await repository.updateVenueDetailsTime(
+  const venue = await repository.updateVenueTime(
     venueId,
     vendorId,
     opening_time,
@@ -166,4 +166,16 @@ export async function updateVenuePricing(vendorId, venueId, data) {
       await repository.insertTimeSlotPricing(client, venueId, data.pricing);
     }
   });
+}
+
+export async function updateVenueStatus(vendorId, venueId, status) {
+  if (status === 'live') {
+    const error = {};
+    const venue = await repository.fetchVenue(vendorId, venueId);
+    if (!venue) {
+      ERROR_CONFIG.VENUE_NOT_FOUND;
+    }
+    if ((venue.has_cover_image = false)) {
+      error[cover_image] = cover_image;
+    }
 }

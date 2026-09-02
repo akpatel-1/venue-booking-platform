@@ -2,7 +2,7 @@ import { pool } from '../../../../infrastructure/database/db.js';
 
 export async function fetchVenue(vendorId, venueId) {
   const result = await pool.query(
-    `SELECT id, name, description, category, address, district, state, pincode, geo_loc, cover_image_id, images, booking_type, opening_time, closing_time, status, suspension_reason, created_at FROM venues WHERE id = $1 AND vendor_id = $2`,
+    `SELECT id, name, description, category, address, district, state, pincode, geo_loc, has_cover_image, images, booking_type, opening_time, closing_time, status, suspension_reason, created_at FROM venues WHERE id = $1 AND vendor_id = $2`,
     [venueId, vendorId]
   );
   return result.rows[0] ?? null;
@@ -43,7 +43,7 @@ export async function updateCoverImage(vendorId, venueId) {
   );
 }
 
-export async function getVenueDetailsImages(vendorId, venueId) {
+export async function getVenueImages(vendorId, venueId) {
   const result = await pool.query(
     `
   SELECT images FROM venues WHERE id = $1 AND vendor_id = $2 `,
@@ -110,7 +110,7 @@ export async function insertIntoVenueReverification(client, data) {
   return result.rows[0];
 }
 
-export async function updateVenueDetailsTime(
+export async function updateVenueTime(
   venueId,
   vendorId,
   openingTime,
