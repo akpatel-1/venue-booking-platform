@@ -8,6 +8,7 @@ export default function errorHandler(err, req, res, next) {
       success: false,
       message: err.message,
       code: err.code,
+      ...(err.errors?.length ? { errors: err.errors } : {}),
     });
   }
 

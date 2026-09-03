@@ -29,6 +29,11 @@ const ERROR_CONFIG = {
     message: 'Failed to update venue pricing',
     code: 'PRICING_UPLAOD_FAILED',
   },
+  INCOMPLETE_VENUE_DETAILS: {
+    statusCode: 400,
+    message: 'Incomplete venue details',
+    code: 'INCOMPLETE_VENUE_DETAILS',
+  },
 };
 
 export default ERROR_CONFIG;

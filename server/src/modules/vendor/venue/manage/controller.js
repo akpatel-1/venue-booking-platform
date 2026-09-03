@@ -58,6 +58,18 @@ export async function updateVenuePricing(req, res) {
   });
 }
 
+export async function updateVenueStatus(req, res) {
+  await service.updateVenueStatus(
+    req.vendor.id,
+    req.params.venueId,
+    req.body.status
+  );
+  res.status(201).json({
+    success: true,
+    message: 'Venue status updated successfully',
+  });
+}
+
 export async function updateReverificationDetails(req, res) {
   const data = await service.updateReverificationDetails(
     req.vendor.id,

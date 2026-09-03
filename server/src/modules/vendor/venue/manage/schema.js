@@ -115,6 +115,18 @@ const schema = {
     .refine((data) => Object.keys(data).length > 0, {
       message: 'At least one field is required for reverification',
     }),
+
+  status: z.object({
+    status: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .pipe(
+        z.enum(['draft', 'live'], {
+          message: 'Status must be either draft or live',
+        })
+      ),
+  }),
 };
 
 export default schema;

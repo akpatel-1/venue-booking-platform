@@ -58,6 +58,13 @@ router.patch(
 );
 
 router.patch(
+  '/venues/:venueId/status',
+  validateSchema(schema.venueId, 'params'),
+  validateSchema(schema.status),
+  controller.updateVenueStatus
+);
+
+router.patch(
   '/venues/:venueId/reverification',
   validateSchema(schema.venueId, 'params'),
   validateSchema(schema.reverification),

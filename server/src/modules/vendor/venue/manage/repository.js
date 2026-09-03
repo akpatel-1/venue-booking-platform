@@ -150,6 +150,24 @@ export async function insertTimeSlotPricing(client, venueId, pricing) {
   }
 }
 
+export async function updateVenueStatus(vendorId, venueId, status) {
+  const result = await pool.query(
+    `UPDATE venues SET status = $1 WHERE id = $1 AND vendorId = $2 RETURNING id`,
+    [status, venueId, vendorId]
+  );
+  return result.rows[0]?.id ?? null;
+}
+
+export async function getVenuePricing(venueId) {
+  const result = await pool.query(
+    `
+    SELECT * FROM venue_pricing WHERE venue_id = $1`,
+    [venueId]
+  );
+
+  return result.rows;
+}
+
 export async function insertIntoVenueReverification(client, data) {
   const result = await client.query(
     `
