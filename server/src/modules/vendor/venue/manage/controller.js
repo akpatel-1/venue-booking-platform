@@ -11,7 +11,7 @@ export async function getVenueDetails(req, res) {
 export async function uploadCoverImage(req, res) {
   await service.uploadCoverImage(req.vendor.id, req.params.venueId, req.file);
   res
-    .status(201)
+    .status(200)
     .json({ success: true, message: 'Cover image uploaded sucessfully' });
 }
 
@@ -24,8 +24,8 @@ export async function uploadVenueImages(req, res) {
   };
   await service.uploadVenueImages(data);
   res
-    .status(201)
-    .json({ success: true, message: 'Venue images edited sucessfully' });
+    .status(200)
+    .json({ success: true, message: 'Venue images updated sucessfully' });
 }
 
 export async function updateVenueDescription(req, res) {
@@ -35,7 +35,7 @@ export async function updateVenueDescription(req, res) {
     req.body.description
   );
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     message: 'Venue description updated successfully',
   });
@@ -44,7 +44,7 @@ export async function updateVenueDescription(req, res) {
 export async function updateVenueHours(req, res) {
   await service.updateVenueHours(req.vendor.id, req.params.venueId, req.body);
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     message: 'Venue hours updated successfully',
   });
@@ -52,7 +52,7 @@ export async function updateVenueHours(req, res) {
 
 export async function updateVenuePricing(req, res) {
   await service.updateVenuePricing(req.vendor.id, req.params.venueId, req.body);
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     message: 'Venue pricing updated successfully',
   });
@@ -64,7 +64,7 @@ export async function updateVenueStatus(req, res) {
     req.params.venueId,
     req.body.status
   );
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     message: 'Venue status updated successfully',
   });
