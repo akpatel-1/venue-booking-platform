@@ -10,3 +10,36 @@ export async function getVenues() {
     `);
   return result.rows;
 }
+
+export async function getVenue(venueId) {
+  const result = await pool.query(
+    `
+  SELECT
+  v.id,
+  v.vendor_id,
+  v.name,
+  v.description,
+  v.category,
+  v.district,
+  v.state,
+  v.booking_type,
+  v.opening_time,
+  v.closing_time,
+  v.images,
+  vp.starting_price
+
+FROM venues v
+
+JOIN (
+  SELECT
+    venue_id,
+    MIN(price) AS starting_price
+  FROM venue_pricing
+  GROUP BY venue_id
+) vp ON vp.venue_id = v.id
+
+WHERE v.id = $1 AND v.status = 'live'`,
+    [venueId]
+  );
+  return result.rows[0];
+}

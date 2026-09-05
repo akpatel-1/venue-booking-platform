@@ -1,9 +1,17 @@
 import express from 'express';
 
+import validateSchema from '../../../../middleware/schema.validation.js';
 import * as controller from './controller.js';
+import * as schema from './schems.js';
 
 const router = express.Router();
 
 router.get('/venues', controller.getVenues);
+
+router.get(
+  '/venues/:venueId',
+  validateSchema(schema.venueId, 'params'),
+  controller.getVenue
+);
 
 export default router;
