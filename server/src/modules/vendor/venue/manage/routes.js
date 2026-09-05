@@ -30,7 +30,7 @@ router.patch(
 router.patch(
   '/venues/:venueId/images',
   validateSchema(schema.venueId, 'params'),
-  upload(10, 10).array('venue_images', 10),
+  upload(10, 1).array('venue_images', 10),
   validateSchema(schema.deleteIds),
   validateFileType,
   controller.uploadVenueImages
