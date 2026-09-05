@@ -36,3 +36,15 @@ export function deleteFromCloudinary(publicId) {
     );
   });
 }
+
+export async function getFromCloudinary(imageIds) {
+  return Promise.all(
+    imageIds.map(
+      async (imageId) =>
+        await cloudinary.url(imageId, {
+          resource_type: 'image',
+          secure: true,
+        })
+    )
+  );
+}
