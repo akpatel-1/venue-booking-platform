@@ -17,3 +17,12 @@ export async function getVenue(req, res) {
     data,
   });
 }
+
+export async function getVenuePricing(req, res) {
+  const data = await service.getVenuePricing(req.params.venueId);
+  res.status(200).json({
+    success: true,
+    message: 'Venue pricing details fetched successfully',
+    data,
+  });
+}

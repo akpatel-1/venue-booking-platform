@@ -43,3 +43,21 @@ WHERE v.id = $1 AND v.status = 'live'`,
   );
   return result.rows[0];
 }
+
+export async function getVenueBookingType(venueId) {
+  const result = await pool.query(
+    `
+    SELECT booking_type FROM venues WHERE id = $1`,
+    [venueId]
+  );
+  return result.rows[0]?.booking_type;
+}
+
+export async function getVenuePricing(venueId) {
+  const result = await pool.query(
+    `
+  SELECT venue_id, day_type, duration_minutes, price FROM venue_pricing WHERE venue_id = $1`,
+    [venueId]
+  );
+  return result.rows;
+}

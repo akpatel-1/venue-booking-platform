@@ -14,4 +14,10 @@ router.get(
   controller.getVenue
 );
 
+router.get(
+  '/venues/:venueId/pricing',
+  validateSchema(schema.venueId, 'params'),
+  controller.getVenuePricing
+);
+
 export default router;
