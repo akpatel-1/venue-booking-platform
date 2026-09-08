@@ -20,4 +20,11 @@ router.get(
   controller.getVenuePricing
 );
 
+router.post(
+  '/venues/:venueId/bookings',
+  validateSchema(schema.venueId, 'params'),
+  validateSchema(schema.createBooking),
+  controller.createBooking
+);
+
 export default router;

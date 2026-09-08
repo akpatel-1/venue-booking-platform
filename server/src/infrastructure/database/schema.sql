@@ -173,18 +173,18 @@ CREATE TABLE IF NOT EXISTS venues (
   )
 );
 
-CREATE TABLE IF NOT EXISTS venue_pricing (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  venue_id UUID NOT NULL REFERENCES venues (id) ON DELETE CASCADE,
-  day_type TEXT NOT NULL CHECK (day_type IN ('weekday', 'weekend')),
+create table if not exists venue_pricing (
+  id UUID primary key default gen_random_uuid (),
+  venue_id UUID not null references venues (id) on delete CASCADE,
+  day_type TEXT not null check (day_type in ('weekday', 'weekend')),
   duration_minutes INTEGER,
-  price INTEGER NOT NULL CHECK (price >= 0),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CONSTRAINT valid_duration CHECK (
-    duration_minutes IS NULL
-    OR duration_minutes > 0
-  )
+  price INTEGER not null check (price >= 0),
+  created_at TIMESTAMPTZ not null default NOW(),
+  updated_at TIMESTAMPTZ not null default NOW(),
+  constraint valid_duration check (
+    duration_minutes is null
+    or duration_minutes = 60
+  ),
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS unique_venue_pricing ON venue_pricing (
@@ -223,3 +223,41 @@ CREATE TABLE IF NOT EXISTS venue_reverifications (
 CREATE UNIQUE INDEX unique_pending_venue_reverification
 ON venue_reverifications (venue_id)
 WHERE status = 'pending';
+
+
+CREATE TYPE booking_status AS ENUM (
+  'pending_payment',
+  'confirmed',
+  'payment_failed',
+  'cancelled',
+  'expired'
+);
+
+CREATE TABLE IF NOT EXISTS bookings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id),
+  venue_id UUID NOT NULL REFERENCES venues(id),
+  booking_date DATE NOT NULL,
+  booking_type booking_types NOT NULL,
+  quantity INTEGER NOT NULL CHECK (quantity > 0),
+  start_time TIME,
+  end_time TIME,
+  total_amount INTEGER NOT NULL CHECK (total_amount >= 0),
+  status booking_status NOT NULL DEFAULT 'pending_payment',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT valid_booking_time
+    CHECK (
+      (
+        booking_type = 'whole_day'
+        AND start_time IS NULL
+        AND end_time IS NULL
+      )
+      OR
+      (
+        booking_type = 'time_slot'
+        AND start_time IS NOT NULL
+        AND end_time IS NOT NULL
+        AND end_time > start_time
+      )
+    )
+);

@@ -26,3 +26,17 @@ export async function getVenuePricing(req, res) {
     data,
   });
 }
+
+export async function createBooking(req, res) {
+  const data = await service.createBooking(
+    req.user.id,
+    req.params.venueId,
+    req.body
+  );
+
+  res.status(201).json({
+    success: true,
+    message: 'Booking created successfully',
+    data,
+  });
+}
